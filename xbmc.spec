@@ -244,17 +244,8 @@ make %{?_smp_mflags} VERBOSE=1
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
-# remove the doc files from libdir, they should be put in the docdir
-rm $RPM_BUILD_ROOT/%{_libdir}/xbmc/copying.txt $RPM_BUILD_ROOT/%{_libdir}/xbmc/keymapping.txt $RPM_BUILD_ROOT/%{_libdir}/xbmc/LICENSE.GPL $RPM_BUILD_ROOT/%{_libdir}/xbmc/README.linux
-# remove bogus header file 
-rm -f $RPM_BUILD_ROOT%{_libdir}/xbmc/visualisations/xbmc_vis.h
-
-# make Python files executable to keep rpmlint quiet
-# (spyce to be dropped from next xbmc release, so this can be dropped then)
-#for i in run_spyceCGI.py run_spyceCmd.py run_spyceModpy.py spyceCGI.py spyceCmd.py spyce.py verchk.py
-#do
-#  chmod +x $RPM_BUILD_ROOT%{_libdir}/xbmc/system/python/spyce/$i
-#done
+# remove the doc files from unversioned /usr/share/doc/xbmc, they should be in versioned docdir
+rm -r $RPM_BUILD_ROOT/%{_datadir}/xbmc/doc/
 
 desktop-file-install \
  --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
