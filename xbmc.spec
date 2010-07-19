@@ -263,9 +263,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/xbmc
 %{_datadir}/xsessions/XBMC.desktop
 %{_datadir}/applications/xbmc.desktop
-%{_datadir}/icons/hicolor/*/*.png
+%{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Mon Jul 19 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.1.20100719svn31977
+- Major overhaul for 10.x version of XBMC
+- Fix file section for better FHS-compliance
+- Drop a lot of patches that have been upstreamed, and rebase others
+
 * Fri May 21 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 9.11-19
 - Add new BR for libmodplug-devel, expat-devel, libmicrohttpd-devel
   in preparation for 10.x
