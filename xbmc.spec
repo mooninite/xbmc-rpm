@@ -245,7 +245,7 @@ make %{?_smp_mflags} VERBOSE=1
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
 # remove the doc files from unversioned /usr/share/doc/xbmc, they should be in versioned docdir
-rm -r $RPM_BUILD_ROOT/%{_datadir}/xbmc/doc/
+rm -r $RPM_BUILD_ROOT/%{_datadir}/doc/
 
 desktop-file-install \
  --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
@@ -260,9 +260,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/xbmc
 %{_bindir}/xbmc-standalone
 %{_libdir}/xbmc
+%{_datadir}/xbmc
 %{_datadir}/xsessions/XBMC.desktop
 %{_datadir}/applications/xbmc.desktop
-%{_datadir}/pixmaps/xbmc.png
+%{_datadir}/icons/hicolor/*/*.png
 
 %changelog
 * Fri May 21 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 9.11-19
