@@ -52,7 +52,8 @@ find \( -type f -name '*.so' -o -name '*.DLL' -o -name '*.dll' -o -name '*.lib' 
 # remove all other packages that should be system-wide
 # except for libass, cpluff, jsoncpp (need to figure out how to
 # remove these too)
-for i in enca freetype fribidi libcdio libcrystalhd libcurl-mingw32 libcurl-OSX libiconv liblame libmicrohttpd libmicrohttpd_win32 libmodplug libmysql_win32 libSDL-OSX libSDL-WIN32 libssh_win32 pcre xbmc-dll-symbols
+# xbmc-dll-symbols seems to be XBMC-specific
+for i in enca freetype fribidi libcdio libcrystalhd libcurl-mingw32 libcurl-OSX libiconv liblame libmicrohttpd libmicrohttpd_win32 libmodplug libmysql_win32 libSDL-OSX libSDL-WIN32 libssh_win32 pcre 
 do
     rm -r lib/$i
 done
