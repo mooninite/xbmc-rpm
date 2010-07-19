@@ -88,6 +88,9 @@ Patch30: xbmc-10-remove-libmodplug-libmicrohttpd.patch
 # rebase hdhomerun
 Patch31: xbmc-10-hdhomerun.patch
 
+# fix "@#" in Makefile which seem to screw things up
+Patch32: xbmc-10-Makefile.patch
+
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
 Summary: Media center
@@ -203,6 +206,7 @@ forecast functions, together third-party plugins.
 %patch29 -p0
 %patch30 -p0
 %patch31 -p1
+%patch32 -p0
 
 # Prevent rerunning the autotools.
 touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
@@ -235,8 +239,7 @@ ASFLAGS=-fPIC
 # enumerate all the external libraries because the libdts/liba52 detection 
 # is broken upstream: http://trac.xbmc.org/ticket/9277
 
-#make %{?_smp_mflags} VERBOSE=1
-make VERBOSE=1
+make %{?_smp_mflags} VERBOSE=1
 
 %install
 rm -rf $RPM_BUILD_ROOT
