@@ -1,0 +1,205 @@
+diff -Naur xbmc-9.11-8.3/configure.in xbmc-9.11-8.4/configure.in
+--- xbmc-9.11-8.3/configure.in	2010-01-22 11:06:37.000000000 +0100
++++ xbmc-9.11-8.4/configure.in	2010-01-24 06:05:15.000000000 +0100
+@@ -1363,8 +1363,10 @@
+       --disable-skyrocket
+   else
+     ./configure \
+-      CFLAGS="-fPIC" \ 
+-      CXXFLAGS="-fPIC" \
++      CPPFLAGS="$CPPFLAGS" \
++      CFLAGS="$CFLAGS -fPIC" \ 
++      CXXFLAGS="$CXXFLAGS -fPIC" \
++      --prefix="${prefix}" --includedir="${includedir}" --libdir="${libdir}" --datadir="${datadir}" \
+       --without-xscreensaver \
+       --disable-sound \
+       --disable-cyclone \
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/configure xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/configure
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/configure	2008-07-20 17:54:35.000000000 +0200
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/configure	2010-01-24 06:03:38.000000000 +0100
+@@ -3241,7 +3241,7 @@
+ fi
+ 
+ 
+-CXXFLAGS=`echo $CXXFLAGS | sed -e s,-O2,-O3,`
++#CXXFLAGS=`echo $CXXFLAGS | sed -e s,-O2,-O3,`
+ ac_ext=cpp
+ ac_cpp='$CXXCPP $CPPFLAGS'
+ ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+@@ -3469,9 +3469,9 @@
+ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+ 
+ 
+-if test x"$GXX" = x"yes"; then
+-	CXXFLAGS=`echo $CXXFLAGS -Wall`
+-fi
++#if test x"$GXX" = x"yes"; then
++#	CXXFLAGS=`echo $CXXFLAGS -Wall`
++#fi
+ 
+ ac_ext=c
+ ac_cpp='$CPP $CPPFLAGS'
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/configure.ac xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/configure.ac
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/configure.ac	2007-10-08 19:37:14.000000000 +0200
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/configure.ac	2010-01-24 06:03:38.000000000 +0100
+@@ -16,12 +16,12 @@
+ LT_AC_PROG_SED
+ AC_LANG(C++)
+ AC_PROG_CXX
+-CXXFLAGS=`echo $CXXFLAGS | sed -e s,-O2,-O3,`
++#CXXFLAGS=`echo $CXXFLAGS | sed -e s,-O2,-O3,`
+ AC_PROG_CXXCPP
+ 
+-if test x"$GXX" = x"yes"; then
+-	CXXFLAGS=`echo $CXXFLAGS -Wall`
+-fi
++#if test x"$GXX" = x"yes"; then
++#	CXXFLAGS=`echo $CXXFLAGS -Wall`
++#fi
+ 
+ AC_PROG_CC
+ AM_PROG_CC_C_O
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/cyclone/Makefile.in xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/cyclone/Makefile.in
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/cyclone/Makefile.in	2009-01-24 23:51:01.000000000 +0100
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/cyclone/Makefile.in	2010-01-24 06:03:38.000000000 +0100
+@@ -278,7 +278,7 @@
+ @DLOPEN_TRUE@LIBLTDL_CPPFLAGS = -I$(top_builddir)/libltdl
+ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -I$(srcdir)/.. -I$(top_srcdir)/lib $(X_CPPFLAGS)
+ AM_LDFLAGS = 
+-AM_CXXFLAGS = -Wall -funroll-loops
++AM_CXXFLAGS =
+ AM_ETAGSFLAGS = --extra=fq
+ rs_cyclone_SOURCES = $(COMMON) $(COLOR) $(VECTOR) blend.cc blend.hh cyclone.cc \
+ 	cyclone.hh particle.cc particle.hh
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/euphoria/Makefile.in xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/euphoria/Makefile.in
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/euphoria/Makefile.in	2009-01-24 23:51:01.000000000 +0100
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/euphoria/Makefile.in	2010-01-24 06:03:38.000000000 +0100
+@@ -290,7 +290,7 @@
+ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -I$(srcdir)/.. \
+ 	-I$(top_srcdir)/lib $(X_CPPFLAGS) $(IMAGE_CPPFLAGS)
+ AM_LDFLAGS = $(IMAGE_LDFLAGS)
+-AM_CXXFLAGS = -Wall -funroll-loops $(IMAGE_CXXFLAGS)
++AM_CXXFLAGS = $(IMAGE_CXXFLAGS)
+ AM_ETAGSFLAGS = --extra=fq
+ rs_euphoria_SOURCES = $(COMMON) $(COLOR) $(VECTOR) $(IMAGE) euphoria.cc \
+ 	euphoria.hh wisp.cc wisp.hh
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/fieldlines/Makefile.in xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/fieldlines/Makefile.in
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/fieldlines/Makefile.in	2009-01-24 23:51:01.000000000 +0100
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/fieldlines/Makefile.in	2010-01-24 06:03:38.000000000 +0100
+@@ -277,7 +277,7 @@
+ @DLOPEN_TRUE@LIBLTDL_CPPFLAGS = -I$(top_builddir)/libltdl
+ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -I$(srcdir)/.. -I$(top_srcdir)/lib $(X_CPPFLAGS)
+ AM_LDFLAGS = 
+-AM_CXXFLAGS = -Wall -funroll-loops
++AM_CXXFLAGS =
+ AM_ETAGSFLAGS = --extra=fq
+ rs_fieldlines_SOURCES = $(COMMON) $(COLOR) $(VECTOR) fieldlines.cc \
+ 	fieldlines.hh ion.hh
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/flocks/Makefile.in xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/flocks/Makefile.in
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/flocks/Makefile.in	2009-01-24 23:51:01.000000000 +0100
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/flocks/Makefile.in	2010-01-24 06:03:38.000000000 +0100
+@@ -277,7 +277,7 @@
+ @DLOPEN_TRUE@LIBLTDL_CPPFLAGS = -I$(top_builddir)/libltdl
+ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -I$(srcdir)/.. -I$(top_srcdir)/lib $(X_CPPFLAGS)
+ AM_LDFLAGS = 
+-AM_CXXFLAGS = -Wall -funroll-loops
++AM_CXXFLAGS =
+ AM_ETAGSFLAGS = --extra=fq
+ rs_flocks_SOURCES = $(COMMON) $(COLOR) $(VECTOR) bug.cc bug.hh flocks.cc \
+ 	flocks.hh
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/flux/Makefile.in xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/flux/Makefile.in
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/flux/Makefile.in	2009-01-24 23:51:01.000000000 +0100
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/flux/Makefile.in	2010-01-24 06:03:38.000000000 +0100
+@@ -277,7 +277,7 @@
+ @DLOPEN_TRUE@LIBLTDL_CPPFLAGS = -I$(top_builddir)/libltdl
+ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -I$(srcdir)/.. -I$(top_srcdir)/lib $(X_CPPFLAGS)
+ AM_LDFLAGS = 
+-AM_CXXFLAGS = -Wall -funroll-loops
++AM_CXXFLAGS =
+ AM_ETAGSFLAGS = --extra=fq
+ rs_flux_SOURCES = $(COMMON) $(COLOR) $(VECTOR) flux.cc flux.hh trail.cc trail.hh
+ rs_flux_LDADD = $(LIBMISC) $(X_LIBS) $(OPENGL_LIBS)
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/helios/Makefile.in xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/helios/Makefile.in
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/helios/Makefile.in	2009-01-24 23:51:01.000000000 +0100
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/helios/Makefile.in	2010-01-24 06:03:38.000000000 +0100
+@@ -290,7 +290,7 @@
+ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -I$(srcdir)/.. \
+ 	-I$(top_srcdir)/lib $(X_CPPFLAGS) $(IMAGE_CPPFLAGS)
+ AM_LDFLAGS = $(IMAGE_LDFLAGS)
+-AM_CXXFLAGS = -Wall -funroll-loops $(IMAGE_CXXFLAGS)
++AM_CXXFLAGS = $(IMAGE_CXXFLAGS)
+ AM_ETAGSFLAGS = --extra=fq
+ rs_helios_SOURCES = $(COMMON) $(COLOR) $(VECTOR) $(IMAGE) $(IMPLICIT) \
+ 	helios.cc helios.hh particle.cc particle.hh sphere.hh
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/hyperspace/Makefile.in xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/hyperspace/Makefile.in
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/hyperspace/Makefile.in	2009-01-24 23:51:01.000000000 +0100
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/hyperspace/Makefile.in	2010-01-24 06:03:38.000000000 +0100
+@@ -295,7 +295,7 @@
+ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -I$(srcdir)/.. \
+ 	-I$(top_srcdir)/lib $(X_CPPFLAGS) $(IMAGE_CPPFLAGS)
+ AM_LDFLAGS = $(IMAGE_LDFLAGS)
+-AM_CXXFLAGS = -Wall -funroll-loops $(IMAGE_CXXFLAGS)
++AM_CXXFLAGS = $(IMAGE_CXXFLAGS)
+ AM_ETAGSFLAGS = --extra=fq
+ rs_hyperspace_SOURCES = $(COMMON) $(COLOR) $(VECTOR) $(IMPLICIT) $(IMAGE) \
+ 	caustic.cc caustic.hh cubemaps.cc cubemaps.hh extensions.cc extensions.hh \
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/lattice/Makefile.in xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/lattice/Makefile.in
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/lattice/Makefile.in	2009-01-24 23:51:01.000000000 +0100
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/lattice/Makefile.in	2010-01-24 06:03:38.000000000 +0100
+@@ -287,7 +287,7 @@
+ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -I$(srcdir)/.. \
+ 	-I$(top_srcdir)/lib $(X_CPPFLAGS) $(IMAGE_CPPFLAGS)
+ AM_LDFLAGS = $(IMAGE_LDFLAGS)
+-AM_CXXFLAGS = -Wall -funroll-loops $(IMAGE_CXXFLAGS)
++AM_CXXFLAGS = $(IMAGE_CXXFLAGS)
+ AM_ETAGSFLAGS = --extra=fq
+ rs_lattice_SOURCES = $(COMMON) $(VECTOR) $(IMAGE) camera.hh lattice.cc \
+ 	lattice.hh resources.cc resources.hh
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/Makefile.common xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/Makefile.common
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/Makefile.common	2007-10-08 19:37:14.000000000 +0200
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/Makefile.common	2010-01-24 06:03:38.000000000 +0100
+@@ -18,7 +18,7 @@
+ 
+ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -I$(srcdir)/.. -I$(top_srcdir)/lib $(X_CPPFLAGS) -D_LINUX -DXBMC
+ AM_LDFLAGS =
+-AM_CXXFLAGS = -Wall -funroll-loops
++AM_CXXFLAGS =
+ 
+ AM_ETAGSFLAGS = --extra=fq
+ 
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/plasma/Makefile.in xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/plasma/Makefile.in
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/plasma/Makefile.in	2009-01-24 23:51:01.000000000 +0100
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/plasma/Makefile.in	2010-01-24 06:03:38.000000000 +0100
+@@ -274,7 +274,7 @@
+ @DLOPEN_TRUE@LIBLTDL_CPPFLAGS = -I$(top_builddir)/libltdl
+ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -I$(srcdir)/.. -I$(top_srcdir)/lib $(X_CPPFLAGS)
+ AM_LDFLAGS = 
+-AM_CXXFLAGS = -Wall -funroll-loops
++AM_CXXFLAGS =
+ AM_ETAGSFLAGS = --extra=fq
+ rs_plasma_SOURCES = $(COMMON) plasma.cc plasma.hh
+ rs_plasma_LDADD = $(LIBMISC) $(X_LIBS) $(OPENGL_LIBS)
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/skyrocket/Makefile.in xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/skyrocket/Makefile.in
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/skyrocket/Makefile.in	2009-01-24 23:51:01.000000000 +0100
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/skyrocket/Makefile.in	2010-01-24 06:03:38.000000000 +0100
+@@ -310,7 +310,7 @@
+ 	-I$(top_srcdir)/lib $(X_CPPFLAGS) $(LIBLTDL_CPPFLAGS) \
+ 	$(IMAGE_CPPFLAGS) $(SOUND_CPPFLAGS)
+ AM_LDFLAGS = $(IMAGE_LDFLAGS) $(SOUND_LDFLAGS)
+-AM_CXXFLAGS = -Wall -funroll-loops $(IMAGE_CXXFLAGS) $(SOUND_CXXFLAGS)
++AM_CXXFLAGS = $(IMAGE_CXXFLAGS) $(SOUND_CXXFLAGS)
+ AM_ETAGSFLAGS = --extra=fq
+ rs_skyrocket_SOURCES = $(COMMON) $(COLOR) $(VECTOR) $(IMAGE) $(SOUND) $(DLOPEN) \
+ 	bee.cc bee.hh bigmama.cc bigmama.hh bomb.cc bomb.hh explosion.cc \
+diff -Naur xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/solarwinds/Makefile.in xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/solarwinds/Makefile.in
+--- xbmc-9.11-8.3/xbmc/screensavers/rsxs-0.9/src/solarwinds/Makefile.in	2009-01-24 23:51:01.000000000 +0100
++++ xbmc-9.11-8.4/xbmc/screensavers/rsxs-0.9/src/solarwinds/Makefile.in	2010-01-24 06:03:38.000000000 +0100
+@@ -277,7 +277,7 @@
+ @DLOPEN_TRUE@LIBLTDL_CPPFLAGS = -I$(top_builddir)/libltdl
+ AM_CPPFLAGS = -DPKGDATADIR=\"$(pkgdatadir)\" -I$(srcdir)/.. -I$(top_srcdir)/lib $(X_CPPFLAGS)
+ AM_LDFLAGS = 
+-AM_CXXFLAGS = -Wall -funroll-loops
++AM_CXXFLAGS =
+ AM_ETAGSFLAGS = --extra=fq
+ rs_solarwinds_SOURCES = $(COMMON) $(COLOR) $(VECTOR) solarwinds.cc \
+ 	solarwinds.hh wind.cc wind.hh

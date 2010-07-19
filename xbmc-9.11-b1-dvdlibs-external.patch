@@ -1,0 +1,130 @@
+--- xbmc-9.11-b1/configure.in.dvdlibs	2009-12-01 23:00:27.689755837 +0100
++++ xbmc-9.11-b1/configure.in	2009-12-01 23:13:34.449759740 +0100
+@@ -37,8 +37,6 @@
+ pulse_disabled="== PulseAudio support manually disabled. =="
+ faac_not_found="== Could not find libfaac. FAAC support disabled. =="
+ faac_disabled="== FAAC support manually disabled. =="
+-dvdcss_enabled="== DVDCSS support enabled. =="
+-dvdcss_disabled="== DVDCSS support disabled. =="
+ avahi_not_found="== Could not find libavahi-common or libavahi-client. Avahi support disabled. =="
+ avahi_disabled="== Avahi support disabled. =="
+ vdpau_not_found="== Could not find libvdpau. VDPAU support disabled. =="
+@@ -160,12 +158,6 @@
+             [use_faac=$enableval],
+             [use_faac=yes])
+ 
+-AC_ARG_ENABLE([dvdcss],
+-            [AS_HELP_STRING([--enable-dvdcss],
+-               [enable DVDCSS support (default is yes)])],
+-            [use_dvdcss=$enableval],
+-            [use_dvdcss=yes])
+-
+ AC_ARG_ENABLE([mid],
+             [AS_HELP_STRING([--enable-mid],
+                [enable MID support (default is no)])],
+@@ -871,20 +863,6 @@
+   final_message="$final_message\n  FAAC:\t\tNo"
+ fi
+ 
+-# DVDCSS
+-if test "$use_dvdcss" = "yes"; then
+-  AC_MSG_NOTICE($dvdcss_enabled)
+-  final_message="$final_message\n  DVDCSS:\tYes"
+-  BUILD_DVDCSS=1
+-  SKIP_CONFIG_DVDCSS=0
+-  DVDREAD_CFLAGS="-D_XBMC -DHAVE_DVDCSS_DVDCSS_H"
+-else
+-  AC_MSG_NOTICE($dvdcss_disabled)
+-  final_message="$final_message\n  DVDCSS:\tNo"
+-  BUILD_DVDCSS=0
+-  SKIP_CONFIG_DVDCSS=1
+-  DVDREAD_CFLAGS="-D_XBMC -UHAVE_DVDCSS_DVDCSS_H"
+-fi
+ if test "$use_avahi" = "yes"; then
+   final_message="$final_message\n  Avahi:\tYes"
+ else
+@@ -1214,44 +1192,6 @@
+   fi
+ ], [$USE_EXTERNAL_LIBDTS])
+ 
+-XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdvd/libdvdcss], [
+-  if test "$host_vendor" = "apple" ; then
+-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 \
+-    CFLAGS="-isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4" \
+-      --disable-doc \
+-      --enable-static \
+-      --with-pic
+-  else
+-    ./configure \
+-      --disable-doc \
+-      --enable-static \
+-      --with-pic
+-  fi
+-], [$SKIP_CONFIG_DVDCSS])
+-
+-XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdvd/libdvdread], [
+-  if test "$host_vendor" = "apple" ; then
+-    ./configure2 MACOSX_DEPLOYMENT_TARGET=10.4 \
+-      --extra-cflags="$DVDREAD_CFLAGS -D__DARWIN__ -fPIC -DPIC -fno-common -isysroot /Developer/SDKs/MacOSX10.4u.sdk -mmacosx-version-min=10.4 -I`pwd`/../libdvdcss/src" \
+-      --enable-static \
+-      --disable-shared \
+-      --cc="$CC" &&
+-    make dvdread-config &&
+-    mkdir -p `pwd`/../includes/dvdread
+-    cp `pwd`/../libdvdread/src/*.h `pwd`/../includes/dvdread
+-  else
+-    ./configure2 \
+-      --extra-cflags="$DVDREAD_CFLAGS -fPIC -DPIC -I`pwd`/../libdvdcss/src" \
+-      --enable-static \
+-      --disable-shared \
+-      --cc="$CC" &&
+-    make dvdread-config &&
+-    mkdir -p `pwd`/../includes/dvdread
+-    cp `pwd`/../libdvdread/src/*.h `pwd`/../includes/dvdread
+-  fi
+-
+-], [0])
+-
+ XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdvd/libdvdnav], [
+   if test "$host_vendor" = "apple" ; then
+     ./configure2 MACOSX_DEPLOYMENT_TARGET=10.4 \
+@@ -1263,9 +1203,7 @@
+       --cc="$CC"
+   else
+     ./configure2 \
+-      --extra-cflags="$DVDREAD_CFLAGS -fPIC -DPIC -I`pwd`/../includes" \
+-      --extra-ldflags="-L`pwd`/../libdvdread/obj" \
+-      --with-dvdread-config="`pwd`/../libdvdread/obj/dvdread-config" \
++      --extra-cflags="-D_XBMC -fPIC -DPIC" \
+       --enable-static \
+       --disable-shared \
+       --cc="$CC"
+--- xbmc-9.11-b1/xbmc/cores/dvdplayer/Codecs/libdvd/Makefile.in.dvdlibs	2009-07-10 01:10:10.000000000 +0200
++++ xbmc-9.11-b1/xbmc/cores/dvdplayer/Codecs/libdvd/Makefile.in	2009-12-02 23:15:36.942762083 +0100
+@@ -2,13 +2,12 @@
+ ARCH=@ARCH@
+ SYSDIR=../../../../../system/players/dvdplayer
+ SOS= libdvdnav-$(ARCH).so
+-DIRS=	libdvdread \
+-	libdvdnav
++DIRS=	libdvdnav
+ 
+ WRAPPER=../../../DllLoader/exports/wrapper.o
+ WRAPPER_OSX=../../../../../tools/Mach5/wrapper.rb
+ 
+-LDFLAGS=-shared -fPIC -rdynamic
++LDFLAGS=-shared -fPIC -rdynamic -ldvdread
+ ifeq ($(ARCH), powerpc-osx)
+ 	# Add -lbundle1.o for powerpc-osx
+ 	BUNDLE1_O = -lbundle1.o
+@@ -53,8 +52,8 @@
+ 		libdvdcss/src/*.o \
+ 		`cat $(WRAPPER:.o=.def)` $(WRAPPER)
+ 
+-$(SYSDIR)/libdvdnav-$(ARCH).so: $(WRAPPER) $(DVDCSS_A) libdvdread/obj/libdvdread.a libdvdnav/obj/libdvdnav.a
+-	$(CC) -o $@ $(LDFLAGS) --soname,$@ $(DVDCSS_O) libdvdread/obj/*.o libdvdnav/obj/*.o \
++$(SYSDIR)/libdvdnav-$(ARCH).so: $(WRAPPER) $(DVDCSS_A) libdvdnav/obj/libdvdnav.a
++	$(CC) -o $@ $(LDFLAGS) --soname,$@ $(DVDCSS_O) libdvdnav/obj/*.o \
+ 		`cat $(WRAPPER:.o=.def)` $(WRAPPER)
+ 
+ endif

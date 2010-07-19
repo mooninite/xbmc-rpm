@@ -1,0 +1,12 @@
+diff -Naur xbmc-9.11.orig/xbmc/visualizations/XBMCProjectM/libprojectM/RandomNumberGenerators.hpp xbmc-9.11/xbmc/visualizations/XBMCProjectM/libprojectM/RandomNumberGenerators.hpp
+--- xbmc-9.11.orig/xbmc/visualizations/XBMCProjectM/libprojectM/RandomNumberGenerators.hpp	2008-07-18 06:54:03.000000000 +0200
++++ xbmc-9.11/xbmc/visualizations/XBMCProjectM/libprojectM/RandomNumberGenerators.hpp	2009-12-31 11:57:53.000000000 +0100
+@@ -85,7 +85,7 @@
+     // Sum up mass, stopping when cutoff is reached. This is the typical
+     // weighted sampling algorithm.
+ 	float mass = 0;
+-	for (std::size_t i = 0; i< weights.size() ; i) {
++	for (std::size_t i = 0; i< weights.size() ; i++) {
+ 		mass += weights[i];
+ 		if (mass >= cutoff)
+ 			return i;

@@ -1,0 +1,14 @@
+--- xbmc-9.11.orig/xbmc/cores/ffmpeg/DllSwScale.h	2009-09-15 12:19:19.000000000 +0200
++++ xbmc-9.11/xbmc/cores/ffmpeg/DllSwScale.h	2010-03-02 16:55:15.101967249 +0100
+@@ -76,7 +76,11 @@
+ 
+   virtual int sws_scale(struct SwsContext *context, uint8_t* src[], int srcStride[], int srcSliceY,
+                 int srcSliceH, uint8_t* dst[], int dstStride[])  
++#if LIBSWSCALE_VERSION_INT >= 0x800
++    { return ::sws_scale(context, const_cast<const uint8_t**>(src), srcStride, srcSliceY, srcSliceH, dst, dstStride); }
++#else
+     { return ::sws_scale(context, src, srcStride, srcSliceY, srcSliceH, dst, dstStride); }
++#endif
+   #if (! defined USE_EXTERNAL_FFMPEG)
+     virtual void sws_rgb2rgb_init(int flags) { ::sws_rgb2rgb_init(flags); }
+   #elif (defined HAVE_LIBSWSCALE_RGB2RGB_H) || (defined HAVE_FFMPEG_RGB2RGB_H)
