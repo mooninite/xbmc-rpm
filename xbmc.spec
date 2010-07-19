@@ -1,9 +1,12 @@
+%global SVNVERSION 31977
+%global DIRVERSION %{version}-%{SVNVERSION}
+
 Name: xbmc
-Version: 9.11
-Release: 18%{?dist}
+Version: 10.5
+Release: 0.1.20100719svn%{SVNVERSION}%{?dist}
 URL: http://www.xbmc.org/
 
-Source0: %{name}-%{version}-patched.tar.xz
+Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 # xbmc contains code that we cannot ship, as well as redundant private
 # copies of upstream libraries that we already distribute.  Therefore
 # we use this script to remove the code before shipping it.
@@ -68,6 +71,22 @@ Patch25: xbmc-9.11-xext.diff
 
 # an attempt to force hdhomerun to be external
 Patch26: xbmc-9.11-hdhomerun.patch
+
+# new patches for bootstrap
+Patch27: xbmc-10-bootstrap.patch
+
+# and libdvdread (supercedes above patch)
+Patch28: xbmc-10-dvdread.patch
+
+# and new problem with zlib in cximage
+Patch29: xbmc-10-disable-zlib-in-cximage.patch
+
+# grrr, why if an external library is detected does it require that the
+# directory exist in the tarball?
+Patch30: xbmc-10-remove-libmodplug-libmicrohttpd.patch
+
+# rebase hdhomerun
+Patch31: xbmc-10-hdhomerun.patch
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -138,8 +157,10 @@ BuildRequires: pulseaudio-libs-devel
 BuildRequires: libdca-devel
 BuildRequires: libass-devel >= 0.9.7
 BuildRequires: hdhomerun-devel
-# add following BR in next release of XBMC to get support for crystalhd devices
-#BuildRequires: libcrystalhd-devel
+BuildRequires: libcrystalhd-devel
+BuildRequires: libmodplug-devel
+BuildRequires: libmicrohttpd-devel
+BuildRequires: expat-devel
 
 %description
 XBMC media center is a free cross-platform media-player jukebox and
@@ -149,34 +170,39 @@ forecast functions, together third-party plugins.
 
 %prep
 
-%setup -q -n %{name}-%{version}
+%setup -q -n %{name}-%{DIRVERSION}
 
-%patch1 -p1 -b .dtsdca
-%patch2 -p1 -b .dvdlibs
-%patch3 -p1 -b .cdio
-%patch4 -p0 -b .makefilein
-%patch5 -p1 -b .makefileincl
-%patch6 -p1 -b .xbmcsh
-%patch7 -p1
-%patch8 -p1 -b .rand
-%patch9 -p1 -b .remlibass
-%patch10 -p1 -b .gccwarning
-%patch11 -p0 -b .removegoahead
-%patch12 -p1 -b .zlib
-%patch13 -p1 -b .goom
-%patch14 -p1 -b .rsxs
-%patch15 -p1 -b .weather
-%patch16 -p1 -b .projectm
-%patch17 -p1 -b .cflags
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
-%patch22 -p1
-%patch23 -p1
-%patch24 -p1
-%patch25 -p1
-%patch26 -p1 -b .hdhomerun
+#patch1 -p1 -b .dtsdca
+#   patch2 -p1 -b .dvdlibs
+#patch3 -p1 -b .cdio
+#patch4 -p0 -b .makefilein
+#patch5 -p1 -b .makefileincl
+#patch6 -p1 -b .xbmcsh
+#patch7 -p1
+#patch8 -p1 -b .rand
+#   patch9 -p1 -b .remlibass
+#patch10 -p1 -b .gccwarning
+#patch11 -p0 -b .removegoahead
+#patch12 -p1 -b .zlib
+#patch13 -p1 -b .goom
+#patch14 -p1 -b .rsxs
+#patch15 -p1 -b .weather
+#patch16 -p1 -b .projectm
+#patch17 -p1 -b .cflags
+#patch18 -p1
+#patch19 -p1
+#patch20 -p1
+#patch21 -p1
+#patch22 -p1
+#patch23 -p1
+#patch24 -p1
+#patch25 -p1
+#   patch26 -p1 -b .hdhomerun
+%patch27 -p0
+%patch28 -p0
+%patch29 -p0
+%patch30 -p0
+%patch31 -p1
 
 # Prevent rerunning the autotools.
 touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
@@ -191,10 +217,12 @@ chmod +x bootstrap
 ./configure \
 --prefix=%{_prefix} --bindir=%{_bindir} --includedir=%{_includedir} \
 --libdir=%{_libdir} --datadir=%{_datadir} \
---enable-external-libraries --enable-goom \
+--enable-goom \
+--enable-external-ffmpeg --enable-external-python \
+--disable-libdts --disable-liba52 \
+--disable-dvdcss \
 --disable-optimizations --disable-debug \
---disable-webserver \
-SVN_REV=26017 \
+SVN_REV=%{SVNVERSION} \
 CPPFLAGS="-I/usr/include/ffmpeg" \
 CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/ffmpeg" \
 CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/ffmpeg" \
@@ -202,7 +230,13 @@ LDFLAGS="-fPIC" \
 LIBS="-L%{_libdir}/mysql -lhdhomerun $LIBS" \
 ASFLAGS=-fPIC
 
-make %{?_smp_mflags} VERBOSE=1
+# disable the following:
+# --enable-external-libraries
+# enumerate all the external libraries because the libdts/liba52 detection 
+# is broken upstream: http://trac.xbmc.org/ticket/9277
+
+#make %{?_smp_mflags} VERBOSE=1
+make VERBOSE=1
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -214,10 +248,10 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/xbmc/visualisations/xbmc_vis.h
 
 # make Python files executable to keep rpmlint quiet
 # (spyce to be dropped from next xbmc release, so this can be dropped then)
-for i in run_spyceCGI.py run_spyceCmd.py run_spyceModpy.py spyceCGI.py spyceCmd.py spyce.py verchk.py
-do
-  chmod +x $RPM_BUILD_ROOT%{_libdir}/xbmc/system/python/spyce/$i
-done
+#for i in run_spyceCGI.py run_spyceCmd.py run_spyceModpy.py spyceCGI.py spyceCmd.py spyce.py verchk.py
+#do
+#  chmod +x $RPM_BUILD_ROOT%{_libdir}/xbmc/system/python/spyce/$i
+#done
 
 desktop-file-install \
  --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
@@ -237,6 +271,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/pixmaps/xbmc.png
 
 %changelog
+* Fri May 21 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 9.11-19
+- Add new BR for libmodplug-devel, expat-devel, libmicrohttpd-devel
+  in preparation for 10.x
+
 * Fri Mar 26 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 9.11-18
 - Exclude ppc64 (not available for F-13+ in any case)
 

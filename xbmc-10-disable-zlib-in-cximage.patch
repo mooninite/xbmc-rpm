@@ -1,0 +1,17 @@
+--- configure.in.orig	2010-07-19 01:46:04.827142816 -0400
++++ configure.in	2010-07-19 01:46:19.063394804 -0400
+@@ -1708,14 +1708,6 @@
+   fi
+ ], 0)
+ 
+-XB_CONFIG_MODULE([xbmc/lib/cximage-6.0/zlib], [
+-  if test "$host_vendor" = "apple" ; then
+-    export MACOSX_DEPLOYMENT_TARGET=10.4
+-    CFLAGS="$CFLAGS -fno-common" \
+-    ./configure
+-  fi
+-], [0])
+-
+ XB_CONFIG_MODULE([lib/libass], [
+   if test "$host_vendor" = "apple" ; then
+     CFLAGS="$CFLAGS -fno-common" \

@@ -1,0 +1,12 @@
+--- bootstrap.orig	2010-07-19 01:01:26.405392464 -0400
++++ bootstrap	2010-07-19 01:02:03.122518706 -0400
+@@ -10,7 +10,8 @@
+ # order matters with libbdnav and friends
+ [ -d xbmc/cores/dvdplayer/Codecs/libdvd/libdvdcss ] && \
+   autoreconf -vif xbmc/cores/dvdplayer/Codecs/libdvd/libdvdcss
+-autoreconf -vif xbmc/cores/dvdplayer/Codecs/libdvd/libdvdread
++[ -d xbmc/cores/dvdplayer/Codecs/libdvd/libdvdread ] && \
++  autoreconf -vif xbmc/cores/dvdplayer/Codecs/libdvd/libdvdread
+ autoreconf -vif xbmc/cores/dvdplayer/Codecs/libdvd/libdvdnav
+ 
+ # Clean the generated files
