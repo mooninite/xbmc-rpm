@@ -1,9 +1,9 @@
-%global SVNVERSION 31977
+%global SVNVERSION 31991
 %global DIRVERSION %{version}-%{SVNVERSION}
 
 Name: xbmc
 Version: 10.5
-Release: 0.1.20100719svn%{SVNVERSION}%{?dist}
+Release: 0.2.20100719svn%{SVNVERSION}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -266,6 +266,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Mon Jul 19 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.2.20100719svn31991
+- Sync with Dharma branch
+
 * Mon Jul 19 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.1.20100719svn31977
 - Major overhaul for 10.x version of XBMC
 - Fix file section for better FHS-compliance

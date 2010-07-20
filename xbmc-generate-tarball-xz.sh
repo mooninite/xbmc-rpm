@@ -2,13 +2,19 @@
 
 MAJORVERSION=10.5
 
+# pull from Dharma branch
+SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/branches/Dharma
+
+# uncomment this to switch to trunk
+#SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/trunk
+
 # get version number
-SVNVERSION=$(svn info  https://xbmc.svn.sourceforge.net/svnroot/xbmc/trunk |grep "Revision:"|cut -d' ' -f2)
+SVNVERSION=$(svn info $SVNURL  |grep "Revision:"|cut -d' ' -f2)
 
 #VERSION=${1-9.11}
 VERSION=$MAJORVERSION-$SVNVERSION
 
-svn export -r $SVNVERSION https://xbmc.svn.sourceforge.net/svnroot/xbmc/trunk xbmc-$VERSION
+svn export -r $SVNVERSION $SVNURL xbmc-$VERSION
 
 # don't need to extra tarball, already expanded
 #tar -xzvf xbmc-$VERSION.tar.gz
