@@ -3,7 +3,7 @@
 
 Name: xbmc
 Version: 10.5
-Release: 0.2.20100719svn%{SVNVERSION}%{?dist}
+Release: 0.3.20100719svn%{SVNVERSION}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -17,79 +17,31 @@ Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 # where <version> is the particular version being used
 Source1: xbmc-generate-tarball-xz.sh
 
-# look for libdca, rather than libdts
-# http://xbmc.org/trac/ticket/8040
-Patch1:	xbmc-9.11-libdca.patch
-
-# Needs work before being submitted upstream
-Patch2:	xbmc-9.11-b1-dvdlibs-external.patch
-
-# http://xbmc.org/trac/ticket/8026 (this will be in next release)
-Patch3:	xbmc-9.11-use_cdio_system_headers_on_non_win32.patch 
-
-# Next 3 patches to use %{_libdir}
-# http://xbmc.org/trac/ticket/8590
-Patch4:	xbmc-9.11-fix-Makefile.in.patch
-Patch5: xbmc-9.11-Makefile.include.in.diff
-Patch6: xbmc-9.11-xbmc.sh.diff
-
-# Next 2 patches submitted upstream
-# http://www.xbmc.org/trac/ticket/8629
-Patch7: xbmc-9.11-spyce.diff
-Patch8: xbmc-9.11-RandomNumberGenerators.hpp.diff
-
-# Needs work before being submitted upstream
-Patch9: xbmc-9.11-remlibass.patch
-
-# Fixes GCC warning: partial backport to 9.11
-# (should be fixed in next release)
-Patch10: xbmc-9.11-changeset-26191.diff
-
-# remove goahead completely from compilation, it's been replaced
-# by libmicrohttpd in SVN, so should add that BuildRequires for 10.5
-# and drop this patch
-Patch11: xbmc-9.11-remove-goahead.patch
-
-# Next 12 patches submitted upstream:
-# http://www.xbmc.org/trac/ticket/8629
-Patch12: xbmc-9.11-external-zlib.diff
-Patch13: xbmc-9.11-goom-missing.diff
-Patch14: xbmc-9.11-rsxs-0.9.diff
-Patch15: xbmc-9.11-Weather.diff
-Patch16: xbmc-9.11-XBMCProjectM-cmake.diff
-Patch17: xbmc-9.11-cflags.patch
-Patch18: xbmc-9.11-configure.patch
-Patch19: xbmc-9.11-gymcodec.patch
-Patch20: xbmc-9.11-macdll.patch
-Patch21: xbmc-9.11-maclib.patch
-Patch22: xbmc-9.11-libid3tag.patch
-Patch23: xbmc-9.11-librtv.patch
-
-# these next 2 are (hopefully temporary) hacks
-Patch24: xbmc-9.11-swscale.diff
-Patch25: xbmc-9.11-xext.diff
-
-# an attempt to force hdhomerun to be external
-Patch26: xbmc-9.11-hdhomerun.patch
-
 # new patches for bootstrap
-Patch27: xbmc-10-bootstrap.patch
+# no trac ticket filed as yet
+Patch1: xbmc-10-bootstrap.patch
 
-# and libdvdread (supercedes above patch)
-Patch28: xbmc-10-dvdread.patch
+# filed ticket, but patch still needs work
+# http://trac.xbmc.org/ticket/9658
+Patch2: xbmc-10-dvdread.patch
 
 # and new problem with zlib in cximage
-Patch29: xbmc-10-disable-zlib-in-cximage.patch
+# trac ticket filed: http://trac.xbmc.org/ticket/9659
+# but patch not attached because it needs work
+Patch3: xbmc-10-disable-zlib-in-cximage.patch
 
 # grrr, why if an external library is detected does it require that the
 # directory exist in the tarball?
-Patch30: xbmc-10-remove-libmodplug-libmicrohttpd.patch
+# need to file trac ticket
+Patch4: xbmc-10-remove-libmodplug-libmicrohttpd.patch
 
-# rebase hdhomerun
-Patch31: xbmc-10-hdhomerun.patch
+# need to file trac ticket, this patch just forces external hdhomerun
+# functionality, needs to be able fallback internal version
+Patch5: xbmc-10-hdhomerun.patch
 
-# fix "@#" in Makefile which seem to screw things up
-Patch32: xbmc-10-Makefile.patch
+# fix "@#" in Makefile which seem to screw things up no trac filed
+# yet, don't know why this isn't a problem on other Linux systems
+Patch6: xbmc-10-Makefile.patch
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -175,38 +127,12 @@ forecast functions, together third-party plugins.
 
 %setup -q -n %{name}-%{DIRVERSION}
 
-#patch1 -p1 -b .dtsdca
-#   patch2 -p1 -b .dvdlibs
-#patch3 -p1 -b .cdio
-#patch4 -p0 -b .makefilein
-#patch5 -p1 -b .makefileincl
-#patch6 -p1 -b .xbmcsh
-#patch7 -p1
-#patch8 -p1 -b .rand
-#   patch9 -p1 -b .remlibass
-#patch10 -p1 -b .gccwarning
-#patch11 -p0 -b .removegoahead
-#patch12 -p1 -b .zlib
-#patch13 -p1 -b .goom
-#patch14 -p1 -b .rsxs
-#patch15 -p1 -b .weather
-#patch16 -p1 -b .projectm
-#patch17 -p1 -b .cflags
-#patch18 -p1
-#patch19 -p1
-#patch20 -p1
-#patch21 -p1
-#patch22 -p1
-#patch23 -p1
-#patch24 -p1
-#patch25 -p1
-#   patch26 -p1 -b .hdhomerun
-%patch27 -p0
-%patch28 -p0
-%patch29 -p0
-%patch30 -p0
-%patch31 -p1
-%patch32 -p0
+%patch1 -p0
+%patch2 -p0
+%patch3 -p0
+%patch4 -p0
+%patch5 -p1
+%patch6 -p0
 
 # Prevent rerunning the autotools.
 touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
@@ -266,6 +192,13 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Mon Jul 19 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.3.20100719svn31991%{?dist}
+- Remove 24 patches which have been applied upstream, yay!
+- Rebased 2 patches: libdvd patch and hdhomerun patch for Dharma
+- Add some new patches, some of which have upstream trac tickets,
+  others need to
+- Renumber patches
+
 * Mon Jul 19 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.2.20100719svn31991
 - Sync with Dharma branch
 
