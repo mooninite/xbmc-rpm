@@ -1,0 +1,655 @@
+Index: xbmc/lib/libPython/linux/Makefile.in
+===================================================================
+--- xbmc/lib/libPython/linux/Makefile.in	(revision 32022)
++++ xbmc/lib/libPython/linux/Makefile.in	(working copy)
+@@ -5,7 +5,10 @@
+ SHELL=/bin/bash
+ SYSDIR=../../../../system/python
+ 
+-ifeq (@USE_PYTHON2_6@,1)
++ifeq (@USE_PYTHON2_7@,1)
++    PYVERSION=python2.7
++    SO=python27-$(ARCH).so
++else ifeq (@USE_PYTHON2_6@,1)
+     PYVERSION=python2.6
+     SO=python26-$(ARCH).so
+ else ifeq (@USE_PYTHON2_5@,1)
+Index: xbmc/lib/libPython/xbmcmodule/winxmldialog.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/winxmldialog.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/winxmldialog.cpp	(working copy)
+@@ -24,7 +24,9 @@
+ #endif
+ #include "winxml.h"
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/dialog.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/dialog.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/dialog.h	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/xbmcguimodule.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/xbmcguimodule.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/xbmcguimodule.cpp	(working copy)
+@@ -23,7 +23,10 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++    #include <python2.7/structmember.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+     #include <python2.6/structmember.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+Index: xbmc/lib/libPython/xbmcmodule/keyboard.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/keyboard.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/keyboard.h	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/xbmcaddonmodule.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/xbmcaddonmodule.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/xbmcaddonmodule.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/pyplaylist.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/pyplaylist.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/pyplaylist.cpp	(working copy)
+@@ -26,7 +26,9 @@
+ #include "Util.h"
+ #include "pyplaylist.h"
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controllist.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controllist.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controllist.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/winxml.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/winxml.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/winxml.cpp	(working copy)
+@@ -24,7 +24,9 @@
+ #endif
+ #include "winxml.h"
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controllabel.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controllabel.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controllabel.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/action.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/action.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/action.h	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controlslider.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controlslider.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controlslider.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controlimage.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controlimage.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controlimage.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/infotagvideo.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/infotagvideo.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/infotagvideo.h	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/control.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/control.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/control.h	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controlradiobutton.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controlradiobutton.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controlradiobutton.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controlgroup.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controlgroup.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controlgroup.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/infotagmusic.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/infotagmusic.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/infotagmusic.h	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controltextbox.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controltextbox.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controltextbox.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/listitem.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/listitem.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/listitem.h	(working copy)
+@@ -25,7 +25,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/xbmcmodule.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/xbmcmodule.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/xbmcmodule.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/dialog.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/dialog.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/dialog.cpp	(working copy)
+@@ -24,7 +24,9 @@
+ #endif
+ #include "dialog.h"
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controlfadelabel.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controlfadelabel.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controlfadelabel.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/player.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/player.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/player.h	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/PythonPlayer.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/PythonPlayer.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/PythonPlayer.h	(working copy)
+@@ -25,7 +25,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controlprogress.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controlprogress.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controlprogress.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controlspin.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controlspin.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controlspin.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controlbutton.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controlbutton.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controlbutton.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/window.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/window.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/window.h	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/pyplaylist.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/pyplaylist.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/pyplaylist.h	(working copy)
+@@ -25,7 +25,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/GUIPythonWindow.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/GUIPythonWindow.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/GUIPythonWindow.h	(working copy)
+@@ -26,7 +26,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/winxml.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/winxml.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/winxml.h	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/controlcheckmark.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/controlcheckmark.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/controlcheckmark.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/listitem.cpp
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/listitem.cpp	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/listitem.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/pyutil.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/pyutil.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/pyutil.h	(working copy)
+@@ -25,7 +25,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/xbmcmodule/PythonAddon.h
+===================================================================
+--- xbmc/lib/libPython/xbmcmodule/PythonAddon.h	(revision 32022)
++++ xbmc/lib/libPython/xbmcmodule/PythonAddon.h	(working copy)
+@@ -25,7 +25,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/XBPyThread.h
+===================================================================
+--- xbmc/lib/libPython/XBPyThread.h	(revision 32022)
++++ xbmc/lib/libPython/XBPyThread.h	(working copy)
+@@ -26,7 +26,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: xbmc/lib/libPython/XBPythonDllFuncs.S
+===================================================================
+--- xbmc/lib/libPython/XBPythonDllFuncs.S	(revision 32022)
++++ xbmc/lib/libPython/XBPythonDllFuncs.S	(working copy)
+@@ -2,7 +2,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/pyconfig.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/pyconfig.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/pyconfig.h>
+Index: xbmc/lib/libPython/XBPythonDll.cpp
+===================================================================
+--- xbmc/lib/libPython/XBPythonDll.cpp	(revision 32022)
++++ xbmc/lib/libPython/XBPythonDll.cpp	(working copy)
+@@ -23,7 +23,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/pyconfig.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/pyconfig.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/pyconfig.h>
+Index: xbmc/lib/libPython/XBPyThread.cpp
+===================================================================
+--- xbmc/lib/libPython/XBPyThread.cpp	(revision 32022)
++++ xbmc/lib/libPython/XBPyThread.cpp	(working copy)
+@@ -24,7 +24,10 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++    #include <python2.7/osdefs.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+     #include <python2.6/osdefs.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+Index: xbmc/lib/libPython/XBPython.cpp
+===================================================================
+--- xbmc/lib/libPython/XBPython.cpp	(revision 32022)
++++ xbmc/lib/libPython/XBPython.cpp	(working copy)
+@@ -24,7 +24,9 @@
+   #include "config.h"
+ #endif
+ #if (defined USE_EXTERNAL_PYTHON)
+-  #if (defined HAVE_LIBPYTHON2_6)
++  #if (defined HAVE_LIBPYTHON2_7)
++    #include <python2.7/Python.h>
++  #elif (defined HAVE_LIBPYTHON2_6)
+     #include <python2.6/Python.h>
+   #elif (defined HAVE_LIBPYTHON2_5)
+     #include <python2.5/Python.h>
+Index: configure.in
+===================================================================
+--- configure.in	(revision 32022)
++++ configure.in	(working copy)
+@@ -835,7 +835,11 @@
+ 
+ # External Python
+ if test "$use_external_python" = "yes"; then
+-  AC_CHECK_LIB([python2.6], [main],
++  AC_CHECK_LIB([python2.7], [main],
++    [AC_DEFINE([HAVE_LIBPYTHON2_7], [1],
++    [Define to 1 if you have the 'python2.7' library.])
++    USE_PYTHON2_7=1],
++  [AC_CHECK_LIB([python2.6], [main],
+     [AC_DEFINE([HAVE_LIBPYTHON2_6], [1],
+     [Define to 1 if you have the 'python2.6' library.])
+     USE_PYTHON2_6=1],
+@@ -847,9 +851,10 @@
+     [AC_DEFINE([HAVE_LIBPYTHON2_4], [1],
+     [Define to 1 if you have the 'python2.4' library.])
+     USE_PYTHON2_4=1],
+-  [AC_MSG_ERROR($missing_library)] )] )] )
++  [AC_MSG_ERROR($missing_library)] )] )] )] )
+ 
+   AC_MSG_NOTICE($external_python_enabled)
++  test "$USE_PYTHON2_7" && AC_MSG_NOTICE([Using Python 2.7])
+   test "$USE_PYTHON2_6" && AC_MSG_NOTICE([Using Python 2.6])
+   test "$USE_PYTHON2_5" && AC_MSG_NOTICE([Using Python 2.5])
+   test "$USE_PYTHON2_4" && AC_MSG_NOTICE([Using Python 2.4])
+@@ -1429,6 +1434,7 @@
+ AC_SUBST(USE_EXTERNAL_LIBMPEG2)
+ AC_SUBST(USE_EXTERNAL_LIBWAVPACK)
+ AC_SUBST(USE_EXTERNAL_PYTHON)
++AC_SUBST(USE_PYTHON2_7)
+ AC_SUBST(USE_PYTHON2_6)
+ AC_SUBST(USE_PYTHON2_5)
+ AC_SUBST(USE_PYTHON2_4)

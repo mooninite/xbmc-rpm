@@ -3,7 +3,7 @@
 
 Name: xbmc
 Version: 10.5
-Release: 0.4.20100728svn%{SVNVERSION}%{?dist}
+Release: 0.7.20100728svn%{SVNVERSION}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -42,6 +42,10 @@ Patch5: xbmc-10-hdhomerun.patch
 # fix "@#" in Makefile which seem to screw things up no trac filed
 # yet, don't know why this isn't a problem on other Linux systems
 Patch6: xbmc-10-Makefile.patch
+
+# add patch from upstream trac http://trac.xbmc.org/ticket/9584
+# to find Python 2.7 (needed for F-14+)
+Patch7: xbmc-10-python2.7.patch
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -116,6 +120,13 @@ BuildRequires: libcrystalhd-devel
 BuildRequires: libmodplug-devel
 BuildRequires: libmicrohttpd-devel
 BuildRequires: expat-devel
+%if 0%{?fedora} >= 14
+BuildRequires: gettext-autopoint
+%else
+BuildRequires: gettext
+%endif
+BuildRequires: zip
+
 
 %description
 XBMC media center is a free cross-platform media-player jukebox and
@@ -133,6 +144,7 @@ forecast functions, together third-party plugins.
 %patch4 -p0
 %patch5 -p1
 %patch6 -p0
+%patch7 -p0
 
 # Prevent rerunning the autotools.
 touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
@@ -192,6 +204,18 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Thu Jul 29 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.7.20100728svn32266
+- Add patch from upstream trac ticket 9584 to find Python 2.7
+  (needed for F-14+)
+- Add BuildRequires: zip
+
+* Thu Jul 29 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.6.20100728svn32266
+- Need to conditionally enable gettext-autopoint in BuildRequires
+  for F-14+ and gettext otherwise
+
+* Thu Jul 29 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.5.20100728svn32266
+- Add gettext-devel to BuildRequires for autopoint
+
 * Wed Jul 28 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.4.20100728svn32266
 - Sync with latest Dharma branch (r32266)
 
