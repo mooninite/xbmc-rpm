@@ -1,6 +1,6 @@
---- configure.in.orig	2010-07-19 01:26:37.542392956 -0400
-+++ configure.in	2010-07-19 01:28:05.077400778 -0400
-@@ -1641,33 +1641,6 @@
+--- configure.in.orig	2010-07-28 09:27:12.000000000 -0400
++++ configure.in	2010-07-29 01:45:59.523143299 -0400
+@@ -1663,34 +1663,6 @@
    fi
  ], [$SKIP_CONFIG_DVDCSS])
  
@@ -20,6 +20,7 @@
 -      --prefix="${prefix}" --includedir="${includedir}" --libdir="${libdir}" --datadir="${datadir}" \
 -      --host=$host_alias \
 -      --build=$build_alias \
+-      --target=$target_alias \      
 -      --enable-static \
 -      --disable-shared \
 -      --disable-strip \
@@ -34,7 +35,7 @@
  
  XB_CONFIG_MODULE([xbmc/cores/dvdplayer/Codecs/libdvd/libdvdnav], [
    if test "$host_vendor" = "apple" ; then
-@@ -1680,9 +1653,7 @@
+@@ -1703,9 +1675,7 @@
        --cc="$CC"
    else
      ./configure2 \
@@ -44,7 +45,7 @@
 +      --extra-cflags="-D_XBMC -fPIC -DPIC" \
        --host=$host_alias \
        --build=$build_alias \
-       --enable-static \
+       --target=$target_alias \      
 --- xbmc/cores/dvdplayer/Codecs/libdvd/Makefile.in.orig	2010-07-19 01:28:37.716268195 -0400
 +++ xbmc/cores/dvdplayer/Codecs/libdvd/Makefile.in	2010-07-19 01:31:10.453143936 -0400
 @@ -2,13 +2,12 @@

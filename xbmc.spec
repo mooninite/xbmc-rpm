@@ -1,9 +1,9 @@
-%global SVNVERSION 31991
+%global SVNVERSION 32266
 %global DIRVERSION %{version}-%{SVNVERSION}
 
 Name: xbmc
 Version: 10.5
-Release: 0.3.20100719svn%{SVNVERSION}%{?dist}
+Release: 0.4.20100728svn%{SVNVERSION}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -192,7 +192,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
-* Mon Jul 19 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.3.20100719svn31991%{?dist}
+* Wed Jul 28 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.4.20100728svn32266
+- Sync with latest Dharma branch (r32266)
+
+* Mon Jul 19 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.3.20100719svn31991
 - Remove 24 patches which have been applied upstream, yay!
 - Rebased 2 patches: libdvd patch and hdhomerun patch for Dharma
 - Add some new patches, some of which have upstream trac tickets,
