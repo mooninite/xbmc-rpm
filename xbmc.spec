@@ -1,9 +1,9 @@
-%global SVNVERSION 32266
+%global SVNVERSION 32970
 %global DIRVERSION %{version}-%{SVNVERSION}
 
 Name: xbmc
 Version: 10.5
-Release: 0.7.20100728svn%{SVNVERSION}%{?dist}
+Release: 0.7.20100820svn%{SVNVERSION}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -204,6 +204,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Fri Aug 20 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.7.20100820svn32970
+- Rebase patches to r32970 on Dharma branch
+
 * Thu Jul 29 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.7.20100728svn32266
 - Add patch from upstream trac ticket 9584 to find Python 2.7
   (needed for F-14+)

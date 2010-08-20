@@ -1,8 +1,8 @@
---- configure.in.orig	2010-07-19 01:46:04.827142816 -0400
-+++ configure.in	2010-07-19 01:46:19.063394804 -0400
-@@ -1708,14 +1708,6 @@
+--- configure.in.orig	2010-08-20 00:17:55.000000000 -0400
++++ configure.in	2010-08-20 00:19:27.621394427 -0400
+@@ -1736,14 +1736,6 @@
    fi
- ], 0)
+ ], [$HOST_NOT_APPLE])
  
 -XB_CONFIG_MODULE([xbmc/lib/cximage-6.0/zlib], [
 -  if test "$host_vendor" = "apple" ; then

@@ -1,6 +1,6 @@
---- configure.in.orig	2010-07-19 01:52:39.417268110 -0400
-+++ configure.in	2010-07-19 01:53:38.539142826 -0400
-@@ -1828,26 +1828,6 @@
+--- configure.in.orig	2010-08-20 00:21:05.638518410 -0400
++++ configure.in	2010-08-20 00:20:04.949267903 -0400
+@@ -1866,22 +1866,6 @@
    fi
  ], [0])
  
@@ -9,20 +9,16 @@
 -    CFLAGS="$CFLAGS -fno-common" \
 -    CXXFLAGS="$CXXFLAGS -fno-common" \
 -    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 --with-pic --disable-shared --enable-static
--  else
--    true
 -  fi
--], [0])
+-], [$HOST_NOT_APPLE])
 -
 -XB_CONFIG_MODULE([lib/libmicrohttpd], [
 -  if test "$host_vendor" = "apple" ; then
 -    CFLAGS="$CFLAGS -fno-common" \
 -    CXXFLAGS="$CXXFLAGS -fno-common" \
--    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 --with-pic --disable-shared --enable-static
--  else
--    true
+-    ./configure MACOSX_DEPLOYMENT_TARGET=10.4 --with-pic --disable-shared --enable-static --with-libgcrypt-prefix=/dev/null
 -  fi
--], [0])
+-], [$HOST_NOT_APPLE])
 -
  XB_CONFIG_MODULE([lib/cpluff], [
    if test "$host_vendor" = "apple" ; then

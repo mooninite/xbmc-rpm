@@ -1,19 +1,19 @@
---- Makefile.in.orig	2010-07-19 04:55:05.582142959 -0400
-+++ Makefile.in	2010-07-19 04:56:00.409143150 -0400
-@@ -515,7 +515,6 @@
+--- Makefile.in.orig	2010-08-20 00:24:13.000000000 -0400
++++ Makefile.in	2010-08-20 00:25:20.956267798 -0400
+@@ -518,7 +518,6 @@
  endif
  
  install-arch:
 -	@# Arch dependent files
- 	@find system addons -regextype posix-extended -type f -not -iregex ".*svn.*|.*script\.module\..*" -iregex ".*$(ARCH).*|.*\.vis|.*\.xbs" -exec install -D "{}" $(DESTDIR)$(libdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
- 	@cp -r addons/script.module.pil $(DESTDIR)$(libdir)/xbmc/addons/script.module.pil
- 	@cp -r addons/script.module.pysqlite $(DESTDIR)$(libdir)/xbmc/addons/script.module.pysqlite
-@@ -532,9 +531,7 @@
+ 	@find system addons -regextype posix-extended -type f -not -iregex ".*svn.*|.*script\.module\..*" -iregex ".*$(ARCH).*|.*\.vis|.*\.xbs|.*python.*\.zip" -exec install -D "{}" $(DESTDIR)$(libdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
+ 	@cp -r addons/script.module.pil $(DESTDIR)$(libdir)/xbmc/addons/
+ 	@cp -r addons/script.module.pysqlite $(DESTDIR)$(libdir)/xbmc/addons/
+@@ -535,9 +534,7 @@
  		install -D -m 0644 "$$FILE" "$(DESTDIR)$(docdir)/$$FILE"; done
  	@echo "Done!"
  	@echo "Copying system files to $(DESTDIR)$(datarootdir)/xbmc"
 -	@# Arch independent files
- 	@find addons language media scripts sounds userdata system -regextype posix-extended -type f -not -iregex ".*script\.module\..*|.*$(ARCH).*|.*\.vis|.*\.xbs|.*svn.*|.*\.so|.*\.dll|.*\.pyd|.*python/.*\.zlib" -exec install -D -m 0644 "{}" $(DESTDIR)$(datarootdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
+ 	@find addons language media sounds userdata system -regextype posix-extended -type f -not -iregex ".*script\.module\..*|.*$(ARCH).*|.*\.vis|.*\.xbs|.*svn.*|.*\.so|.*\.dll|.*\.pyd|.*python.*\.zip" -exec install -D -m 0644 "{}" $(DESTDIR)$(datarootdir)/xbmc/"{}" \; -printf " -- %-75.75f\r"
 -	@# Icons and links
  	@mkdir -p $(DESTDIR)$(datarootdir)/applications
  	@cp -a tools/Linux/xbmc.desktop $(DESTDIR)$(datarootdir)/applications/
