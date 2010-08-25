@@ -3,7 +3,7 @@
 
 Name: xbmc
 Version: 10.5
-Release: 0.7.20100820svn%{SVNVERSION}%{?dist}
+Release: 0.8.20100820svn%{SVNVERSION}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -159,6 +159,7 @@ chmod +x bootstrap
 ./configure \
 --prefix=%{_prefix} --bindir=%{_bindir} --includedir=%{_includedir} \
 --libdir=%{_libdir} --datadir=%{_datadir} \
+--with-lirc-device=/var/run/lirc/lircd \
 --enable-goom \
 --enable-external-ffmpeg --enable-external-python \
 --disable-libdts --disable-liba52 \
@@ -204,6 +205,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Wed Aug 25 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.8.20100820svn32970
+- Default to using /var/run/lirc/lircd (#1325)
+
 * Fri Aug 20 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.7.20100820svn32970
 - Rebase patches to r32970 on Dharma branch
 
