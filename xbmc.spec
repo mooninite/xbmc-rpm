@@ -3,7 +3,7 @@
 
 Name: xbmc
 Version: 10.5
-Release: 0.8.20100820svn%{SVNVERSION}%{?dist}
+Release: 0.9.20100820svn%{SVNVERSION}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -167,8 +167,8 @@ chmod +x bootstrap
 --disable-optimizations --disable-debug \
 SVN_REV=%{SVNVERSION} \
 CPPFLAGS="-I/usr/include/ffmpeg" \
-CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/ffmpeg" \
-CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/ffmpeg" \
+CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
+CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
 LDFLAGS="-fPIC" \
 LIBS="-L%{_libdir}/mysql -lhdhomerun $LIBS" \
 ASFLAGS=-fPIC
@@ -205,6 +205,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Sun Aug 29 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.9.20100820svn32970
+- Add -D__STDC_CONSTANT_MACROS for building with ffmpeg > 0.6
+
 * Wed Aug 25 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.8.20100820svn32970
 - Default to using /var/run/lirc/lircd (#1325)
 
