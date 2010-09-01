@@ -68,6 +68,9 @@ do
     rm -r lib/$i
 done
 
+# TODO/FIXME: remove tools/XBMCLive/ and other things under tools/ 
+# also remove anything to do with win32
+
 cd -
 
 # repack
