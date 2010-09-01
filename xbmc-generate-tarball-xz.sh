@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MAJORVERSION=10.5
+MAJORVERSION=10.9
 
 # pull from Dharma branch
 SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/branches/Dharma
@@ -9,20 +9,24 @@ SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/branches/Dharma
 #SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/trunk
 
 # use SVN version number passed from script, or otherwise use default
-SVNVERSION=${1-32970}
+SVNVERSION=${1-33324}
 # uncomment following if you want to always pull from tip of branch
 # SVNVERSION=$(svn info $SVNURL  |grep "Revision:"|cut -d' ' -f2)
 
-VERSION=$MAJORVERSION-$SVNVERSION
+#VERSION=$MAJORVERSION-$SVNVERSION
+VERSION=Dharma_beta1
 
 # remove existing checkout
 rm -r xbmc-$VERSION
 
-svn export -r $SVNVERSION $SVNURL xbmc-$VERSION
+#svn export -r $SVNVERSION $SVNURL xbmc-$VERSION
 
 # don't need to extra tarball, already expanded
-#tar -xzvf xbmc-$VERSION.tar.gz
+# comment out with tarball
+tar -xzvf xbmc-$VERSION.tar.gz
 
+# rename tarball directory
+mv -i $VERSION xbmc-$VERSION
 cd xbmc-$VERSION
 
 # remove bundled libraries (including zlib and OSX), saves space and forces using external versions
@@ -70,6 +74,10 @@ done
 
 # TODO/FIXME: remove tools/XBMCLive/ and other things under tools/ 
 # also remove anything to do with win32
+for i in arm MingwBuildEnvironment PackageMaker win32buildtools XBMCLive XBMCTex
+do
+    rm -r tools/$i
+done
 
 cd -
 

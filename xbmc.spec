@@ -1,9 +1,12 @@
-%global SVNVERSION 32970
-%global DIRVERSION %{version}-%{SVNVERSION}
+%global SVNVERSION 33324
+%global PRERELEASE Dharma_beta1
+# use below for SVN snapshot
+#global DIRVERSION %{version}-%{SVNVERSION}
+%global DIRVERSION %{PRERELEASE}
 
 Name: xbmc
-Version: 10.5
-Release: 0.9.20100820svn%{SVNVERSION}%{?dist}
+Version: 10.9
+Release: 0.10.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -205,6 +208,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Wed Sep  1 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.9-0.10.Dharma_beta1
+- Rebase to Dharma beta1 release
+
 * Sun Aug 29 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.5-0.9.20100820svn32970
 - Add -D__STDC_CONSTANT_MACROS for building with ffmpeg > 0.6
 
