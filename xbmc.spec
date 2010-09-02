@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 10.9
-Release: 0.10.%{PRERELEASE}%{?dist}
+Release: 0.11.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -33,22 +33,17 @@ Patch2: xbmc-10-dvdread.patch
 # but patch not attached because it needs work
 Patch3: xbmc-10-disable-zlib-in-cximage.patch
 
-# grrr, why if an external library is detected does it require that the
-# directory exist in the tarball?
-# need to file trac ticket
-Patch4: xbmc-10-remove-libmodplug-libmicrohttpd.patch
-
 # need to file trac ticket, this patch just forces external hdhomerun
 # functionality, needs to be able fallback internal version
-Patch5: xbmc-10-hdhomerun.patch
+Patch4: xbmc-10-hdhomerun.patch
 
 # fix "@#" in Makefile which seem to screw things up no trac filed
 # yet, don't know why this isn't a problem on other Linux systems
-Patch6: xbmc-10-Makefile.patch
+Patch5: xbmc-10-Makefile.patch
 
 # add patch from upstream trac http://trac.xbmc.org/ticket/9584
 # to find Python 2.7 (needed for F-14+)
-Patch7: xbmc-10-python2.7.patch
+Patch6: xbmc-10-python2.7.patch
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -144,10 +139,9 @@ forecast functions, together third-party plugins.
 %patch1 -p0
 %patch2 -p0
 %patch3 -p0
-%patch4 -p0
-%patch5 -p1
+%patch4 -p1
+%patch5 -p0
 %patch6 -p0
-%patch7 -p0
 
 # Prevent rerunning the autotools.
 touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
@@ -208,6 +202,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Wed Sep  1 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.9-0.11.Dharma_beta1
+- Drop libmodplug/microhttpd patch, no longer needed 
+
 * Wed Sep  1 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.9-0.10.Dharma_beta1
 - Rebase to Dharma beta1 release
 
