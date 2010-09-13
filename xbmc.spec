@@ -5,8 +5,8 @@
 %global DIRVERSION %{PRERELEASE}
 
 Name: xbmc
-Version: 10.9
-Release: 0.11.%{PRERELEASE}%{?dist}
+Version: 10.0
+Release: 0.12.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -125,6 +125,9 @@ BuildRequires: gettext
 %endif
 BuildRequires: zip
 
+# need explicit requires for libcrystalhd functionality
+# as it is dynamically loaded
+Requires: libcrystalhd
 
 %description
 XBMC media center is a free cross-platform media-player jukebox and
@@ -202,6 +205,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Mon Sep 13 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.12.Dharma_beta1
+- Upstream is dropping month from version, using 10.0 as Dharma release version.
+- Add explicit Requires for libcrystalhd
+
 * Wed Sep  1 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.9-0.11.Dharma_beta1
 - Drop libmodplug/microhttpd patch, no longer needed 
 
