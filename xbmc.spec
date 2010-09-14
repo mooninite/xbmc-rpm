@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 10.0
-Release: 0.12.%{PRERELEASE}%{?dist}
+Release: 0.13.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -44,6 +44,11 @@ Patch5: xbmc-10-Makefile.patch
 # add patch from upstream trac http://trac.xbmc.org/ticket/9584
 # to find Python 2.7 (needed for F-14+)
 Patch6: xbmc-10-python2.7.patch
+
+# disable SNES code (Nintendo sound files) as nasm >=2.09 has
+# trouble compiling with that version on f14
+# filed: https://bugzilla.redhat.com/show_bug.cgi?id=633646
+Patch7: xbmc-10-disable-snes.patch
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -145,6 +150,9 @@ forecast functions, together third-party plugins.
 %patch4 -p1
 %patch5 -p0
 %patch6 -p0
+%if 0%{?fedora} >= 14
+%patch7 -p0
+%endif
 
 # Prevent rerunning the autotools.
 touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
@@ -205,6 +213,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Tue Sep 14 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.13.Dharma_beta1
+- Disable SNES codec (Nintendo sound files) on f14 as nasm >=2.09 has
+  trouble compiling with that version on f14 (rhbz#633646)
+
 * Mon Sep 13 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.12.Dharma_beta1
 - Upstream is dropping month from version, using 10.0 as Dharma release version.
 - Add explicit Requires for libcrystalhd
