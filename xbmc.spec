@@ -1,12 +1,12 @@
-%global SVNVERSION 33324
-%global PRERELEASE Dharma_beta1
+%global SVNVERSION 33778
+%global PRERELEASE Dharma_beta2
 # use below for SVN snapshot
 #global DIRVERSION %{version}-%{SVNVERSION}
 %global DIRVERSION %{PRERELEASE}
 
 Name: xbmc
 Version: 10.0
-Release: 0.13.%{PRERELEASE}%{?dist}
+Release: 0.14.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -213,6 +213,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Tue Sep 14 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.14.Dharma_beta2
+- Rebase to Dharma beta 2 (SVN r33778)
+
 * Tue Sep 14 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.13.Dharma_beta1
 - Disable SNES codec (Nintendo sound files) on f14 as nasm >=2.09 has
   trouble compiling with that version on f14 (rhbz#633646)
