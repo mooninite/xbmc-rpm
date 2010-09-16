@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 10.0
-Release: 0.14.%{PRERELEASE}%{?dist}
+Release: 0.15.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -129,6 +129,7 @@ BuildRequires: gettext-autopoint
 BuildRequires: gettext
 %endif
 BuildRequires: zip
+BuildRequires: librtmp-devel
 
 # need explicit requires for libcrystalhd functionality
 # as it is dynamically loaded
@@ -213,6 +214,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Thu Sep 16 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.15.Dharma_beta2
+- Add BuildRequires for librtmp-devel, used for various plugins
+
 * Tue Sep 14 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.14.Dharma_beta2
 - Rebase to Dharma beta 2 (SVN r33778)
 
