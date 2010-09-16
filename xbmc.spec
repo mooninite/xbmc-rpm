@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 10.0
-Release: 0.15.%{PRERELEASE}%{?dist}
+Release: 0.16.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -130,6 +130,7 @@ BuildRequires: gettext
 %endif
 BuildRequires: zip
 BuildRequires: librtmp-devel
+BuildRequires: libva-freeworld-devel
 
 # need explicit requires for libcrystalhd functionality
 # as it is dynamically loaded
@@ -214,6 +215,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Thu Sep 16 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.16.Dharma_beta2
+- Enable VAAPI: add BR: libva-freeworld-devel
+
 * Thu Sep 16 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.15.Dharma_beta2
 - Add BuildRequires for librtmp-devel, used for various plugins
 
