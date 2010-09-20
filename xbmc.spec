@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 10.0
-Release: 0.16.%{PRERELEASE}%{?dist}
+Release: 0.17.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -129,7 +129,9 @@ BuildRequires: gettext-autopoint
 BuildRequires: gettext
 %endif
 BuildRequires: zip
+%if 0%{?fedora} >= 14
 BuildRequires: librtmp-devel
+%endif
 BuildRequires: libva-freeworld-devel
 
 # need explicit requires for libcrystalhd functionality
@@ -215,6 +217,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Sat Sep 18 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.17.Dharma_beta2
+- Enable librtmp support on in F-14 and later (until librtmp is build on F-13)
+
 * Thu Sep 16 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.16.Dharma_beta2
 - Enable VAAPI: add BR: libva-freeworld-devel
 
