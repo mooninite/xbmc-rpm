@@ -1,12 +1,12 @@
-%global SVNVERSION 34731
-%global PRERELEASE Dharma_beta3
+%global SVNVERSION 35068
+%global PRERELEASE Dharma_beta4
 # use below for SVN snapshot
 #global DIRVERSION %{version}-%{SVNVERSION}
 %global DIRVERSION %{PRERELEASE}
 
 Name: xbmc
 Version: 10.0
-Release: 0.18.%{PRERELEASE}%{?dist}
+Release: 0.19.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -44,11 +44,6 @@ Patch5: xbmc-10-Makefile.patch
 # add patch from upstream trac http://trac.xbmc.org/ticket/9584
 # to find Python 2.7 (needed for F-14+)
 Patch6: xbmc-10-python2.7.patch
-
-# disable SNES code (Nintendo sound files) as nasm >=2.09 has
-# trouble compiling with that version on f14
-# filed: https://bugzilla.redhat.com/show_bug.cgi?id=633646
-Patch7: xbmc-10-disable-snes.patch
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -123,14 +118,17 @@ BuildRequires: libcrystalhd-devel
 BuildRequires: libmodplug-devel
 BuildRequires: libmicrohttpd-devel
 BuildRequires: expat-devel
+BuildRequires: zip
 %if 0%{?fedora} >= 14
 BuildRequires: gettext-autopoint
 %else
 BuildRequires: gettext
 %endif
-BuildRequires: zip
 %if 0%{?fedora} >= 14
 BuildRequires: librtmp-devel
+%endif
+%if 0%{?fedora} >= 15
+BuildRequires: libbluray-devel
 %endif
 # VAAPI currently not working, comment-out
 #BuildRequires: libva-freeworld-devel
@@ -155,9 +153,6 @@ forecast functions, together third-party plugins.
 %patch4 -p1
 %patch5 -p0
 %patch6 -p0
-%if 0%{?fedora} >= 14
-%patch7 -p0
-%endif
 
 # Prevent rerunning the autotools.
 touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
@@ -218,6 +213,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Sun Nov  7 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.19.Dharma_beta4
+- Rebase to Dharma beta 4 (SVN r35068)
+- Enable libbluray (currently only available for f15+)
+- Drop patch disabling SNES (fixed in nasm)
+
 * Thu Oct 14 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.18.Dharma_beta3
 - Rebase to Dharma beta3 (SVN r34731)
 - Disable VAAPI: crashes XBMC when playing back rtmp streams
