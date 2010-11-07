@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 10.0
-Release: 0.19.%{PRERELEASE}%{?dist}
+Release: 0.20.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -213,14 +213,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
-* Sun Nov  7 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.19.Dharma_beta4
+* Sun Nov  7 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.20.Dharma_beta4
 - Rebase to Dharma beta 4 (SVN r35068)
 - Enable libbluray (currently only available for f15+)
 - Drop patch disabling SNES (fixed in nasm)
 
-* Thu Oct 14 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.18.Dharma_beta3
+* Thu Oct 14 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.19.Dharma_beta3
 - Rebase to Dharma beta3 (SVN r34731)
 - Disable VAAPI: crashes XBMC when playing back rtmp streams
+
+* Thu Oct 14 2010 Nicolas Chauvet <kwizart@gmail.com> - 10.0-0.18.Dharma_beta2
+- Rebuilt for gcc bug
 
 * Sat Sep 18 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.17.Dharma_beta2
 - Enable librtmp support on in F-14 and later (until librtmp is build on F-13)
