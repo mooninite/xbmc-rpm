@@ -1,12 +1,12 @@
-%global SVNVERSION 35068
-%global PRERELEASE Dharma_beta4
+%global SVNVERSION 35326
+%global PRERELEASE Dharma_rc1
 # use below for SVN snapshot
 #global DIRVERSION %{version}-%{SVNVERSION}
 %global DIRVERSION %{PRERELEASE}
 
 Name: xbmc
 Version: 10.0
-Release: 0.20.%{PRERELEASE}%{?dist}.1
+Release: 0.21.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -124,12 +124,8 @@ BuildRequires: gettext-autopoint
 %else
 BuildRequires: gettext
 %endif
-%if 0%{?fedora} >= 14
 BuildRequires: librtmp-devel
-%endif
-%if 0%{?fedora} >= 15
 BuildRequires: libbluray-devel
-%endif
 # VAAPI currently not working, comment-out
 #BuildRequires: libva-freeworld-devel
 
@@ -213,6 +209,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Fri Nov 19 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.21.Dharma_rc1
+- Rebase to Dharma rc1 (SVN r35326)
+- Remove conditionals on {librtmp,libbluray}-devel: now present in all
+  currently supported releases (f13+)
+
 * Thu Nov 18 2010 Nicolas Chauvet <kwizart@gmail.com> - 10.0-0.20.Dharma_beta4.1
 - Rebuilt for libmicrohttpd - ABI bump
  https://admin.fedoraproject.org/updates/libmicrohttpd-0.9.2-3.fc14
