@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 10.0
-Release: 0.20.%{PRERELEASE}%{?dist}
+Release: 0.20.%{PRERELEASE}%{?dist}.1
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -213,6 +213,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Thu Nov 18 2010 Nicolas Chauvet <kwizart@gmail.com> - 10.0-0.20.Dharma_beta4.1
+- Rebuilt for libmicrohttpd - ABI bump
+ https://admin.fedoraproject.org/updates/libmicrohttpd-0.9.2-3.fc14
+
 * Sun Nov  7 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.20.Dharma_beta4
 - Rebase to Dharma beta 4 (SVN r35068)
 - Enable libbluray (currently only available for f15+)
