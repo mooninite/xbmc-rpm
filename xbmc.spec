@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 10.0
-Release: 0.21.%{PRERELEASE}%{?dist}
+Release: 0.22.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -129,9 +129,12 @@ BuildRequires: libbluray-devel
 # VAAPI currently not working, comment-out
 #BuildRequires: libva-freeworld-devel
 
-# need explicit requires for libcrystalhd functionality
-# as it is dynamically loaded
+# need explicit requires for these packages
+# as they are dynamically loaded via XBMC's arcane 
+# pseudo-DLL loading scheme (sigh)
 Requires: libcrystalhd
+Requires: librtmp
+Requires: libbluray
 
 %description
 XBMC media center is a free cross-platform media-player jukebox and
@@ -209,6 +212,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Sun Nov 21 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.22.Dharma_rc1
+- Need explicit requires for librtmp and libbluray: loaded dynamically
+  via XBMC's DLL mechanism which is missed by autodeps
+
 * Fri Nov 19 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.21.Dharma_rc1
 - Rebase to Dharma rc1 (SVN r35326)
 - Remove conditionals on {librtmp,libbluray}-devel: now present in all
