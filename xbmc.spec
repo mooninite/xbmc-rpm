@@ -1,12 +1,12 @@
-%global SVNVERSION 35326
-%global PRERELEASE Dharma_rc1
+%global SVNVERSION 35567
+%global PRERELEASE Dharma_rc2
 # use below for SVN snapshot
 #global DIRVERSION %{version}-%{SVNVERSION}
 %global DIRVERSION %{PRERELEASE}
 
 Name: xbmc
 Version: 10.0
-Release: 0.22.%{PRERELEASE}%{?dist}
+Release: 0.23.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -212,6 +212,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Sun Dec 12 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.23.Dharma_rc2
+- Rebase to Dharma rc2 (SVN r35567)
+- Update Python 2.7 patch, to fix DLL search patch problems (#1532).  Thanks to
+  Richard Guest for patch.
+
 * Sun Nov 21 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.22.Dharma_rc1
 - Need explicit requires for librtmp and libbluray: loaded dynamically
   via XBMC's DLL mechanism which is missed by autodeps

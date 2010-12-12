@@ -9,12 +9,12 @@ SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/branches/Dharma
 #SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/trunk
 
 # use SVN version number passed from script, or otherwise use default
-SVNVERSION=${1-35326}
+SVNVERSION=${1-35567}
 # uncomment following if you want to always pull from tip of branch
 # SVNVERSION=$(svn info $SVNURL  |grep "Revision:"|cut -d' ' -f2)
 
 #VERSION=$MAJORVERSION-$SVNVERSION
-VERSION=Dharma_rc1
+VERSION=Dharma_rc2
 
 # remove existing checkout
 rm -r xbmc-$VERSION
