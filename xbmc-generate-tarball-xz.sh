@@ -13,8 +13,11 @@ SVNVERSION=${1-35567}
 # uncomment following if you want to always pull from tip of branch
 # SVNVERSION=$(svn info $SVNURL  |grep "Revision:"|cut -d' ' -f2)
 
+VERSION=$MAJORVERSION-Dharma
+# SVN snapshot
 #VERSION=$MAJORVERSION-$SVNVERSION
-VERSION=Dharma_rc2
+# pre-release
+#VERSION=Dharma_rc2
 
 # remove existing checkout
 rm -r xbmc-$VERSION

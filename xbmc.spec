@@ -1,12 +1,14 @@
-%global SVNVERSION 35567
-%global PRERELEASE Dharma_rc2
+%global SVNVERSION 35648
+#global PRERELEASE Dharma_rc2
+%global DIRVERSION %{version}-Dharma
 # use below for SVN snapshot
 #global DIRVERSION %{version}-%{SVNVERSION}
-%global DIRVERSION %{PRERELEASE}
+# use below for pre-release
+#global DIRVERSION %{PRERELEASE}
 
 Name: xbmc
 Version: 10.0
-Release: 0.23.%{PRERELEASE}%{?dist}
+Release: 1%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -212,6 +214,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Thu Dec 23 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-1
+- Update to 10.0 (Dharma final)
+
 * Sun Dec 12 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-0.23.Dharma_rc2
 - Rebase to Dharma rc2 (SVN r35567)
 - Update Python 2.7 patch, to fix DLL search patch problems (#1532).  Thanks to
