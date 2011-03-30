@@ -1,13 +1,10 @@
-%global SVNVERSION 35648
 #global PRERELEASE Dharma_rc2
-%global DIRVERSION %{version}-Dharma
-# use below for SVN snapshot
-#global DIRVERSION %{version}-%{SVNVERSION}
+%global DIRVERSION %{version}
 # use below for pre-release
 #global DIRVERSION %{PRERELEASE}
 
 Name: xbmc
-Version: 10.0
+Version: 10.1
 Release: 1%{?dist}
 URL: http://www.xbmc.org/
 
@@ -138,6 +135,13 @@ Requires: libcrystalhd
 Requires: librtmp
 Requires: libbluray
 
+# These are just symlinked to, but needed both at build-time
+# and for installation
+BuildRequires: python-imaging
+Requires: python-imaging
+BuildRequires: python-sqlite2
+Requires: python-sqlite2
+
 %description
 XBMC media center is a free cross-platform media-player jukebox and
 entertainment hub.  XBMC can play a spectrum of of multimedia formats,
@@ -174,7 +178,6 @@ chmod +x bootstrap
 --disable-libdts --disable-liba52 \
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
-SVN_REV=%{SVNVERSION} \
 CPPFLAGS="-I/usr/include/ffmpeg" \
 CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
 CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
@@ -199,6 +202,14 @@ desktop-file-install \
  --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
  $RPM_BUILD_ROOT%{_datadir}/applications/xbmc.desktop
 
+# Normally we are expected to build these manually. But since we are using
+# the system Python interpreter, we also want to use the system libraries
+install -d $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pil/lib
+ln -s %{python_sitearch}/PIL $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pil/lib/PIL
+install -d $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pysqlite/lib
+ln -s %{python_sitearch}/pysqlite2 $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pysqlite/lib/pysqlite2
+
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -214,6 +225,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Tue Mar 29 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.1-1
+- Update to 10.1
+- Add support for using system python-imaging and pysqlite modules, thanks to Pierre 
+  Ossman for patch (#1575)
+- Drop most references to SVNVERSION, upstream now uses git
+
+* Sun Mar 27 2011 Nicolas Chauvet <kwizart@gmail.com> - 10.0-2
+- Rebuild for libmysqlclient
+
 * Thu Dec 23 2010 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.0-1
 - Update to 10.0 (Dharma final)
 

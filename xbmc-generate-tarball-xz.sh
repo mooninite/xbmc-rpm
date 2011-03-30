@@ -1,20 +1,18 @@
 #!/bin/sh
 
-MAJORVERSION=10.0
+MAJORVERSION=10.1
 
-# pull from Dharma branch
-SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/branches/Dharma
+# FIXME: need to update to use git
+#SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/branches/Dharma
 
 # uncomment this to switch to trunk
 #SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/trunk
 
 # use SVN version number passed from script, or otherwise use default
 SVNVERSION=${1-35567}
-# uncomment following if you want to always pull from tip of branch
-# SVNVERSION=$(svn info $SVNURL  |grep "Revision:"|cut -d' ' -f2)
 
-VERSION=$MAJORVERSION-Dharma
-# SVN snapshot
+VERSION=$MAJORVERSION
+# git snapshot
 #VERSION=$MAJORVERSION-$SVNVERSION
 # pre-release
 #VERSION=Dharma_rc2
@@ -22,19 +20,14 @@ VERSION=$MAJORVERSION-Dharma
 # remove existing checkout
 rm -r xbmc-$VERSION
 
-#svn export -r $SVNVERSION $SVNURL xbmc-$VERSION
-
 # don't need to extra tarball, already expanded
 # comment out with tarball
 tar -xzvf xbmc-$VERSION.tar.gz
 
-# rename tarball directory
-mv -i $VERSION xbmc-$VERSION
 cd xbmc-$VERSION
 
 # remove bundled libraries (including zlib and OSX), saves space and forces using external versions
 # also remove legally problematic libGoAhead library
-#for i in libass libcdio libCDRip libcurl libenca libfribidi liblzo libmms libpcre libsamplerate sqLite/sqlite libPython/Python cximage-6.0/zlib libid3tag/zlib zlib libSDL-OSX boost libportaudio libglew libGoAhead libhdhomerun
 for i in liblzo libmms libsamplerate sqLite/sqlite libPython/Python cximage-6.0/zlib libid3tag/zlib zlib boost libhdhomerun
 do
     rm -r xbmc/lib/$i
