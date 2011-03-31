@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 10.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -43,6 +43,10 @@ Patch5: xbmc-10-Makefile.patch
 # add patch from upstream trac http://trac.xbmc.org/ticket/9584
 # to find Python 2.7 (needed for F-14+)
 Patch6: xbmc-10-python2.7.patch
+
+# patch from upstream to fix builds for GCC 4.6.x
+# (committed to git upstream: http://trac.xbmc.org/ticket/11383)
+Patch7: xbmc-Dharma-10.1-gcc-4.6-fixes-0.1.patch
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -158,6 +162,7 @@ forecast functions, together third-party plugins.
 %patch4 -p1
 %patch5 -p0
 %patch6 -p0
+%patch7 -p1
 
 # Prevent rerunning the autotools.
 touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
@@ -225,6 +230,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Wed Mar 30 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.1-2
+- Patch from upstream to fix builds for GCC 4.6.x, slightly modified
+  to handle previous patches for Makefile.in
+  http://trac.xbmc.org/ticket/11383
+
 * Tue Mar 29 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.1-1
 - Update to 10.1
 - Add support for using system python-imaging and pysqlite modules, thanks to Pierre 
