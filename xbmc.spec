@@ -233,7 +233,7 @@ rm -rf $RPM_BUILD_ROOT
 - Remove hal-devel as BuildRequires, dropped in f16 and later:
   http://fedoraproject.org/wiki/Features/HalRemoval
   replaced by udisks, upower, libudev, but not clear if xbmc
-  can use those packages yet
+  can use those packages yet (fixes #1915).
 
 * Tue Apr 05 2011 Nicolas Chauvet <kwizart@gmail.com> - 10.1-3
 - Rebuilt for libmysqlclient bump (was built with previous version).
