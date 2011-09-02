@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 10.1
-Release: 2%{?dist}
+Release: 4%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -60,7 +60,6 @@ BuildRequires: SDL_mixer-devel
 BuildRequires: fontconfig-devel
 BuildRequires: fribidi-devel
 BuildRequires: glibc-devel
-BuildRequires: hal-devel
 BuildRequires: glew-devel
 BuildRequires: libstdc++-devel
 BuildRequires: glib2-devel
@@ -230,6 +229,15 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Fri Sep  2 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.1-4
+- Remove hal-devel as BuildRequires, dropped in f16 and later:
+  http://fedoraproject.org/wiki/Features/HalRemoval
+  replaced by udisks, upower, libudev, but not clear if xbmc
+  can use those packages yet
+
+* Tue Apr 05 2011 Nicolas Chauvet <kwizart@gmail.com> - 10.1-3
+- Rebuilt for libmysqlclient bump (was built with previous version).
+
 * Wed Mar 30 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.1-2
 - Patch from upstream to fix builds for GCC 4.6.x, slightly modified
   to handle previous patches for Makefile.in
