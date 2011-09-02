@@ -54,6 +54,7 @@ Summary: Media center
 License: GPLv2+ and GPLv3+
 Group: Applications/Multimedia
 BuildRequires: desktop-file-utils
+BuildRequires: dbus-devel
 BuildRequires: SDL-devel
 BuildRequires: SDL_image-devel
 BuildRequires: SDL_mixer-devel
@@ -233,7 +234,9 @@ rm -rf $RPM_BUILD_ROOT
 - Remove hal-devel as BuildRequires, dropped in f16 and later:
   http://fedoraproject.org/wiki/Features/HalRemoval
   replaced by udisks, upower, libudev, but not clear if xbmc
-  can use those packages yet (fixes #1915).
+  can use those packages yet (fixes #1915).  
+- Add dbus-devel, since hal-devel no longer automatically pulls
+  package in.
 
 * Tue Apr 05 2011 Nicolas Chauvet <kwizart@gmail.com> - 10.1-3
 - Rebuilt for libmysqlclient bump (was built with previous version).
