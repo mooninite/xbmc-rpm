@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 10.1
-Release: 4%{?dist}
+Release: 6%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -111,7 +111,7 @@ BuildRequires: libtool
 BuildRequires: libtiff-devel
 BuildRequires: libvdpau-devel
 BuildRequires: libdvdread-devel
-BuildRequires: ffmpeg-devel
+#BuildRequires: ffmpeg-devel
 BuildRequires: faad2-devel
 BuildRequires: pulseaudio-libs-devel
 BuildRequires: libdca-devel
@@ -174,12 +174,16 @@ chmod +x bootstrap
 ./bootstrap
 # Can't use export nor %%configure (implies using export), because
 # the Makefile pile up *FLAGS in this case.
+
+# FIXME: disable using external ffmpeg for the moment, until such time
+# as either we backport a fix for 0.8 ffmpeg or we build XBMC Eden (11.x)
+# --enable-external-ffmpeg
 ./configure \
 --prefix=%{_prefix} --bindir=%{_bindir} --includedir=%{_includedir} \
 --libdir=%{_libdir} --datadir=%{_datadir} \
 --with-lirc-device=/var/run/lirc/lircd \
 --enable-goom \
---enable-external-ffmpeg --enable-external-python \
+--enable-external-python \
 --disable-libdts --disable-liba52 \
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
@@ -230,6 +234,14 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Sat Nov  5 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.1-6
+- Disable using external ffmpeg for the moment, until such time as
+  either we backport a fix for 0.8 ffmpeg or we build XBMC Eden (11.x)
+  (see #1962)
+
+* Mon Sep 26 2011 Nicolas Chauvet <kwizart@gmail.com> - 10.1-5
+- Rebuilt for FFmpeg-0.8
+
 * Fri Sep  2 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.1-4
 - Remove hal-devel as BuildRequires, dropped in f16 and later:
   http://fedoraproject.org/wiki/Features/HalRemoval
