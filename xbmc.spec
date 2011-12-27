@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 10.1
-Release: 6%{?dist}
+Release: 9%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -47,6 +47,18 @@ Patch6: xbmc-10-python2.7.patch
 # patch from upstream to fix builds for GCC 4.6.x
 # (committed to git upstream: http://trac.xbmc.org/ticket/11383)
 Patch7: xbmc-Dharma-10.1-gcc-4.6-fixes-0.1.patch
+
+# upstream patches for newer libbluray support
+# commit 8c1504d0a647271ee48ff83c6eac2cd4b7670df0
+# commit e41dd86046cabe84493453c6588baaf5279710fd
+# commit d17f271d6489cc76494fbc4f3e8017a97d947af4
+Patch8: xbmc-support_newer_libbluray.patch
+
+# libpng 1.5 patch from gentoo
+# http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/media-tv/xbmc/files/xbmc-10.1-libpng-1.5.patch
+Patch9: xbmc-10.1-libpng-1.5.patch
+
+Patch10: xbmc-10.1-Dharma-335-Python_parse_had_wrong_native_type-0.1.patch
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -128,7 +140,7 @@ BuildRequires: gettext-autopoint
 BuildRequires: gettext
 %endif
 BuildRequires: librtmp-devel
-BuildRequires: libbluray-devel
+BuildRequires: libbluray-devel >= 0.2.1
 # VAAPI currently not working, comment-out
 #BuildRequires: libva-freeworld-devel
 
@@ -163,6 +175,9 @@ forecast functions, together third-party plugins.
 %patch5 -p0
 %patch6 -p0
 %patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
 
 # Prevent rerunning the autotools.
 touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
@@ -234,6 +249,17 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Tue Dec 20 2011 Alex Lancaster <alexlan[AT] fedoraproject org> - 10.1-9
+- Add patch from OpenElec distribution to fix broken YouTube plugin
+  (should fix #1905)
+
+* Wed Dec 14 2011 Xavier Bachelot <xavier@bachelot.org> - 10.1-8
+- Add patch for newer libbluray support.
+- Add patch for libpng 1.5 support.
+
+* Wed Nov 23 2011 Nicolas Chauvet <kwizart@gmail.com> - 10.1-7
+- Rebuilt for libcdio
+
 * Sat Nov  5 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 10.1-6
 - Disable using external ffmpeg for the moment, until such time as
   either we backport a fix for 0.8 ffmpeg or we build XBMC Eden (11.x)
