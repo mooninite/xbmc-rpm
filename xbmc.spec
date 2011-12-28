@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 11.0
-Release: 0.2.%{PRERELEASE}%{?dist}
+Release: 0.3.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -156,6 +156,11 @@ Requires: libcrystalhd
 Requires: librtmp
 Requires: libbluray
 
+# needed when doing a minimal install, see
+# https://bugzilla.rpmfusion.org/show_bug.cgi?id=1844
+Requires: glx-utils
+Requires: xorg-x11-utils
+
 # These are just symlinked to, but needed both at build-time
 # and for installation
 BuildRequires: python-imaging
@@ -285,6 +290,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Wed Dec 28 2011 Alex Lancaster <alexlan[AT] fedoraproject org> - 11.0-0.3.Eden_beta1
+- Added glx-utils and xorg-x11-utils as Requires, so selecting
+  minimal install works out of the box (#1844)
+
 * Wed Dec 28 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-0.2.Eden_beta1
 - Re-enable external ffmpeg
 - Add EventClients sub-package (patch thanks to Ben Konrath <ben@bagu.org>)
