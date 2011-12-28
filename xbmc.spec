@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 11.0
-Release: 0.1.%{PRERELEASE}%{?dist}
+Release: 0.2.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -139,6 +139,9 @@ BuildRequires: librtmp-devel
 BuildRequires: libbluray-devel
 #BuildRequires: libbluray-devel >= 0.2.1
 BuildRequires: yajl-devel
+BuildRequires: bluez-libs-devel
+BuildRequires: cwiid-devel
+
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
 # afp build currently broken
@@ -172,12 +175,26 @@ fi
 %posttrans
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
-
 %description
 XBMC media center is a free cross-platform media-player jukebox and
 entertainment hub.  XBMC can play a spectrum of of multimedia formats,
 and featuring playlist, audio visualizations, slideshow, and weather
 forecast functions, together third-party plugins.
+
+%package eventclients
+Summary: Media center event client remotes
+
+%description eventclients
+This package contains support for using XBMC with the PS3 Remote, the Wii
+Remote, a J2ME based remote and the command line xbmc-send utility.
+
+%package eventclients-devel
+Summary: Media center event client remotes development files
+Requires:	%{name}-eventclients = %{version}-%{release}
+
+%description eventclients-devel
+This package contains the development header files for the eventclients
+library.
 
 %prep
 
@@ -194,19 +211,12 @@ forecast functions, together third-party plugins.
 #patch9 -p1
 #patch10 -p1
 
-# Prevent rerunning the autotools.
-#touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
-#$(find xbmc/screensavers/rsxs-0.9 \( -name 'configure.*' -o -name 'Makefile.*' \))
-
 %build
 
 chmod +x bootstrap
 ./bootstrap
 # Can't use export nor %%configure (implies using export), because
 # the Makefile pile up *FLAGS in this case.
-
-# FIXME: disable using external ffmpeg for the moment, until such time
-# as either we backport a fix for 0.8 ffmpeg or we build XBMC Eden (11.x)
 
 ./configure \
 --prefix=%{_prefix} --bindir=%{_bindir} --includedir=%{_includedir} \
@@ -223,20 +233,12 @@ LDFLAGS="-fPIC" \
 LIBS="-L%{_libdir}/mysql -lhdhomerun $LIBS" \
 ASFLAGS=-fPIC
 
-# disable the following:
-#
-#--enable-external-python \
-#--enable-external-ffmpeg \
-#-disable-libdts --disable-liba52 \
- 
-# enumerate all the external libraries because the libdts/liba52 detection 
-# is broken upstream: http://trac.xbmc.org/ticket/9277
-
 make %{?_smp_mflags} VERBOSE=1
 
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
+make -C tools/EventClients DESTDIR=$RPM_BUILD_ROOT install 
 # remove the doc files from unversioned /usr/share/doc/xbmc, they should be in versioned docdir
 rm -r $RPM_BUILD_ROOT/%{_datadir}/doc/
 
@@ -266,7 +268,28 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/applications/xbmc.desktop
 %{_datadir}/icons/hicolor/*/*/*.png
 
+%files eventclients
+%defattr(-,root,root)
+%python_sitelib/xbmc
+%dir %{_datadir}/pixmaps/xbmc
+%{_datadir}/pixmaps/xbmc/*.png
+%{_bindir}/xbmc-j2meremote
+%{_bindir}/xbmc-ps3d
+%{_bindir}/xbmc-ps3remote
+%{_bindir}/xbmc-send
+%{_bindir}/xbmc-wiiremote
+
+%files eventclients-devel
+%defattr(-,root,root)
+%dir %{_includedir}/xbmc
+%{_includedir}/xbmc/xbmcclient.h
+
 %changelog
+* Wed Dec 28 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-0.2.Eden_beta1
+- Re-enable external ffmpeg
+- Add EventClients sub-package (patch thanks to Ben Konrath <ben@bagu.org>)
+- More spec cleaning
+
 * Wed Dec 28 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-0.1.Eden_beta1
 - Update to 11.0 beta1
 - Disable patches that are obsolete (keep around while testing)
