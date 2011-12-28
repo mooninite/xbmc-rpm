@@ -1,0 +1,76 @@
+--- configure.in.orig	2011-12-27 17:22:07.212194848 -0500
++++ configure.in	2011-12-27 17:24:56.248461555 -0500
+@@ -2110,28 +2110,9 @@
+     --with-pic
+ ], [$SKIP_CONFIG_DVDCSS])
+ 
+-XB_CONFIG_MODULE([lib/libdvd/libdvdread], [
+-  ./configure2 \
+-    --extra-cflags="$CFLAGS $DVDREAD_CFLAGS -I`pwd`/../libdvdcss/src" \
+-    --prefix="${prefix}" --includedir="${includedir}" --libdir="${libdir}" --datadir="${datadir}" \
+-    --host=$host_alias \
+-    --build=$build_alias \
+-    --target=$target_alias \      
+-    --enable-static \
+-    --disable-shared \
+-    --disable-strip \
+-    --disable-opts \
+-    --cc="$CC" &&
+-  $MAKE dvdread-config &&
+-  mkdir -p `pwd`/../includes/dvdread
+-  cp `pwd`/../libdvdread/src/*.h `pwd`/../includes/dvdread
+-], [0])
+-
+ XB_CONFIG_MODULE([lib/libdvd/libdvdnav], [
+   ./configure2 \
+-    --extra-cflags="$CFLAGS $DVDREAD_CFLAGS -I`pwd`/../includes" \
+-    --extra-ldflags="-L`pwd`/../libdvdread/obj" \
+-    --with-dvdread-config="`pwd`/../libdvdread/obj/dvdread-config" \
++    --extra-cflags="-D_XBMC -fPIC -DPIC" \
+     --prefix="${prefix}" --includedir="${includedir}" --libdir="${libdir}" --datadir="${datadir}" \
+     --host=$host_alias \
+     --build=$build_alias \
+--- lib/libdvd/Makefile.in.orig	2011-12-27 17:26:34.728220804 -0500
++++ lib/libdvd/Makefile.in	2011-12-27 17:29:31.835558231 -0500
+@@ -5,8 +5,7 @@
+ 
+ SYSDIR=@abs_top_srcdir@/system/players/dvdplayer
+ SOS= libdvdnav-$(ARCH).so
+-DIRS=	libdvdread \
+-	libdvdnav
++DIRS= libdvdnav
+ 
+ WRAPPER=@abs_top_srcdir@/xbmc/cores/DllLoader/exports/wrapper.o
+ WRAPPER_MACH_ALIAS=@abs_top_srcdir@/xbmc/cores/DllLoader/exports/wrapper_mach_alias
+@@ -14,7 +13,7 @@
+ ifeq ($(findstring osx,$(ARCH)),osx)
+ LDFLAGS +=-bundle -undefined dynamic_lookup -read_only_relocs suppress
+ else
+-LDFLAGS += -shared -fPIC -rdynamic
++LDFLAGS += -shared -fPIC -rdynamic -ldvdread
+ endif
+ 
+ ifeq ($(ARCH), powerpc-osx)
+@@ -48,9 +47,9 @@
+ 	$(CC) $(LDFLAGS) -Wl,-alias_list,$(WRAPPER_MACH_ALIAS) -o $@ \
+ 		$(WRAPPER) libdvdcss/src/*.o $(BUNDLE1_O)
+ 
+-$(SYSDIR)/libdvdnav-$(ARCH).so: $($(WRAPPER)) $(DVDCSS_A) libdvdread/obj/libdvdread.a libdvdnav/obj/libdvdnav.a
++$(SYSDIR)/libdvdnav-$(ARCH).so: $($(WRAPPER)) $(DVDCSS_A) libdvdnav/obj/libdvdnav.a
+ 	$(CC) $(LDFLAGS) -Wl,-alias_list,$(WRAPPER_MACH_ALIAS) -o $@ \
+-		$(WRAPPER) $(DVDCSS_O) libdvdread/obj/*.o libdvdnav/obj/*.o $(BUNDLE1_O)
++		$(WRAPPER) $(DVDCSS_O) libdvdnav/obj/*.o $(BUNDLE1_O)
+ 
+ else
+ 
+@@ -59,8 +58,8 @@
+ 		libdvdcss/src/*.o -Wl,--unresolved-symbols=ignore-all \
+ 		`cat $(WRAPPER:.o=.def)` $(WRAPPER)
+ 
+-$(SYSDIR)/libdvdnav-$(ARCH).so: $(WRAPPER) $(DVDCSS_A) libdvdread/obj/libdvdread.a libdvdnav/obj/libdvdnav.a
+-	$(CC) -o $@ $(LDFLAGS) -Wl,--soname,$@ $(DVDCSS_O) libdvdread/obj/*.o libdvdnav/obj/*.o \
++$(SYSDIR)/libdvdnav-$(ARCH).so: $(WRAPPER) $(DVDCSS_A) libdvdnav/obj/libdvdnav.a
++	$(CC) -o $@ $(LDFLAGS) -Wl,--soname,$@ $(DVDCSS_O)  libdvdnav/obj/*.o \
+ 		-Wl,--unresolved-symbols=ignore-all \
+ 		`cat $(WRAPPER:.o=.def)` $(WRAPPER)
+ 

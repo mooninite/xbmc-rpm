@@ -1,82 +1,64 @@
 #!/bin/sh
 
-MAJORVERSION=10.1
+MAJORVERSION=11
+MINORVERSION=0
+PRERELEASE=Eden_beta1
 
-# FIXME: need to update to use git
-#SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/branches/Dharma
+VERSION=${MAJORVERSION}.${MINORVERSION}${PRERELEASE:+-${PRERELEASE}}
 
-# uncomment this to switch to trunk
-#SVNURL=https://xbmc.svn.sourceforge.net/svnroot/xbmc/trunk
+GITHUBURL=https://github.com/xbmc/xbmc/tarball/$VERSION-Dharma
 
-# use SVN version number passed from script, or otherwise use default
-SVNVERSION=${1-35567}
+# comment-out line below if using tarball
+#curl -L $GITHUBURL | tar xz
 
-VERSION=$MAJORVERSION
-# git snapshot
-#VERSION=$MAJORVERSION-$SVNVERSION
-# pre-release
-#VERSION=Dharma_rc2
+# Repair GitHub's odd auto-generated top-level directory...
+#mv xbmc-xbmc-* xbmc-$VERSION
 
-# remove existing checkout
-rm -r xbmc-$VERSION
-
-# don't need to extra tarball, already expanded
-# comment out with tarball
+# extract tarball
+# comment-out if not using tarball
 tar -xzvf xbmc-$VERSION.tar.gz
 
 cd xbmc-$VERSION
 
-# remove bundled libraries (including zlib and OSX), saves space and forces using external versions
-# also remove legally problematic libGoAhead library
-for i in liblzo libmms libsamplerate sqLite/sqlite libPython/Python cximage-6.0/zlib libid3tag/zlib zlib boost libhdhomerun
+# remove bundled libraries, saves space and forces using external versions
+for i in  cximage-6.0/zlib libid3tag/zlib libhdhomerun libmpeg2 ffmpeg
 do
-    rm -r xbmc/lib/$i
+    rm -r lib/$i
 done
 
-# bundled win32 binaries
-rm -r xbmc/visualizations/XBMCProjectM/win32
-
 # remove more bundled codecs
-# libfaad2, libmad needs upstream patches to be able to remove from tarball
-# even though the bundled libaries aren't, I think, compiled
-# grrr, have to keep in ffmpeg for now (2010-07-019) since upstream
-# seems to require files within that subdirectory <sigh>
-for i in liba52 libmpeg2 libdts
+for i in libmpeg2
 do
-    rm -r xbmc/cores/dvdplayer/Codecs/$i
+    rm -r xbmc/cores/dvdplayer/DVDCodecs/Video/$i
 done
 
 
 # remove DVD stuff we can't ship, or is already in external libraries
 for i in libdvdcss libdvdread includes 
 do
-    rm -r xbmc/cores/dvdplayer/Codecs/libdvd/$i
+    rm -r lib/libdvd/$i
 done
 
 # remove all prebuilt binaries (e.g., .so files and Win32 DLLs)
-find \( -type f -name '*.so' -o -name '*.DLL' -o -name '*.dll' -o -name '*.lib' -o -name '*.zlib' -o -name '*.obj' -o -name '*.exe' -o -name '*.vis' \) | xargs rm -f
+find \( -type f -name '*.so' -o -name '*.DLL' -o -name '*.dll' -o -name '*.lib' -o -name '*.zlib' -o -name '*.obj' -o -name '*.exe' -o -name '*.vis' \) -print0 | xargs -0 rm -f
 
 # remove all other packages that should be system-wide
 # except for libass, cpluff, jsoncpp (need to figure out how to
 # remove these too)
 # xbmc-dll-symbols seems to be XBMC-specific
-for i in enca freetype fribidi libcdio libcrystalhd libcurl-OSX libiconv liblame libmicrohttpd libmicrohttpd_win32 libmodplug libmysql_win32 libSDL-OSX libssh_win32 pcre libbluray libbluray_win32 librtmp bzip2
+for i in enca freetype liblame libmicrohttpd libmodplug libbluray librtmp win32
 do
     rm -r lib/$i
 done
 
 # TODO/FIXME: remove tools/XBMCLive/ and other things under tools/ 
 # also remove anything to do with win32
-for i in arm MingwBuildEnvironment PackageMaker win32buildtools XBMCLive XBMCTex
+for i in arm darwin win32buildtools 
 do
     rm -r tools/$i
 done
 
-cd -
+cd ..
 
 # repack
 tar -cJvf xbmc-$VERSION-patched.tar.xz xbmc-$VERSION
-
-echo "Release:"
-echo "$(date +'%Y%m%d')svn${SVNVERSION}"
-

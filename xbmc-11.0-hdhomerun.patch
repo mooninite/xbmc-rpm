@@ -1,46 +1,53 @@
---- xbmc-10/Makefile.in.orig	2010-07-19 02:04:32.002268864 -0400
-+++ xbmc-10/Makefile.in	2010-07-19 02:06:30.185143439 -0400
-@@ -94,7 +94,6 @@
- LIB_DIRS=\
- 	xbmc/lib/cximage-6.0 \
- 	xbmc/lib/libexif \
--	xbmc/lib/libhdhomerun \
- 	xbmc/lib/libid3tag \
- 	xbmc/lib/libapetag \
- 	xbmc/lib/libPython/linux \
-@@ -340,8 +339,6 @@
- endif
- libexif: dllloader
- 	$(MAKE) -C xbmc/lib/libexif
+--- Makefile.in.orig	2011-12-27 18:13:13.204873013 -0500
++++ Makefile.in	2011-12-27 18:14:17.225245721 -0500
+@@ -131,7 +131,6 @@
+ 	lib/cximage-6.0 \
+ 	lib/libexif \
+ 	lib/cmyth \
+-	lib/libhdhomerun \
+ 	lib/libid3tag \
+ 	lib/libapetag \
+ 	lib/cpluff \
+@@ -267,8 +266,6 @@
+ 	$(MAKE) -C lib/libexif
+ cmyth: dllloader
+ 	$(MAKE) -C lib/cmyth
 -libhdhomerun: dllloader
--	$(MAKE) -C xbmc/lib/libhdhomerun
+-	$(MAKE) -C lib/libhdhomerun
  libid3tag: dllloader
- 	$(MAKE) -C xbmc/lib/libid3tag
+ 	$(MAKE) -C lib/libid3tag
  papcodecs: dllloader dvdpcodecs
-@@ -371,9 +368,9 @@
+@@ -293,7 +290,7 @@
+ 	$(MAKE) -C lib/cximage-6.0
  
  codecs: papcodecs dvdpcodecs
- ifeq ($(findstring osx,$(ARCH)), osx)
--libs: libhdhomerun libid3tag imagelib libexif python system/libcpluff-$(ARCH).so system/players/paplayer/libmodplug-$(ARCH).so
-+libs: libid3tag imagelib libexif python system/libcpluff-$(ARCH).so system/players/paplayer/libmodplug-$(ARCH).so
- else
--libs: libhdhomerun libid3tag imagelib libexif python system/libcpluff-$(ARCH).so
-+libs: libid3tag imagelib libexif python system/libcpluff-$(ARCH).so
- endif
- externals: codecs libs python visualizations screensavers
+-libs: cmyth libhdhomerun libid3tag imagelib libexif system/libcpluff-@ARCH@.so
++libs: cmyth libid3tag imagelib libexif system/libcpluff-@ARCH@.so
+ externals: codecs libs visualizations screensavers
  
---- xbmc-10/xbmc/FileSystem/HDHomeRun.h.orig	2010-09-14 01:00:12.000000000 -0400
-+++ xbmc-10/xbmc/FileSystem/HDHomeRun.h	2010-09-14 19:30:28.290178461 -0400
-@@ -22,7 +22,7 @@
+ xcode_depends: \
+--- configure.in.orig	2011-12-27 18:16:52.986149450 -0500
++++ configure.in	2011-12-27 18:17:09.552245330 -0500
+@@ -1877,7 +1877,6 @@
+     lib/libexif/Makefile \
+     lib/libXDAAP/Makefile \
+     lib/cmyth/Makefile \
+-    lib/libhdhomerun/Makefile \
+     lib/libsquish/Makefile \
+     lib/libid3tag/Makefile \
+     lib/cximage-6.0/Makefile \
+--- xbmc/filesystem/DllHDHomeRun.h.orig	2011-12-28 12:16:37.207493443 -0500
++++ xbmc/filesystem/DllHDHomeRun.h	2011-12-28 12:18:50.854262220 -0500
+@@ -21,7 +21,7 @@
+  */
  
- #include "IDirectory.h"
  #include "DynamicDll.h"
 -#include "lib/libhdhomerun/hdhomerun.h"
-+#include <hdhomerun/hdhomerun.h>
- #include "FileSystem/IFile.h"
++#include  <hdhomerun/hdhomerun.h>
  
  class DllHdHomeRunInterface
-@@ -44,31 +44,57 @@
+ {
+@@ -42,30 +42,56 @@
  
  class DllHdHomeRun : public DllDynamic, public DllHdHomeRunInterface
  {
@@ -122,15 +129,3 @@
 +  virtual void Unload() {}
  };
  
- namespace XFILE
-
---- xbmc-10/configure.in.orig	2010-07-19 02:11:59.114393341 -0400
-+++ xbmc-10/configure.in	2010-07-19 02:12:07.951143138 -0400
-@@ -1348,7 +1348,6 @@
-     xbmc/lib/libRTV/Makefile \
-     xbmc/lib/libexif/Makefile \
-     xbmc/lib/libXDAAP/Makefile \
--    xbmc/lib/libhdhomerun/Makefile \
-     xbmc/lib/libhttpapi/Makefile \
-     lib/jsoncpp/jsoncpp/src/lib_json/Makefile \
-     xbmc/lib/libjsonrpc/Makefile \

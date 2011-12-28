@@ -1,11 +1,11 @@
-#global PRERELEASE Dharma_rc2
-%global DIRVERSION %{version}
+%global PRERELEASE Eden_beta1
+#global DIRVERSION %{version}
 # use below for pre-release
-#global DIRVERSION %{PRERELEASE}
+%global DIRVERSION %{version}-%{PRERELEASE}
 
 Name: xbmc
-Version: 10.1
-Release: 9%{?dist}
+Version: 11.0
+Release: 0.1.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -21,11 +21,11 @@ Source1: xbmc-generate-tarball-xz.sh
 
 # new patches for bootstrap
 # no trac ticket filed as yet
-Patch1: xbmc-10-bootstrap.patch
+Patch1: xbmc-11.0-bootstrap.patch
 
 # filed ticket, but patch still needs work
 # http://trac.xbmc.org/ticket/9658
-Patch2: xbmc-10-dvdread.patch
+Patch2: xbmc-11.0-dvdread.patch
 
 # and new problem with zlib in cximage
 # trac ticket filed: http://trac.xbmc.org/ticket/9659
@@ -34,7 +34,7 @@ Patch3: xbmc-10-disable-zlib-in-cximage.patch
 
 # need to file trac ticket, this patch just forces external hdhomerun
 # functionality, needs to be able fallback internal version
-Patch4: xbmc-10-hdhomerun.patch
+Patch4: xbmc-11.0-hdhomerun.patch
 
 # fix "@#" in Makefile which seem to screw things up no trac filed
 # yet, don't know why this isn't a problem on other Linux systems
@@ -123,7 +123,7 @@ BuildRequires: libtool
 BuildRequires: libtiff-devel
 BuildRequires: libvdpau-devel
 BuildRequires: libdvdread-devel
-#BuildRequires: ffmpeg-devel
+BuildRequires: ffmpeg-devel
 BuildRequires: faad2-devel
 BuildRequires: pulseaudio-libs-devel
 BuildRequires: libdca-devel
@@ -134,13 +134,15 @@ BuildRequires: libmodplug-devel
 BuildRequires: libmicrohttpd-devel
 BuildRequires: expat-devel
 BuildRequires: zip
-%if 0%{?fedora} >= 14
 BuildRequires: gettext-autopoint
-%else
-BuildRequires: gettext
-%endif
 BuildRequires: librtmp-devel
-BuildRequires: libbluray-devel >= 0.2.1
+BuildRequires: libbluray-devel
+#BuildRequires: libbluray-devel >= 0.2.1
+BuildRequires: yajl-devel
+# nfs-utils-lib-devel package currently broken
+#BuildRequires: nfs-utils-lib-devel
+# afp build currently broken
+#BuildRequires: afpfs-ng-devel
 # VAAPI currently not working, comment-out
 #BuildRequires: libva-freeworld-devel
 
@@ -158,6 +160,19 @@ Requires: python-imaging
 BuildRequires: python-sqlite2
 Requires: python-sqlite2
 
+%post
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+
+%postun
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
+
+%posttrans
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
+
 %description
 XBMC media center is a free cross-platform media-player jukebox and
 entertainment hub.  XBMC can play a spectrum of of multimedia formats,
@@ -170,18 +185,18 @@ forecast functions, together third-party plugins.
 
 %patch1 -p0
 %patch2 -p0
-%patch3 -p0
-%patch4 -p1
-%patch5 -p0
-%patch6 -p0
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
+#patch3 -p0
+%patch4 -p0
+#patch5 -p0
+#patch6 -p0
+#patch7 -p1
+#patch8 -p1
+#patch9 -p1
+#patch10 -p1
 
 # Prevent rerunning the autotools.
-touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
-$(find xbmc/screensavers/rsxs-0.9 \( -name 'configure.*' -o -name 'Makefile.*' \))
+#touch -r xbmc/screensavers/rsxs-0.9/aclocal.m4 \
+#$(find xbmc/screensavers/rsxs-0.9 \( -name 'configure.*' -o -name 'Makefile.*' \))
 
 %build
 
@@ -192,14 +207,13 @@ chmod +x bootstrap
 
 # FIXME: disable using external ffmpeg for the moment, until such time
 # as either we backport a fix for 0.8 ffmpeg or we build XBMC Eden (11.x)
-# --enable-external-ffmpeg
+
 ./configure \
 --prefix=%{_prefix} --bindir=%{_bindir} --includedir=%{_includedir} \
 --libdir=%{_libdir} --datadir=%{_datadir} \
 --with-lirc-device=/var/run/lirc/lircd \
 --enable-goom \
---enable-external-python \
---disable-libdts --disable-liba52 \
+--enable-external-libraries \
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
 CPPFLAGS="-I/usr/include/ffmpeg" \
@@ -210,7 +224,11 @@ LIBS="-L%{_libdir}/mysql -lhdhomerun $LIBS" \
 ASFLAGS=-fPIC
 
 # disable the following:
-# --enable-external-libraries
+#
+#--enable-external-python \
+#--enable-external-ffmpeg \
+#-disable-libdts --disable-liba52 \
+ 
 # enumerate all the external libraries because the libdts/liba52 detection 
 # is broken upstream: http://trac.xbmc.org/ticket/9277
 
@@ -249,6 +267,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/icons/hicolor/*/*/*.png
 
 %changelog
+* Wed Dec 28 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-0.1.Eden_beta1
+- Update to 11.0 beta1
+- Disable patches that are obsolete (keep around while testing)
+- Update icon cache (#2097)
+
 * Tue Dec 20 2011 Alex Lancaster <alexlan[AT] fedoraproject org> - 10.1-9
 - Add patch from OpenElec distribution to fix broken YouTube plugin
   (should fix #1905)
