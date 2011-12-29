@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 11.0
-Release: 0.3.%{PRERELEASE}%{?dist}
+Release: 0.4.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -213,7 +213,7 @@ library.
 #patch6 -p0
 #patch7 -p1
 #patch8 -p1
-#patch9 -p1
+%patch9 -p2
 #patch10 -p1
 
 %build
@@ -290,6 +290,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Thu Dec 29 2011 Alex Lancaster <alexlan[AT] fedoraproject org> - 11.0-0.4.Eden_beta1
+- Enable libpng 1.5 patch, still needed, upstream bug is at: 
+  http://trac.xbmc.org/ticket/12001
+
 * Wed Dec 28 2011 Alex Lancaster <alexlan[AT] fedoraproject org> - 11.0-0.3.Eden_beta1
 - Added glx-utils and xorg-x11-utils as Requires, so selecting
   minimal install works out of the box (#1844)
