@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 11.0
-Release: 0.4.%{PRERELEASE}%{?dist}
+Release: 0.5.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -36,29 +36,14 @@ Patch3: xbmc-10-disable-zlib-in-cximage.patch
 # functionality, needs to be able fallback internal version
 Patch4: xbmc-11.0-hdhomerun.patch
 
-# fix "@#" in Makefile which seem to screw things up no trac filed
-# yet, don't know why this isn't a problem on other Linux systems
-Patch5: xbmc-10-Makefile.patch
-
-# add patch from upstream trac http://trac.xbmc.org/ticket/9584
-# to find Python 2.7 (needed for F-14+)
-Patch6: xbmc-10-python2.7.patch
-
-# patch from upstream to fix builds for GCC 4.6.x
-# (committed to git upstream: http://trac.xbmc.org/ticket/11383)
-Patch7: xbmc-Dharma-10.1-gcc-4.6-fixes-0.1.patch
-
-# upstream patches for newer libbluray support
-# commit 8c1504d0a647271ee48ff83c6eac2cd4b7670df0
-# commit e41dd86046cabe84493453c6588baaf5279710fd
-# commit d17f271d6489cc76494fbc4f3e8017a97d947af4
-Patch8: xbmc-support_newer_libbluray.patch
 
 # libpng 1.5 patch from gentoo
 # http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/media-tv/xbmc/files/xbmc-10.1-libpng-1.5.patch
-Patch9: xbmc-10.1-libpng-1.5.patch
-
-Patch10: xbmc-10.1-Dharma-335-Python_parse_had_wrong_native_type-0.1.patch
+# following two patches both submitted upstream: 
+# http://trac.xbmc.org/ticket/12001
+Patch5: xbmc-10.1-libpng-1.5.patch
+# second libpng 1.5 patch avoids use of uninitialised values
+Patch6: xbmc-11.0-libpng-1.5-fix-plt-trn-get.patch
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -209,12 +194,8 @@ library.
 %patch2 -p0
 #patch3 -p0
 %patch4 -p0
-#patch5 -p0
-#patch6 -p0
-#patch7 -p1
-#patch8 -p1
-%patch9 -p2
-#patch10 -p1
+%patch5 -p2
+%patch6 -p1
 
 %build
 
@@ -290,6 +271,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Fri Dec 30 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-0.5.Eden_beta1
+- Add additional patch from http://trac.xbmc.org/ticket/12001 to
+  fix uninitialised pointer with libpng 1.5
+- Remove upstreamed, or otherwise obsoleted patches 
+
 * Thu Dec 29 2011 Alex Lancaster <alexlan[AT] fedoraproject org> - 11.0-0.4.Eden_beta1
 - Enable libpng 1.5 patch, still needed, upstream bug is at: 
   http://trac.xbmc.org/ticket/12001
