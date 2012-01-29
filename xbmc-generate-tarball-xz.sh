@@ -2,11 +2,12 @@
 
 MAJORVERSION=11
 MINORVERSION=0
-PRERELEASE=Eden_beta1
+PRERELEASE=Eden_beta2
 
 VERSION=${MAJORVERSION}.${MINORVERSION}${PRERELEASE:+-${PRERELEASE}}
 
-GITHUBURL=https://github.com/xbmc/xbmc/tarball/$VERSION-Dharma
+# GITHUBURL below is obsolete, I think
+#GITHUBURL=https://github.com/xbmc/xbmc/tarball/$VERSION-Eden
 
 # comment-out line below if using tarball
 #curl -L $GITHUBURL | tar xz

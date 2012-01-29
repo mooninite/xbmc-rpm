@@ -1,11 +1,11 @@
-%global PRERELEASE Eden_beta1
+%global PRERELEASE Eden_beta2
 #global DIRVERSION %{version}
 # use below for pre-release
 %global DIRVERSION %{version}-%{PRERELEASE}
 
 Name: xbmc
 Version: 11.0
-Release: 0.5.%{PRERELEASE}%{?dist}
+Release: 0.6.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -271,6 +271,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Sun Jan 29 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-0.6.Eden_beta2
+- Update to Eden beta2
+
 * Fri Dec 30 2011 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-0.5.Eden_beta1
 - Add additional patch from http://trac.xbmc.org/ticket/12001 to
   fix uninitialised pointer with libpng 1.5
