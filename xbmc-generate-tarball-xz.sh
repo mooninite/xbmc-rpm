@@ -2,7 +2,7 @@
 
 MAJORVERSION=11
 MINORVERSION=0
-PRERELEASE=Eden_beta2
+PRERELEASE=Eden_rc2
 
 VERSION=${MAJORVERSION}.${MINORVERSION}${PRERELEASE:+-${PRERELEASE}}
 
@@ -25,7 +25,7 @@ cd xbmc-$VERSION
 # grrr, *still* have to keep in ffmpeg for now (2011-12-28) since upstream
 # seems to require files within that subdirectory <sigh>, filed
 # http://trac.xbmc.org/ticket/12370
-for i in  cximage-6.0/zlib libid3tag/zlib libhdhomerun libmpeg2
+for i in  cximage-6.0/zlib libid3tag/zlib libhdhomerun libmpeg2 ffmpeg
 do
     rm -r lib/$i
 done
