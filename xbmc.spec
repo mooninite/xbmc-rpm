@@ -1,11 +1,11 @@
 %global PRERELEASE Eden_rc2
-#global DIRVERSION %{version}
+%global DIRVERSION %{version}
 # use below for pre-release
-%global DIRVERSION %{version}-%{PRERELEASE}
+#global DIRVERSION %{version}-%{PRERELEASE}
 
 Name: xbmc
 Version: 11.0
-Release: 0.10.%{PRERELEASE}%{?dist}
+Release: 1%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -192,8 +192,8 @@ forecast functions, together third-party plugins.
 %patch2 -p0
 #patch3 -p0
 %patch4 -p0
-%patch5 -p2
-%patch6 -p1
+#patch5 -p2
+#patch6 -p1
 
 %build
 
@@ -269,6 +269,10 @@ rm -rf $RPM_BUILD_ROOT
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Sun Mar 25 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-1
+- Update to Eden final 11.0
+- Drop libpng 1.5 patches, applied upstream
+
 * Fri Mar  9 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-0.10.Eden_rc2
 - Update to Eden release candidate 2 (rc2)
 
