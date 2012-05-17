@@ -242,7 +242,7 @@ rm -r $RPM_BUILD_ROOT/%{_datadir}/doc/
 # remove the old dteirney MythTV add-on (no longer works
 # and can be confused with the new tsp version)
 rm -r $RPM_BUILD_ROOT/%{_libdir}/xbmc/addons/pvr.mythtv
-rm -f $RPM_BUILD_ROOT/%{_datadir}/xbmc/addons/pvr.mythtv
+rm -r $RPM_BUILD_ROOT/%{_datadir}/xbmc/addons/pvr.mythtv
 
 desktop-file-install \
  --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
