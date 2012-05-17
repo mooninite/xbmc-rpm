@@ -1,0 +1,660 @@
+diff --git a/lib/cmyth/include/cmyth/cmyth.h b/lib/cmyth/include/cmyth/cmyth.h
+index 52f2f68..d8cb364 100644
+--- a/lib/cmyth/include/cmyth/cmyth.h
++++ b/lib/cmyth/include/cmyth/cmyth.h
+@@ -749,6 +749,20 @@ extern char *cmyth_proginfo_subtitle(cmyth_proginfo_t prog);
+ extern char *cmyth_proginfo_description(cmyth_proginfo_t prog);
+ 
+ /**
++ * Retrieve the season of a program.
++ * \param prog proginfo handle
++ * \return season
++ */
++extern unsigned short cmyth_proginfo_season(cmyth_proginfo_t prog);
++
++/**
++ * Retrieve the episode of a program.
++ * \param prog proginfo handle
++ * \return episode
++ */
++extern unsigned short cmyth_proginfo_episode(cmyth_proginfo_t prog);
++
++/**
+  * Retrieve the category of a program.
+  * \param prog proginfo handle
+  * \return null-terminated string
+@@ -805,6 +819,13 @@ extern char *cmyth_proginfo_seriesid(cmyth_proginfo_t prog);
+ extern long cmyth_proginfo_priority(cmyth_proginfo_t prog);
+ 
+ /**
++ * Retrieve the inetref of a program.
++ * \param prog proginfo handle
++ * \return null-terminated string
++ */
++extern char *cmyth_proginfo_inetref(cmyth_proginfo_t prog);
++
++/**
+  * Retrieve the critics rating (number of stars) of a program.
+  * \param prog proginfo handle
+  * \return null-terminated string
+diff --git a/lib/cmyth/libcmyth/bookmark.c b/lib/cmyth/libcmyth/bookmark.c
+index af7580f..4681c21 100644
+--- a/lib/cmyth/libcmyth/bookmark.c
++++ b/lib/cmyth/libcmyth/bookmark.c
+@@ -20,6 +20,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++#include <inttypes.h>
+ #include <errno.h>
+ #include <cmyth_local.h>
+ 
+@@ -59,7 +60,7 @@ long long cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog)
+ 	}
+ 	if ((r=cmyth_rcv_long_long(conn, &err, &ll, count)) < 0) {
+ 		cmyth_dbg(CMYTH_DBG_ERROR,
+-			"%s: cmyth_rcv_longlong() failed (%d)\n",
++			"%s: cmyth_rcv_long_long() failed (%d)\n",
+ 			__FUNCTION__, r);
+ 		ret = err;
+ 		goto out;
+@@ -74,7 +75,7 @@ long long cmyth_get_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog)
+ int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookmark)
+ {
+ 	char *buf;
+-	unsigned int len = CMYTH_TIMESTAMP_LEN + CMYTH_LONGLONG_LEN + 18;
++	unsigned int len = CMYTH_TIMESTAMP_LEN + CMYTH_LONGLONG_LEN * 2 + 18;
+ 	char resultstr[3];
+ 	int r,err;
+ 	int ret;
+@@ -85,8 +86,18 @@ int cmyth_set_bookmark(cmyth_conn_t conn, cmyth_proginfo_t prog, long long bookm
+ 	if (!buf) {
+ 		return -ENOMEM;
+ 	}
+-	sprintf(buf,"%s %ld %s %lld %lld","SET_BOOKMARK",prog->proginfo_chanId,
+-		start_ts_dt, bookmark >> 32,(bookmark & 0xffffffff));
++	if (conn->conn_version >= 66) {
++		/*
++		 * Since protocol 66 mythbackend expects a single 64 bit integer rather than two 32 bit
++		 * hi and lo integers.
++		 */
++		sprintf(buf, "SET_BOOKMARK %ld %s %"PRIu64, prog->proginfo_chanId,
++				start_ts_dt, (int64_t)bookmark);
++	}
++	else {
++		sprintf(buf, "SET_BOOKMARK %ld %s %d %d", prog->proginfo_chanId,
++				start_ts_dt, (int32_t)(bookmark >> 32), (int32_t)(bookmark & 0xffffffff));
++	}
+ 	pthread_mutex_lock(&mutex);
+ 	if ((err = cmyth_send_message(conn,buf)) < 0) {
+ 		cmyth_dbg(CMYTH_DBG_ERROR,
+diff --git a/lib/cmyth/libcmyth/cmyth_local.h b/lib/cmyth/libcmyth/cmyth_local.h
+index 40bed11..f7b85fb 100644
+--- a/lib/cmyth/libcmyth/cmyth_local.h
++++ b/lib/cmyth/libcmyth/cmyth_local.h
+@@ -224,6 +224,8 @@ struct cmyth_proginfo {
+ 	char *proginfo_title;
+ 	char *proginfo_subtitle;
+ 	char *proginfo_description;
++	unsigned short proginfo_season;    /* new in V67 */
++	unsigned short proginfo_episode;    /* new in V67 */
+ 	char *proginfo_category;
+ 	long proginfo_chanId;
+ 	char *proginfo_chanstr;
+@@ -258,6 +260,7 @@ struct cmyth_proginfo {
+ 	char *proginfo_chan_output_filters;    /* new in V8 */
+ 	char *proginfo_seriesid;    /* new in V8 */
+ 	char *proginfo_programid;    /* new in V12 */
++	char *proginfo_inetref;    /* new in V67 */
+ 	cmyth_timestamp_t proginfo_lastmodified;    /* new in V12 */
+ 	char *proginfo_stars;    /* new in V12 */
+ 	cmyth_timestamp_t proginfo_originalairdate;	/* new in V12 */
+diff --git a/lib/cmyth/libcmyth/connection.c b/lib/cmyth/libcmyth/connection.c
+index 9d5fb0d..9d13721 100644
+--- a/lib/cmyth/libcmyth/connection.c
++++ b/lib/cmyth/libcmyth/connection.c
+@@ -56,6 +56,15 @@ static myth_protomap_t protomap[] = {
+ 	{62, "78B5631E"},
+ 	{63, "3875641D"},
+ 	{64, "8675309J"},
++	{65, "D2BB94C2"},
++	{66, "0C0FFEE0"},
++	{67, "0G0G0G0"},
++	{68, "90094EAD"},
++	{69, "63835135"},
++	{70, "53153836"},
++	{71, "05e82186"},
++	{72, "D78EFD6F"},
++	{73, "D7FE8D6F"},
+ 	{0, 0}
+ };
+ 
+@@ -527,7 +536,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
+ 	int err = 0;
+ 	int count = 0;
+ 	int r;
+-	int ann_size = sizeof("ANN FileTransfer []:[][]:[]");
++	int ann_size = sizeof("ANN FileTransfer 0[]:[][]:[]");
+ 	cmyth_file_t ret = NULL;
+ 
+ 	if (!prog) {
+@@ -575,6 +584,12 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
+ 			  myth_host, prog->proginfo_port, buflen);
+ 		goto shut;
+ 	}
++	/*
++	 * Explicitly set the conn version to the control version as cmyth_connect() doesn't and some of
++	 * the cmyth_rcv_* functions expect it to be the same as the protocol version used by mythbackend.
++	 */
++	conn->conn_version = control->conn_version;
++
+ 	ann_size += strlen(prog->proginfo_pathname) + strlen(my_hostname);
+ 	announcement = malloc(ann_size);
+ 	if (!announcement) {
+@@ -584,7 +599,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
+ 		goto shut;
+ 	}
+ 	if (control->conn_version >= 44) {
+-		sprintf(announcement, "ANN FileTransfer %s[]:[]%s[]:[]",
++		sprintf(announcement, "ANN FileTransfer %s 0[]:[]%s[]:[]", // write = false
+ 			  my_hostname, prog->proginfo_pathname);
+ 	}
+ 	else {
+@@ -631,7 +646,7 @@ cmyth_conn_connect_file(cmyth_proginfo_t prog,  cmyth_conn_t control,
+ 	r = cmyth_rcv_u_long_long(conn, &err, &ret->file_length, count);
+ 	if (err) {
+ 		cmyth_dbg(CMYTH_DBG_ERROR,
+-			  "%s: (length) cmyth_rcv_longlong() failed (%d)\n",
++			  "%s: (length) cmyth_rcv_u_long_long() failed (%d)\n",
+ 			  __FUNCTION__, err);
+ 		goto shut;
+ 	}
+@@ -683,7 +698,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
+ 	int err = 0;
+ 	int count = 0;
+ 	int r, port;
+-	int ann_size = sizeof("ANN FileTransfer []:[][]:[]");
++	int ann_size = sizeof("ANN FileTransfer 0[]:[][]:[]");
+ 	struct sockaddr_in addr;
+         socklen_t addr_size = sizeof(addr);
+ 	cmyth_file_t ret = NULL;
+@@ -716,6 +731,11 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
+ 			  __FUNCTION__, host, port, buflen);
+ 		goto shut;
+ 	}
++	/*
++	 * Explicitly set the conn version to the control version as cmyth_connect() doesn't and some of
++	 * the cmyth_rcv_* functions expect it to be the same as the protocol version used by mythbackend.
++	 */
++	conn->conn_version = control->conn_version;
+ 	
+ 	ann_size += strlen(path) + strlen(my_hostname) + strlen(sgToGetFrom) + 6;
+ 	announcement = malloc(ann_size);
+@@ -771,7 +792,7 @@ cmyth_conn_connect_path(char* path, cmyth_conn_t control,
+ 	r = cmyth_rcv_u_long_long(conn, &err, &ret->file_length, count);
+ 	if (err) {
+ 		cmyth_dbg(CMYTH_DBG_ERROR,
+-			  "%s: (length) cmyth_rcv_longlong() failed (%d)\n",
++			  "%s: (length) cmyth_rcv_u_long_long() failed (%d)\n",
+ 			  __FUNCTION__, err);
+ 		goto shut;
+ 	}
+diff --git a/lib/cmyth/libcmyth/file.c b/lib/cmyth/libcmyth/file.c
+index 74408ed..640f299 100644
+--- a/lib/cmyth/libcmyth/file.c
++++ b/lib/cmyth/libcmyth/file.c
+@@ -20,6 +20,7 @@
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <errno.h>
++#include <inttypes.h>
+ #ifndef _MSC_VER
+ #include <sys/socket.h>
+ #endif
+@@ -449,14 +450,28 @@ cmyth_file_seek(cmyth_file_t file, long long offset, int whence)
+ 
+ 	pthread_mutex_lock(&mutex);
+ 
+-	snprintf(msg, sizeof(msg),
+-		 "QUERY_FILETRANSFER %ld[]:[]SEEK[]:[]%d[]:[]%d[]:[]%d[]:[]%d[]:[]%d",
+-		 file->file_id,
+-		 (int32_t)(offset >> 32),
+-		 (int32_t)(offset & 0xffffffff),
+-		 whence,
+-		 (int32_t)(file->file_pos >> 32),
+-		 (int32_t)(file->file_pos & 0xffffffff));
++	if (file->file_control->conn_version >= 66) {
++		/*
++		 * Since protocol 66 mythbackend expects to receive a single 64 bit integer rather than
++		 * two 32 bit hi and lo integers.
++		 */
++		snprintf(msg, sizeof(msg),
++			 "QUERY_FILETRANSFER %ld[]:[]SEEK[]:[]%"PRIu64"[]:[]%d[]:[]%"PRIu64,
++			 file->file_id,
++			 (int64_t)offset,
++			 whence,
++			 (int64_t)file->file_pos);
++	}
++	else {
++		snprintf(msg, sizeof(msg),
++			 "QUERY_FILETRANSFER %ld[]:[]SEEK[]:[]%d[]:[]%d[]:[]%d[]:[]%d[]:[]%d",
++			 file->file_id,
++			 (int32_t)(offset >> 32),
++			 (int32_t)(offset & 0xffffffff),
++			 whence,
++			 (int32_t)(file->file_pos >> 32),
++			 (int32_t)(file->file_pos & 0xffffffff));
++	}
+ 
+ 	if ((err = cmyth_send_message(file->file_control, msg)) < 0) {
+ 		cmyth_dbg(CMYTH_DBG_ERROR,
+diff --git a/lib/cmyth/libcmyth/proginfo.c b/lib/cmyth/libcmyth/proginfo.c
+index b175637..f6f9347 100644
+--- a/lib/cmyth/libcmyth/proginfo.c
++++ b/lib/cmyth/libcmyth/proginfo.c
+@@ -116,6 +116,9 @@ cmyth_proginfo_destroy(cmyth_proginfo_t p)
+ 	if (p->proginfo_programid) {
+ 		ref_release(p->proginfo_programid);
+ 	}
++	if (p->proginfo_inetref) {
++		ref_release(p->proginfo_inetref);
++	}
+ 	if (p->proginfo_stars) {
+ 		ref_release(p->proginfo_stars);
+ 	}
+@@ -217,6 +220,8 @@ cmyth_proginfo_create(void)
+ 	ret->proginfo_title = NULL;
+ 	ret->proginfo_subtitle = NULL;
+ 	ret->proginfo_description = NULL;
++	ret->proginfo_season = 0;
++	ret->proginfo_episode = 0;
+ 	ret->proginfo_category = NULL;
+ 	ret->proginfo_chanId = 0;
+ 	ret->proginfo_chanstr = NULL;
+@@ -250,6 +255,7 @@ cmyth_proginfo_create(void)
+ 	ret->proginfo_chan_output_filters = NULL;
+ 	ret->proginfo_seriesid = NULL;
+ 	ret->proginfo_programid = NULL;
++	ret->proginfo_inetref = NULL;
+ 	ret->proginfo_stars = NULL;
+ 	ret->proginfo_version = 12;
+ 	ret->proginfo_hasairdate = 0;
+@@ -307,6 +313,8 @@ cmyth_proginfo_dup(cmyth_proginfo_t p)
+ 	ret->proginfo_title = ref_hold(p->proginfo_title);
+ 	ret->proginfo_subtitle = ref_hold(p->proginfo_subtitle);
+ 	ret->proginfo_description = ref_hold(p->proginfo_description);
++	ret->proginfo_season = p->proginfo_season;
++	ret->proginfo_episode = p->proginfo_episode;
+ 	ret->proginfo_category = ref_hold(p->proginfo_category);
+ 	ret->proginfo_chanId = p->proginfo_chanId;
+ 	ret->proginfo_chanstr = ref_hold(p->proginfo_chanstr);
+@@ -340,6 +348,7 @@ cmyth_proginfo_dup(cmyth_proginfo_t p)
+ 	ret->proginfo_chan_output_filters = ref_hold(p->proginfo_chan_output_filters);
+ 	ret->proginfo_seriesid = ref_hold(p->proginfo_seriesid);
+ 	ret->proginfo_programid = ref_hold(p->proginfo_programid);
++	ret->proginfo_inetref = ref_hold(p->proginfo_inetref);
+ 	ret->proginfo_stars = ref_hold(p->proginfo_stars);
+ 	ret->proginfo_version = p->proginfo_version;
+ 	ret->proginfo_hasairdate = p->proginfo_hasairdate;
+@@ -386,7 +395,7 @@ delete_command(cmyth_conn_t control, cmyth_proginfo_t prog, char *cmd)
+ 	char *buf;
+ 	unsigned int len = ((2 * CMYTH_LONGLONG_LEN) + 
+ 			    (6 * CMYTH_TIMESTAMP_LEN) +
+-			    (14 * CMYTH_LONG_LEN));
++			    (16 * CMYTH_LONG_LEN));
+ 	char start_ts[CMYTH_TIMESTAMP_LEN + 1];
+ 	char end_ts[CMYTH_TIMESTAMP_LEN + 1];
+ 	char rec_start_ts[CMYTH_TIMESTAMP_LEN + 1];
+@@ -415,8 +424,12 @@ delete_command(cmyth_conn_t control, cmyth_proginfo_t prog, char *cmd)
+ 	len += strlen(S(prog->proginfo_url));
+ 	len += strlen(S(prog->proginfo_hostname));
+ 	len += strlen(S(prog->proginfo_playgroup));
++	len += strlen(S(prog->proginfo_seriesid));
++	len += strlen(S(prog->proginfo_programid));
++	len += strlen(S(prog->proginfo_inetref));
+ 	len += strlen(S(prog->proginfo_recpriority_2));
+ 	len += strlen(S(prog->proginfo_storagegroup));
++	len += strlen(S(prog->proginfo_prodyear));
+ 
+ 	buf = alloca(len + 1+2048);
+ 	if (!buf) {
+@@ -462,6 +475,10 @@ delete_command(cmyth_conn_t control, cmyth_proginfo_t prog, char *cmd)
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_title));
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_subtitle));
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_description));
++		if (control->conn_version >= 67) {
++			sprintf(buf + strlen(buf), "%u[]:[]", prog->proginfo_season);
++			sprintf(buf + strlen(buf), "%u[]:[]", prog->proginfo_episode);
++		}
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_category));
+ 		sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_chanId);
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_chanstr));
+@@ -504,6 +521,9 @@ delete_command(cmyth_conn_t control, cmyth_proginfo_t prog, char *cmd)
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_chan_output_filters));
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_seriesid));
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_programid));
++		if (control->conn_version >= 67) {
++			sprintf(buf + strlen(buf), "%s[]:[]", S(prog->proginfo_inetref));
++		}
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  lastmodified);
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_stars));
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  originalairdate);
+@@ -773,6 +793,24 @@ cmyth_proginfo_description(cmyth_proginfo_t prog)
+ 	return ref_hold(prog->proginfo_description);
+ }
+ 
++unsigned short
++cmyth_proginfo_season(cmyth_proginfo_t prog)
++{
++	if (!prog) {
++		return 0;
++	}
++	return prog->proginfo_season;
++}
++
++unsigned short
++cmyth_proginfo_episode(cmyth_proginfo_t prog)
++{
++	if (!prog) {
++		return 0;
++	}
++	return prog->proginfo_episode;
++}
++
+ /*
+  * cmyth_proginfo_category(cmyth_proginfo_t prog)
+  *
+@@ -827,6 +865,17 @@ cmyth_proginfo_programid(cmyth_proginfo_t prog)
+ }
+ 
+ char *
++cmyth_proginfo_inetref(cmyth_proginfo_t prog)
++{
++	if (!prog) {
++		cmyth_dbg(CMYTH_DBG_ERROR, "%s: NULL inetref\n",
++			  __FUNCTION__);
++		return NULL;
++	}
++	return ref_hold(prog->proginfo_inetref);
++}
++
++char *
+ cmyth_proginfo_stars(cmyth_proginfo_t prog)
+ {
+ 	if (!prog) {
+@@ -1260,7 +1309,7 @@ fill_command(cmyth_conn_t control, cmyth_proginfo_t prog, char *cmd)
+ 	char *buf;
+ 	unsigned int len = ((2 * CMYTH_LONGLONG_LEN) + 
+ 			    (6 * CMYTH_TIMESTAMP_LEN) +
+-			    (14 * CMYTH_LONG_LEN));
++			    (16 * CMYTH_LONG_LEN));
+ 	char start_ts[CMYTH_TIMESTAMP_LEN + 1];
+ 	char end_ts[CMYTH_TIMESTAMP_LEN + 1];
+ 	char rec_start_ts[CMYTH_TIMESTAMP_LEN + 1];
+@@ -1288,6 +1337,9 @@ fill_command(cmyth_conn_t control, cmyth_proginfo_t prog, char *cmd)
+ 	len += strlen(S(prog->proginfo_url));
+ 	len += strlen(S(prog->proginfo_hostname));
+ 	len += strlen(S(prog->proginfo_playgroup));
++	len += strlen(S(prog->proginfo_seriesid));
++	len += strlen(S(prog->proginfo_programid));
++	len += strlen(S(prog->proginfo_inetref));
+ 	len += strlen(S(prog->proginfo_recpriority_2));
+ 	len += strlen(S(prog->proginfo_storagegroup));
+ 	len += strlen(S(prog->proginfo_prodyear));
+@@ -1336,6 +1388,10 @@ fill_command(cmyth_conn_t control, cmyth_proginfo_t prog, char *cmd)
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_title));
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_subtitle));
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_description));
++		if (control->conn_version >= 67) {
++			sprintf(buf + strlen(buf), "%u[]:[]", prog->proginfo_season);
++			sprintf(buf + strlen(buf), "%u[]:[]", prog->proginfo_episode);
++		}
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_category));
+ 		sprintf(buf + strlen(buf), "%ld[]:[]", prog->proginfo_chanId);
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_chanstr));
+@@ -1378,6 +1434,9 @@ fill_command(cmyth_conn_t control, cmyth_proginfo_t prog, char *cmd)
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_chan_output_filters));
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_seriesid));
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_programid));
++		if (control->conn_version >= 67) {
++			sprintf(buf + strlen(buf), "%s[]:[]", S(prog->proginfo_inetref));
++		}
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  lastmodified);
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  S(prog->proginfo_stars));
+ 		sprintf(buf + strlen(buf), "%s[]:[]",  originalairdate);
+diff --git a/lib/cmyth/libcmyth/proglist.c b/lib/cmyth/libcmyth/proglist.c
+index 28e742c..fe75577 100644
+--- a/lib/cmyth/libcmyth/proglist.c
++++ b/lib/cmyth/libcmyth/proglist.c
+@@ -315,6 +315,7 @@ cmyth_proglist_get_list(cmyth_conn_t conn,
+ cmyth_proglist_t
+ cmyth_proglist_get_all_recorded(cmyth_conn_t control)
+ {
++	char query[32];
+ 	cmyth_proglist_t proglist = cmyth_proglist_create();
+ 
+ 	if (proglist == NULL) {
+@@ -324,8 +325,14 @@ cmyth_proglist_get_all_recorded(cmyth_conn_t control)
+ 		return NULL;
+ 	}
+ 
++	if (control->conn_version < 65) {
++		strcpy(query, "QUERY_RECORDINGS Play");
++	}
++	else {
++		strcpy(query, "QUERY_RECORDINGS Ascending");
++	}
+ 	if (cmyth_proglist_get_list(control, proglist,
+-				    "QUERY_RECORDINGS Play",
++				    query,
+ 				    __FUNCTION__) < 0) {
+ 		cmyth_dbg(CMYTH_DBG_ERROR,
+ 			  "%s: cmyth_proglist_get_list() failed\n",
+diff --git a/lib/cmyth/libcmyth/socket.c b/lib/cmyth/libcmyth/socket.c
+index f1f9a45..552b88d 100644
+--- a/lib/cmyth/libcmyth/socket.c
++++ b/lib/cmyth/libcmyth/socket.c
+@@ -882,23 +882,38 @@ cmyth_rcv_long_long(cmyth_conn_t conn, int *err, long long *buf, int count)
+ 		*err = EINVAL;
+ 		return 0;
+ 	}
+-	consumed = cmyth_rcv_u_long(conn, err, &hi, count);
+-	if (*err) {
+-		cmyth_dbg(CMYTH_DBG_ERROR,
+-			  "%s: cmyth_rcv_long_long() failed (%d)\n",
+-			  __FUNCTION__, consumed);
+-		return consumed;
++
++	if (conn->conn_version >= 66) {
++		/*
++		 * Since protocol 66 mythbackend now sends a single 64 bit integer rather than two hi and lo
++		 * 32 bit integers for ALL 64 bit values.
++		 */
++		consumed = cmyth_rcv_int64(conn, err, &val, count);
++		if (*err) {
++			cmyth_dbg(CMYTH_DBG_ERROR,
++				  "%s: cmyth_rcv_int64() failed (%d)\n",
++				  __FUNCTION__, consumed);
++			return consumed;
++		}
+ 	}
+-	consumed += cmyth_rcv_u_long(conn, err, &lo, count-consumed);
+-	if (*err) {
+-		cmyth_dbg(CMYTH_DBG_ERROR,
+-			  "%s: cmyth_rcv_long_long() failed (%d)\n",
+-			  __FUNCTION__, consumed);
+-		return consumed;
++	else {
++		consumed = cmyth_rcv_u_long(conn, err, &hi, count);
++		if (*err) {
++			cmyth_dbg(CMYTH_DBG_ERROR,
++				  "%s: cmyth_rcv_u_long_long() failed (%d)\n",
++				  __FUNCTION__, consumed);
++			return consumed;
++		}
++		consumed += cmyth_rcv_u_long(conn, err, &lo, count-consumed);
++		if (*err) {
++			cmyth_dbg(CMYTH_DBG_ERROR,
++				  "%s: cmyth_rcv_u_long_long() failed (%d)\n",
++				  __FUNCTION__, consumed);
++			return consumed;
++		}
++		val = (((long long)hi) << 32) | ((long long)(lo & 0xFFFFFFFF));
+ 	}
+ 
+-	val = (((long long)hi) << 32) | ((long long)(lo & 0xFFFFFFFF));
+-
+ 	*err = 0;
+ 	*buf = val;
+ 
+@@ -1172,6 +1187,7 @@ cmyth_rcv_ulong_long(cmyth_conn_t conn, int *err,
+ 		     unsigned long long *buf, int count)
+ {
+ 	unsigned long long val;
++	long long val64;
+ 	unsigned long hi, lo;
+ 	int consumed;
+ 	int tmp;
+@@ -1186,23 +1202,45 @@ cmyth_rcv_ulong_long(cmyth_conn_t conn, int *err,
+ 		*err = EINVAL;
+ 		return 0;
+ 	}
+-	consumed = cmyth_rcv_u_long(conn, err, &hi, count);
+-	if (*err) {
+-		cmyth_dbg(CMYTH_DBG_ERROR,
+-			  "%s: cmyth_rcv_ulong_long() failed (%d)\n",
+-			  __FUNCTION__, consumed);
+-		return consumed;
++	
++	if (conn->conn_version >= 66) {
++		/*
++		 * Since protocol 66 mythbackend now sends a single 64 bit integer rather than two hi and lo
++		 * 32 bit integers for ALL 64 bit values.
++		 */
++		consumed = cmyth_rcv_int64(conn, err, &val64, count);
++		if (*err) {
++			cmyth_dbg(CMYTH_DBG_ERROR,
++				  "%s: cmyth_rcv_int64() failed (%d)\n",
++				  __FUNCTION__, consumed);
++			return consumed;
++		}
++		if (val64 < 0) {
++			cmyth_dbg(CMYTH_DBG_ERROR,
++				  "%s: cmyth_rcv_int64() failed as signed 64 bit integer received\n",
++				  __FUNCTION__, consumed);
++			*err = EINVAL;
++			return consumed;
++		}
++		val = (unsigned long long)val64;
+ 	}
+-	consumed += cmyth_rcv_u_long(conn, err, &lo, count);
+-	if (*err) {
+-		cmyth_dbg(CMYTH_DBG_ERROR,
+-			  "%s: cmyth_rcv_ulong_long() failed (%d)\n",
+-			  __FUNCTION__, consumed);
+-		return consumed;
++	else {
++		consumed = cmyth_rcv_u_long(conn, err, &hi, count);
++		if (*err) {
++			cmyth_dbg(CMYTH_DBG_ERROR,
++				  "%s: cmyth_rcv_u_long_long() failed (%d)\n",
++				  __FUNCTION__, consumed);
++			return consumed;
++		}
++		consumed += cmyth_rcv_u_long(conn, err, &lo, count);
++		if (*err) {
++			cmyth_dbg(CMYTH_DBG_ERROR,
++				  "%s: cmyth_rcv_u_long_long() failed (%d)\n",
++				  __FUNCTION__, consumed);
++			return consumed;
++		}
++		val = (((unsigned long long)hi) << 32) | ((unsigned long long)(lo & 0xFFFFFFFF));
+ 	}
+-
+-	val = (((unsigned long long)hi) << 32) | ((unsigned long long)(lo & 0xFFFFFFFF));
+-
+ 	*err = 0;
+ 	*buf = val;
+ 
+@@ -1485,7 +1523,8 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
+ 
+ 	if (buf->proginfo_version >= 57) {
+ 		/*
+-		 * Myth now sends a single 64bit int, rather than 2 32bit ints
++		 * Since protocol 57 mythbackend now sends a single 64 bit integer rather than two 32 bit
++		 * hi and lo integers for the proginfo length.
+ 		 */
+ 		rcv_64 = &cmyth_rcv_int64;
+ 	} else {
+@@ -1536,6 +1575,29 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
+ 		ref_release(buf->proginfo_description);
+ 	buf->proginfo_description = ref_strdup(tmp_str);
+ 
++	if (buf->proginfo_version >= 67) {
++		/*
++		 * Get season and episode (unsigned int)
++		 */
++		consumed = cmyth_rcv_ushort(conn, err,
++					   &buf->proginfo_season, count);
++		count -= consumed;
++		total += consumed;
++		if (*err) {
++			failed = "cmyth_rcv_ushort";
++			goto fail;
++		}
++
++		consumed = cmyth_rcv_ushort(conn, err,
++					   &buf->proginfo_episode, count);
++		count -= consumed;
++		total += consumed;
++		if (*err) {
++			failed = "cmyth_rcv_ushort";
++			goto fail;
++		}
++	}
++
+ 	/*
+ 	 * Get proginfo_category (string)
+ 	 */
+@@ -1649,7 +1711,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
+ 	count -= consumed;
+ 	total += consumed;
+ 	if (*err) {
+-		failed = "cmyth_rcv_long_long";
++		failed = "rcv_64";
+ 		goto fail;
+ 	}
+ 
+@@ -2013,7 +2075,7 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
+ 		count -= consumed;
+ 		total += consumed;
+ 		if (*err) {
+-			failed = "cmyth_rcv_timestamp";
++			failed = "cmyth_rcv_string";
+ 			goto fail;
+ 		}
+ 		if (buf->proginfo_programid)
+@@ -2021,6 +2083,23 @@ cmyth_rcv_proginfo(cmyth_conn_t conn, int *err, cmyth_proginfo_t buf,
+ 		buf->proginfo_programid = ref_strdup(tmp_str);
+ 	}
+ 
++	if (buf->proginfo_version >= 67) {
++		/*
++		 * Get inetref (string)
++		 */
++		consumed = cmyth_rcv_string(conn, err, tmp_str,
++						sizeof(tmp_str) - 1, count);
++		count -= consumed;
++		total += consumed;
++		if (*err) {
++			failed = "cmyth_rcv_string";
++			goto fail;
++		}
++		if (buf->proginfo_inetref)
++			ref_release(buf->proginfo_inetref);
++		buf->proginfo_inetref = ref_strdup(tmp_str);
++	}
++
+ 	if (buf->proginfo_version >= 12) {
+ 		/*
+ 		 * Get lastmodified (string)

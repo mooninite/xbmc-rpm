@@ -1,11 +1,11 @@
-%global PRERELEASE Eden_rc2
+#global PRERELEASE Eden_rc2
 %global DIRVERSION %{version}
 # use below for pre-release
 #global DIRVERSION %{version}-%{PRERELEASE}
 
 Name: xbmc
 Version: 11.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -36,14 +36,28 @@ Patch3: xbmc-10-disable-zlib-in-cximage.patch
 # functionality, needs to be able fallback internal version
 Patch4: xbmc-11.0-hdhomerun.patch
 
+# patch pristine Eden source (git tag: 11.0-Eden-r2) against
+# tsp42's back-port of PVR support (including MythTV support) 
+# to stable Eden branch, patch created using the following:
+#
+#  git clone git://github.com/tsp/xbmc.git xbmc-Eden-pvr
+#  cd xbmc-Eden-pvr/
+#  git checkout Eden-pvr 
+#  git remote add main git://github.com/xbmc/xbmc.git
+#  git fetch main
+#  git diff 11.0-Eden-r2 Eden-pvr > xbmc-11.0-tsp-Eden-pvr.patch
+#
+# (note that hunks within patch that patch ffmpeg needed to be
+# removed, since ffmpeg is removed from original tarball, and other
+# minor tweaks may be needed)
+Patch5: xbmc-11.0-tsp-Eden-pvr.patch
 
-# libpng 1.5 patch from gentoo
-# http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/media-tv/xbmc/files/xbmc-10.1-libpng-1.5.patch
-# following two patches both submitted upstream: 
-# http://trac.xbmc.org/ticket/12001
-Patch5: xbmc-10.1-libpng-1.5.patch
-# second libpng 1.5 patch avoids use of uninitialised values
-Patch6: xbmc-11.0-libpng-1.5-fix-plt-trn-get.patch
+# backport myth-0.25 patch to Eden-PVR from dteirney
+# 
+# git clone --branch myth-0.25 https://github.com/dteirney/xbmc.git xbmc-myth-0.25
+# cd xbmc-myth-0.25
+# git diff 00e6c1c > xbmc-11.0-dteirney-myth-0.25.patch
+Patch6: xbmc-11.0-dteirney-myth-0.25.patch
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -129,8 +143,7 @@ BuildRequires: cwiid-devel
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
-# afp build currently broken
-#BuildRequires: afpfs-ng-devel
+BuildRequires: afpfs-ng-devel
 # VAAPI currently not working, comment-out
 #BuildRequires: libva-freeworld-devel
 
@@ -192,8 +205,8 @@ forecast functions, together third-party plugins.
 %patch2 -p0
 #patch3 -p0
 %patch4 -p0
-#patch5 -p2
-#patch6 -p1
+%patch5 -p1
+%patch6 -p1
 
 %build
 
@@ -211,8 +224,8 @@ chmod +x bootstrap
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
 CPPFLAGS="-I/usr/include/ffmpeg" \
-CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
-CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
+CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
+CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
 LDFLAGS="-fPIC" \
 LIBS="-L%{_libdir}/mysql -lhdhomerun $LIBS" \
 ASFLAGS=-fPIC
@@ -269,6 +282,14 @@ rm -rf $RPM_BUILD_ROOT
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Wed May 16 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-2
+- Add support for PVR add-ons (backported from tsp's PVR branch to
+  Eden), including MythTV
+- Workaround bug in compiling against afpfs-ng-devel, will hopefully
+  get AirPlay support working (needs testing)
+- Drop references to obsolete patches now in Eden
+- Add patch from dteirney's branch for MythTV 0.25 support
+
 * Sun Mar 25 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-1
 - Update to Eden final 11.0
 - Drop libpng 1.5 patches, applied upstream
