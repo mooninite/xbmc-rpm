@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 11.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -239,6 +239,11 @@ make DESTDIR=$RPM_BUILD_ROOT install
 # remove the doc files from unversioned /usr/share/doc/xbmc, they should be in versioned docdir
 rm -r $RPM_BUILD_ROOT/%{_datadir}/doc/
 
+# remove the old dteirney MythTV add-on (no longer works
+# and can be confused with the new tsp version)
+rm -r $RPM_BUILD_ROOT/%{_libdir}/xbmc/addons/pvr.mythtv
+rm -f $RPM_BUILD_ROOT/%{_datadir}/xbmc/addons/pvr.mythtv
+
 desktop-file-install \
  --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
  $RPM_BUILD_ROOT%{_datadir}/applications/xbmc.desktop
@@ -282,6 +287,10 @@ rm -rf $RPM_BUILD_ROOT
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Thu May 17 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-3
+- Remove the old MythTV add-on (no longer works
+  and can be confused with the new cmyth-based version)
+
 * Wed May 16 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-2
 - Add support for PVR add-ons (backported from tsp's PVR branch to
   Eden), including MythTV
