@@ -300,7 +300,7 @@ fi
 - Cleanup spec, fix position of scriplets (#2334)
 
 * Sat May 19 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 11.0-3.1
-- Changes for EL-6:
+- Changes for EL-6: (#2339)
 - Conditionally use gettext-devel instead of gettext-autopoint
 - Conditionally disable libbluray and cwiid BRs (unavailable in EL6)
 - Patch to build pvr with EL6's boost 1.41
