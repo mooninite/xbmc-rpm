@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 11.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -51,13 +51,6 @@ Patch4: xbmc-11.0-hdhomerun.patch
 # removed, since ffmpeg is removed from original tarball, and other
 # minor tweaks may be needed)
 Patch5: xbmc-11.0-tsp-Eden-pvr.patch
-
-# backport myth-0.25 patch to Eden-PVR from dteirney
-# 
-# git clone --branch myth-0.25 https://github.com/dteirney/xbmc.git xbmc-myth-0.25
-# cd xbmc-myth-0.25
-# git diff 00e6c1c > xbmc-11.0-dteirney-myth-0.25.patch
-Patch6: xbmc-11.0-dteirney-myth-0.25.patch
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -133,13 +126,25 @@ BuildRequires: libmodplug-devel
 BuildRequires: libmicrohttpd-devel
 BuildRequires: expat-devel
 BuildRequires: zip
+%if 0%{?el6}
+BuildRequires: gettext-devel
+%else
 BuildRequires: gettext-autopoint
+%endif
 BuildRequires: librtmp-devel
+%if 0%{?el6}
+# libbluray in EPEL 6 is too old. 
+%else
 BuildRequires: libbluray-devel
+%endif
 #BuildRequires: libbluray-devel >= 0.2.1
 BuildRequires: yajl-devel
 BuildRequires: bluez-libs-devel
+%if 0%{?el6}
+# EPEL 6 does not have cwiid
+%else
 BuildRequires: cwiid-devel
+%endif
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
@@ -152,7 +157,11 @@ BuildRequires: afpfs-ng-devel
 # pseudo-DLL loading scheme (sigh)
 Requires: libcrystalhd
 Requires: librtmp
+%if 0%{?el6}
+# libbluray in EPEL 6 is too old. 
+%else
 Requires: libbluray
+%endif
 
 # needed when doing a minimal install, see
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=1844
@@ -163,18 +172,6 @@ Requires: xorg-x11-utils
 # and for installation
 BuildRequires: python-imaging
 Requires: python-imaging
-
-%post
-/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-
-%posttrans
-/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %description
 XBMC media center is a free cross-platform media-player jukebox and
@@ -206,7 +203,6 @@ forecast functions, together third-party plugins.
 #patch3 -p0
 %patch4 -p0
 %patch5 -p1
-%patch6 -p1
 
 %build
 
@@ -255,9 +251,20 @@ ln -s %{python_sitearch}/PIL $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module
 #install -d $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pysqlite/lib
 #ln -s %{python_sitearch}/pysqlite2 $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pysqlite/lib/pysqlite2
 
-
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+
+%postun
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
+
+%posttrans
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
 %defattr(-,root,root)
@@ -287,6 +294,17 @@ rm -rf $RPM_BUILD_ROOT
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Tue Jun  5 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-4
+- Drop separate dteirney-myth-0.25.patch and ktdryer's boost patch,
+  both are merged into tsp's Eden-pvr branch
+- Cleanup spec, fix position of scriplets (#2334)
+
+* Sat May 19 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 11.0-3.1
+- Changes for EL-6:
+- Conditionally use gettext-devel instead of gettext-autopoint
+- Conditionally disable libbluray and cwiid BRs (unavailable in EL6)
+- Patch to build pvr with EL6's boost 1.41
+
 * Thu May 17 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-3
 - Remove the old MythTV add-on (no longer works
   and can be confused with the new cmyth-based version)
