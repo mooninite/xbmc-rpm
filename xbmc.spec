@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 11.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -126,6 +126,9 @@ BuildRequires: libmodplug-devel
 BuildRequires: libmicrohttpd-devel
 BuildRequires: expat-devel
 BuildRequires: zip
+BuildRequires: libudev-devel  
+# for AirPlay support
+BuildRequires: libplist-devel
 %if 0%{?el6}
 BuildRequires: gettext-devel
 %else
@@ -294,6 +297,9 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Wed Jun  6 2012  Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-5
+- Add missing BRs for libudev-devel and libplist-devel (needed for AirPlay)
+
 * Tue Jun  5 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-4
 - Drop separate dteirney-myth-0.25.patch and ktdryer's boost patch,
   both are merged into tsp's Eden-pvr branch
