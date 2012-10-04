@@ -251,8 +251,8 @@ chmod +x bootstrap
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
 CPPFLAGS="-I/usr/include/ffmpeg" \
-CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
-CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
+CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
+CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
 LDFLAGS="-fPIC" \
 LIBS="-L%{_libdir}/mysql %{?_with_hdhomerun:-lhdhomerun} $LIBS" \
 ASFLAGS=-fPIC
@@ -327,6 +327,7 @@ fi
 - Drop desktop patch (now in Frodo alpha6)
 - Add BR for taglib-devel >= 1.8 (libid3tag is being phased out)
 - BR for swig and java-devel
+- Add CFLAGS option to recognize Samba 4.0 (in f18+)
 - Rebase patches to 12.0/Frodo where necessary
 
 * Sun Aug 28 2012 Ken Dreyer <ktdreyer@ktdreyer..com> - 12.8-0.1.Frodo_alpha4
