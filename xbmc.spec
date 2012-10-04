@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 11.0
-Release: 5%{?dist}
+Release: 8%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -51,6 +51,13 @@ Patch4: xbmc-11.0-hdhomerun.patch
 # removed, since ffmpeg is removed from original tarball, and other
 # minor tweaks may be needed)
 Patch5: xbmc-11.0-tsp-Eden-pvr.patch
+
+# Optional deps (not in EPEL)
+# (libbluray in EPEL 6 is too old.)
+%{?fedora:%global _with_hdhomerun 1}
+%{?fedora:%global _with_crystalhd 1}
+%{?fedora:%global _with_libbluray 1}
+%{?fedora:%global _with_cwiid     1}
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -120,13 +127,17 @@ BuildRequires: faad2-devel
 BuildRequires: pulseaudio-libs-devel
 BuildRequires: libdca-devel
 BuildRequires: libass-devel >= 0.9.7
+%if 0%{?_with_hdhomerun}
 BuildRequires: hdhomerun-devel
+%endif
+%if 0%{?_with_crystalhd}
 BuildRequires: libcrystalhd-devel
+%endif
 BuildRequires: libmodplug-devel
 BuildRequires: libmicrohttpd-devel
 BuildRequires: expat-devel
 BuildRequires: zip
-BuildRequires: libudev-devel  
+BuildRequires: pkgconfig(libudev)
 # for AirPlay support
 BuildRequires: libplist-devel
 %if 0%{?el6}
@@ -135,17 +146,13 @@ BuildRequires: gettext-devel
 BuildRequires: gettext-autopoint
 %endif
 BuildRequires: librtmp-devel
-%if 0%{?el6}
-# libbluray in EPEL 6 is too old. 
-%else
+%if 0%{?_with_libbluray}
 BuildRequires: libbluray-devel
-%endif
 #BuildRequires: libbluray-devel >= 0.2.1
+%endif
 BuildRequires: yajl-devel
 BuildRequires: bluez-libs-devel
-%if 0%{?el6}
-# EPEL 6 does not have cwiid
-%else
+%if 0%{?_with_cwiid}
 BuildRequires: cwiid-devel
 %endif
 
@@ -158,11 +165,14 @@ BuildRequires: afpfs-ng-devel
 # need explicit requires for these packages
 # as they are dynamically loaded via XBMC's arcane 
 # pseudo-DLL loading scheme (sigh)
-Requires: libcrystalhd
 Requires: librtmp
-%if 0%{?el6}
-# libbluray in EPEL 6 is too old. 
-%else
+%if 0%{?_with_hdhomerun}
+BuildRequires: hdhomerun
+%endif
+%if 0%{?_with_crystalhd}
+Requires: libcrystalhd
+%endif
+%if 0%{?_with_libbluray}
 Requires: libbluray
 %endif
 
@@ -207,6 +217,17 @@ forecast functions, together third-party plugins.
 %patch4 -p0
 %patch5 -p1
 
+%if 0%{?_with_hdhomerun}
+%else
+  # Remove hdhomerun from the build.
+  pushd xbmc/filesystem/
+    rm HDHomeRun.cpp HDHomeRun.h
+    sed -i Makefile.in -e '/HDHomeRun\.cpp/d'
+    sed -i FactoryDirectory.cpp -e '/HomeRun/d'
+    sed -i FileFactory.cpp -e '/HomeRun/d'
+  popd
+%endif
+
 %build
 
 chmod +x bootstrap
@@ -226,7 +247,7 @@ CPPFLAGS="-I/usr/include/ffmpeg" \
 CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
 CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -D__STDC_CONSTANT_MACROS" \
 LDFLAGS="-fPIC" \
-LIBS="-L%{_libdir}/mysql -lhdhomerun $LIBS" \
+LIBS="-L%{_libdir}/mysql %{?_with_hdhomerun:-lhdhomerun} $LIBS" \
 ASFLAGS=-fPIC
 
 make %{?_smp_mflags} VERBOSE=1
@@ -297,6 +318,16 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Wed Jul 11 2012 Nicolas Chauvet <kwizart@gmail.com> - 11.0-8
+- Switch to pkgconfig(libudev)
+
+* Sun Jul 01 2012 Ken Dreyer <ktdreyer@ktdreyer..com> - 11.0-7
+- Set up with_* conditionals for optional dependencies
+- Disable hdhomerun and crystalhd for EPEL (#2339)
+
+* Tue Jun 26 2012 Nicolas Chauvet <kwizart@gmail.com> - 11.0-6
+- Rebuilt for FFmpeg
+
 * Wed Jun  6 2012  Alex Lancaster <alexlan[AT]fedoraproject org> - 11.0-5
 - Add missing BRs for libudev-devel and libplist-devel (needed for AirPlay)
 
