@@ -294,7 +294,7 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc copying.txt keymapping.txt LICENSE.GPL README
+%doc copying.txt CONTRIBUTORS LICENSE.GPL README
 %doc docs
 %{_bindir}/xbmc
 %{_bindir}/xbmc-standalone
