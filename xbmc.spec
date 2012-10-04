@@ -159,6 +159,7 @@ BuildRequires: cwiid-devel
 BuildRequires: taglib-devel >= 1.8
 BuildRequires: swig
 BuildRequires: java-devel
+BuildRequires: lame-devel
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
@@ -246,6 +247,7 @@ chmod +x bootstrap
 --with-lirc-device=/var/run/lirc/lircd \
 --enable-goom \
 --enable-external-libraries \
+--enable-pulse \
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
 CPPFLAGS="-I/usr/include/ffmpeg" \
