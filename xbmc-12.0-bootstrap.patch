@@ -1,0 +1,12 @@
+--- bootstrap.orig	2012-10-04 15:35:08.580601064 -0400
++++ bootstrap	2012-10-04 15:35:38.067597210 -0400
+@@ -11,7 +11,8 @@
+ # order matters with libdvd and friends
+ [ -d lib/libdvd/libdvdcss ] && \
+   autoreconf -vif lib/libdvd/libdvdcss
+-autoreconf -vif lib/libdvd/libdvdread
++[ -d lib/libdvd/libdvdread ] && \
++  autoreconf -vif lib/libdvd/libdvdread
+ autoreconf -vif lib/libdvd/libdvdnav
+ autoreconf -vif lib/gtest
+ 

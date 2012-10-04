@@ -1,25 +1,27 @@
 #!/bin/sh
 
-MAJORVERSION=11
+MAJORVERSION=12
 MINORVERSION=0
-#PRERELEASE=Eden_rc2
+PRERELEASE=Frodo_alpha6
 
 VERSION=${MAJORVERSION}.${MINORVERSION}${PRERELEASE:+-${PRERELEASE}}
 
-# GITHUBURL below is obsolete, I think
 #GITHUBURL=https://github.com/xbmc/xbmc/tarball/$VERSION-Eden
+GITHUBURL=https://github.com/xbmc/xbmc/zipball/$PRERELEASE
 
-# comment-out line below if using tarball
-#curl -L $GITHUBURL | tar xz
+# download zipball
+if [[ ! -f xbmc-$VERSION.zip ]]; then
+    curl -o xbmc-$VERSION.zip -L $GITHUBURL
+fi
+
+# extract zipball
+rm -r xbmc-xbmc-*
+unzip xbmc-$VERSION.zip
 
 # Repair GitHub's odd auto-generated top-level directory...
-#mv xbmc-xbmc-* xbmc-$VERSION
+mv xbmc-xbmc-* xbmc-$VERSION
 
-# extract tarball
-# comment-out if not using tarball
-tar -xzvf xbmc-$VERSION.tar.gz
-
-cd xbmc-$VERSION
+pushd xbmc-$VERSION
 
 # remove bundled libraries, saves space and forces using external versions
 # grrr, *still* have to keep in ffmpeg for now (2011-12-28) since upstream
@@ -62,7 +64,7 @@ do
     rm -r tools/$i
 done
 
-cd ..
+popd
 
 # repack
 tar -cJvf xbmc-$VERSION-patched.tar.xz xbmc-$VERSION

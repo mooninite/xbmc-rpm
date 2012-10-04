@@ -1,11 +1,11 @@
-#global PRERELEASE Eden_rc2
-%global DIRVERSION %{version}
+%global PRERELEASE Frodo_alpha6
+#global DIRVERSION %{version}
 # use below for pre-release
-#global DIRVERSION %{version}-%{PRERELEASE}
+%global DIRVERSION %{version}-%{PRERELEASE}
 
 Name: xbmc
-Version: 11.0
-Release: 8%{?dist}
+Version: 12.0
+Release: 0.1.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -21,11 +21,11 @@ Source1: xbmc-generate-tarball-xz.sh
 
 # new patches for bootstrap
 # no trac ticket filed as yet
-Patch1: xbmc-11.0-bootstrap.patch
+Patch1: xbmc-12.0-bootstrap.patch
 
 # filed ticket, but patch still needs work
 # http://trac.xbmc.org/ticket/9658
-Patch2: xbmc-11.0-dvdread.patch
+Patch2: xbmc-12.0-dvdread.patch
 
 # and new problem with zlib in cximage
 # trac ticket filed: http://trac.xbmc.org/ticket/9659
@@ -34,7 +34,7 @@ Patch3: xbmc-10-disable-zlib-in-cximage.patch
 
 # need to file trac ticket, this patch just forces external hdhomerun
 # functionality, needs to be able fallback internal version
-Patch4: xbmc-11.0-hdhomerun.patch
+Patch4: xbmc-12.0-hdhomerun.patch
 
 # patch pristine Eden source (git tag: 11.0-Eden-r2) against
 # tsp42's back-port of PVR support (including MythTV support) 
@@ -50,7 +50,7 @@ Patch4: xbmc-11.0-hdhomerun.patch
 # (note that hunks within patch that patch ffmpeg needed to be
 # removed, since ffmpeg is removed from original tarball, and other
 # minor tweaks may be needed)
-Patch5: xbmc-11.0-tsp-Eden-pvr.patch
+#Patch5: xbmc-11.0-tsp-Eden-pvr.patch
 
 # Optional deps (not in EPEL)
 # (libbluray in EPEL 6 is too old.)
@@ -152,9 +152,11 @@ BuildRequires: libbluray-devel
 %endif
 BuildRequires: yajl-devel
 BuildRequires: bluez-libs-devel
+BuildRequires: tinyxml-devel
 %if 0%{?_with_cwiid}
 BuildRequires: cwiid-devel
 %endif
+BuildRequires: taglib-devel >= 1.8
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
@@ -214,8 +216,9 @@ forecast functions, together third-party plugins.
 %patch1 -p0
 %patch2 -p0
 #patch3 -p0
-%patch4 -p0
-%patch5 -p1
+%patch4 -p1
+#patch5 -p1
+#patch6 -p1
 
 %if 0%{?_with_hdhomerun}
 %else
@@ -259,11 +262,6 @@ make DESTDIR=$RPM_BUILD_ROOT install
 # remove the doc files from unversioned /usr/share/doc/xbmc, they should be in versioned docdir
 rm -r $RPM_BUILD_ROOT/%{_datadir}/doc/
 
-# remove the old dteirney MythTV add-on (no longer works
-# and can be confused with the new tsp version)
-rm -r $RPM_BUILD_ROOT/%{_libdir}/xbmc/addons/pvr.mythtv
-rm -r $RPM_BUILD_ROOT/%{_datadir}/xbmc/addons/pvr.mythtv
-
 desktop-file-install \
  --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
  $RPM_BUILD_ROOT%{_datadir}/applications/xbmc.desktop
@@ -292,7 +290,8 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc copying.txt keymapping.txt LICENSE.GPL README.linux
+%doc copying.txt keymapping.txt LICENSE.GPL README
+%doc docs
 %{_bindir}/xbmc
 %{_bindir}/xbmc-standalone
 %{_libdir}/xbmc
@@ -318,6 +317,16 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Thu Oct  4 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 12.0-0.1.Frodo_alpha6
+- Update to Frodo alpha 6
+- Use "12.0" as version, rather than "12.8"
+- Drop desktop patch (now in Frodo alpha6)
+- Add BR for taglib-devel >= 1.8 (libid3tag is being phased out)
+- Rebase patches to 12.0/Frodo where necessary
+
+* Sun Aug 28 2012 Ken Dreyer <ktdreyer@ktdreyer..com> - 12.8-0.1.Frodo_alpha4
+- Upgrade to Frodo alpha 4
+
 * Wed Jul 11 2012 Nicolas Chauvet <kwizart@gmail.com> - 11.0-8
 - Switch to pkgconfig(libudev)
 

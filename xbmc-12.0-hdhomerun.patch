@@ -1,14 +1,24 @@
---- Makefile.in.orig	2011-12-27 18:13:13.204873013 -0500
-+++ Makefile.in	2011-12-27 18:14:17.225245721 -0500
-@@ -131,7 +131,6 @@
+commit 896387e8d0f501b6f46336dd5928d1e71914486c
+Author: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date:   Fri Aug 24 19:34:47 2012 -0600
+
+    Fedora: use internal hdhomerun
+    
+    Original patch by Alex Lancaster <alexlan[AT]fedoraproject org>
+
+diff --git a/Makefile.in b/Makefile.in
+index 6be215f..1120178 100755
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -141,7 +141,6 @@ endif
+ LIB_DIRS=\
  	lib/cximage-6.0 \
  	lib/libexif \
- 	lib/cmyth \
 -	lib/libhdhomerun \
  	lib/libid3tag \
  	lib/libapetag \
  	lib/cpluff \
-@@ -267,8 +266,6 @@
+@@ -295,8 +294,6 @@ libexif: dllloader
  	$(MAKE) -C lib/libexif
  cmyth: dllloader
  	$(MAKE) -C lib/cmyth
@@ -17,18 +27,20 @@
  libid3tag: dllloader
  	$(MAKE) -C lib/libid3tag
  papcodecs: dllloader dvdpcodecs
-@@ -293,7 +290,7 @@
- 	$(MAKE) -C lib/cximage-6.0
+@@ -322,7 +319,7 @@ imagelib: dllloader
  
  codecs: papcodecs dvdpcodecs
--libs: cmyth libhdhomerun libid3tag imagelib libexif system/libcpluff-@ARCH@.so
-+libs: cmyth libid3tag imagelib libexif system/libcpluff-@ARCH@.so
- externals: codecs libs visualizations screensavers
  
- xcode_depends: \
---- configure.in.orig	2011-12-27 18:16:52.986149450 -0500
-+++ configure.in	2011-12-27 18:17:09.552245330 -0500
-@@ -1877,7 +1877,6 @@
+-libs: libhdhomerun libid3tag imagelib libexif system/libcpluff-@ARCH@.so $(CMYTH)
++libs: libid3tag imagelib libexif system/libcpluff-@ARCH@.so $(CMYTH)
+ 
+ externals: codecs libs visualizations screensavers libaddon pvraddons
+ 
+diff --git a/configure.in b/configure.in
+index eabf052..948c9a9 100755
+--- a/configure.in
++++ b/configure.in
+@@ -2041,7 +2041,6 @@ OUTPUT_FILES="Makefile \
      lib/libexif/Makefile \
      lib/libXDAAP/Makefile \
      lib/cmyth/Makefile \
@@ -36,18 +48,20 @@
      lib/libsquish/Makefile \
      lib/libid3tag/Makefile \
      lib/cximage-6.0/Makefile \
---- xbmc/filesystem/DllHDHomeRun.h.orig	2011-12-28 12:16:37.207493443 -0500
-+++ xbmc/filesystem/DllHDHomeRun.h	2011-12-28 12:18:50.854262220 -0500
+diff --git a/xbmc/filesystem/DllHDHomeRun.h b/xbmc/filesystem/DllHDHomeRun.h
+index 8d80cfe..a1134c5 100644
+--- a/xbmc/filesystem/DllHDHomeRun.h
++++ b/xbmc/filesystem/DllHDHomeRun.h
 @@ -21,7 +21,7 @@
   */
  
  #include "DynamicDll.h"
 -#include "lib/libhdhomerun/hdhomerun.h"
-+#include  <hdhomerun/hdhomerun.h>
++#include <hdhomerun/hdhomerun.h>
  
  class DllHdHomeRunInterface
  {
-@@ -42,30 +42,56 @@
+@@ -42,30 +42,56 @@ public:
  
  class DllHdHomeRun : public DllDynamic, public DllHdHomeRunInterface
  {
