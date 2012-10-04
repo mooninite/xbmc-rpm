@@ -1,6 +1,6 @@
 %global PRERELEASE Frodo_alpha6
 #global DIRVERSION %{version}
-# use below for pre-release
+# use the line below for pre-releases
 %global DIRVERSION %{version}-%{PRERELEASE}
 
 Name: xbmc
