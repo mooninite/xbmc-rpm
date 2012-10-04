@@ -157,6 +157,7 @@ BuildRequires: tinyxml-devel
 BuildRequires: cwiid-devel
 %endif
 BuildRequires: taglib-devel >= 1.8
+BuildRequires: swig
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
@@ -322,6 +323,7 @@ fi
 - Use "12.0" as version, rather than "12.8"
 - Drop desktop patch (now in Frodo alpha6)
 - Add BR for taglib-devel >= 1.8 (libid3tag is being phased out)
+- BR for swig
 - Rebase patches to 12.0/Frodo where necessary
 
 * Sun Aug 28 2012 Ken Dreyer <ktdreyer@ktdreyer..com> - 12.8-0.1.Frodo_alpha4
