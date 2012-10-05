@@ -14,7 +14,19 @@
 
 * Unbundle any other deps that can be easily unbundled.
 
-  tinyxml may be a candidate. See https://bugzilla.rpmfusion.org/1850
+  - tinyxml appears to be removed and it now default to external version
+    See https://bugzilla.rpmfusion.org/1850
+  
+  other candidates:
+  
+  - libapetag, libid3tag: once this pull request goes in:
+    https://github.com/xbmc/xbmc/pull/1450
+
+  - libdvdnav: should be reworked with the libdvdread above
+  
+  - libmad: seems to use external library (although for some reason I
+    can't see libmad.so* as a Requires in the built package) , but
+    source code should be removed from lib/libmad
 
 * EL6: Backport support for EPEL's taglib 1.6, so we can build Frodo
   on EL6.
