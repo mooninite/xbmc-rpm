@@ -1,0 +1,20 @@
+* Add PVR clients.
+
+  Decided: we will make this a subpackage of the xbmc SRPM while
+  things are in flux. Once it settles down, we can evaluate moving
+  this to its own package. 
+
+* Merge libdvdread and libhomehdrun patches upstream.
+
+  The patches must be rewritten to use the external, if found, and
+  drop back to bundled versions if not before they would be allowed
+  upstream.
+
+* Package the manpages in docs/manpages as per package guidelines.
+
+* Unbundle any other deps that can be easily unbundled.
+
+  tinyxml may be a candidate. See https://bugzilla.rpmfusion.org/1850
+
+* EL6: Backport support for EPEL's taglib 1.6, so we can build Frodo
+  on EL6.
