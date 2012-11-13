@@ -1,10 +1,19 @@
-* Add PVR clients.
+* Add PVR clients from "official" repo:
+
+  https://github.com/opdenkamp/xbmc-pvr-addons
 
   Decided: we will make this a subpackage of the xbmc SRPM while
-  things are in flux. Once it settles down, we can evaluate moving
-  this to its own package. 
+  things are in flux.  The way upstream has organized things is that
+  it's apparently then possible to untar the PVR add-on directory
+  inside the main xbmc in a directory called "pvr-addons", then the
+  configure script will "notice" it and it will build them as part of
+  the main XBMC build process (although I haven't tested this myself
+  yet).
 
-* Merge libdvdread and libhomehdrun patches upstream.
+  So we should create a tarball snapshot of the git repo and include
+  that in the package.
+
+* Merge libdvdread libhomehdrun patches upstream.
 
   The patches must be rewritten to use the external, if found, and
   drop back to bundled versions if not before they would be allowed
