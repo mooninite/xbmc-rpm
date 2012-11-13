@@ -1,4 +1,4 @@
-%global PRERELEASE Frodo_alpha6
+%global PRERELEASE Frodo_alpha7
 #global DIRVERSION %{version}
 # use the line below for pre-releases
 %global DIRVERSION %{version}-%{PRERELEASE}
@@ -18,10 +18,6 @@ Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 # ./xbmc-generate-tarball-xz.sh <version>
 # where <version> is the particular version being used
 Source1: xbmc-generate-tarball-xz.sh
-
-# new patches for bootstrap
-# no trac ticket filed as yet
-Patch1: xbmc-12.0-bootstrap.patch
 
 # filed ticket, but patch still needs work
 # http://trac.xbmc.org/ticket/9658
@@ -51,6 +47,10 @@ Patch4: xbmc-12.0-hdhomerun.patch
 # removed, since ffmpeg is removed from original tarball, and other
 # minor tweaks may be needed)
 #Patch5: xbmc-11.0-tsp-Eden-pvr.patch
+
+# Link against pulse-simple.
+# This patch is upstream in master, but it is not in alpha 7.
+Patch6: xbmc-12.0-pulse-simple.patch
 
 # Optional deps (not in EPEL)
 # (libbluray in EPEL 6 is too old.)
@@ -160,6 +160,7 @@ BuildRequires: taglib-devel >= 1.8
 BuildRequires: swig
 BuildRequires: java-devel
 BuildRequires: lame-devel
+BuildRequires: libssh-devel
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
@@ -216,12 +217,11 @@ forecast functions, together third-party plugins.
 
 %setup -q -n %{name}-%{DIRVERSION}
 
-%patch1 -p0
 %patch2 -p0
 #patch3 -p0
 %patch4 -p1
 #patch5 -p1
-#patch6 -p1
+%patch6 -p1
 
 %if 0%{?_with_hdhomerun}
 %else
@@ -321,6 +321,13 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Tue Nov 13 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.1.Frodo_alpha7
+- Update to Frodo alpha 7
+- Drop bootstrap patch (system libdvdread works properly now)
+- Add upstream patch for linking against pulse-simple
+- Add BR for libssh
+- Rebase external hdhomerun patch onto alpha7
+
 * Thu Oct  4 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 12.0-0.1.Frodo_alpha6
 - Update to Frodo alpha 6
 - Use "12.0" as version, rather than "12.8"

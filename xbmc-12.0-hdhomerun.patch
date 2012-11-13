@@ -1,4 +1,4 @@
-commit 896387e8d0f501b6f46336dd5928d1e71914486c
+commit c6db60512b4ed9d9252a9234935b23fb1b970080
 Author: Ken Dreyer <ktdreyer@ktdreyer.com>
 Date:   Fri Aug 24 19:34:47 2012 -0600
 
@@ -7,52 +7,52 @@ Date:   Fri Aug 24 19:34:47 2012 -0600
     Original patch by Alex Lancaster <alexlan[AT]fedoraproject org>
 
 diff --git a/Makefile.in b/Makefile.in
-index 6be215f..1120178 100755
+index 31826b1..20eb86d 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -141,7 +141,6 @@ endif
+@@ -179,7 +179,6 @@ endif
  LIB_DIRS=\
  	lib/cximage-6.0 \
  	lib/libexif \
 -	lib/libhdhomerun \
- 	lib/libid3tag \
- 	lib/libapetag \
  	lib/cpluff \
-@@ -295,8 +294,6 @@ libexif: dllloader
+ 	lib/xbmc-dll-symbols
+ 
+@@ -356,8 +355,6 @@ libexif: dllloader
  	$(MAKE) -C lib/libexif
  cmyth: dllloader
  	$(MAKE) -C lib/cmyth
 -libhdhomerun: dllloader
 -	$(MAKE) -C lib/libhdhomerun
- libid3tag: dllloader
- 	$(MAKE) -C lib/libid3tag
  papcodecs: dllloader dvdpcodecs
-@@ -322,7 +319,7 @@ imagelib: dllloader
+ 	test -d system/players/paplayer || mkdir system/players/paplayer
+ 	$(MAKE) -C lib/xbadpcm
+@@ -386,7 +383,7 @@ endif
  
  codecs: papcodecs dvdpcodecs
  
--libs: libhdhomerun libid3tag imagelib libexif system/libcpluff-@ARCH@.so $(CMYTH)
-+libs: libid3tag imagelib libexif system/libcpluff-@ARCH@.so $(CMYTH)
+-libs: libhdhomerun imagelib libexif system/libcpluff-@ARCH@.so $(CMYTH)
++libs: imagelib libexif system/libcpluff-@ARCH@.so $(CMYTH)
  
  externals: codecs libs visualizations screensavers libaddon pvraddons
  
 diff --git a/configure.in b/configure.in
-index eabf052..948c9a9 100755
+index ce40a5b..18df99c 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -2041,7 +2041,6 @@ OUTPUT_FILES="Makefile \
+@@ -2361,7 +2361,6 @@ OUTPUT_FILES="Makefile \
      lib/libexif/Makefile \
      lib/libXDAAP/Makefile \
      lib/cmyth/Makefile \
 -    lib/libhdhomerun/Makefile \
      lib/libsquish/Makefile \
-     lib/libid3tag/Makefile \
      lib/cximage-6.0/Makefile \
+     lib/addons/script.module.pil/Makefile \
 diff --git a/xbmc/filesystem/DllHDHomeRun.h b/xbmc/filesystem/DllHDHomeRun.h
-index 8d80cfe..a1134c5 100644
+index 1667fde..48bdae3 100644
 --- a/xbmc/filesystem/DllHDHomeRun.h
 +++ b/xbmc/filesystem/DllHDHomeRun.h
-@@ -21,7 +21,7 @@
+@@ -20,7 +20,7 @@
   */
  
  #include "DynamicDll.h"
@@ -61,7 +61,7 @@ index 8d80cfe..a1134c5 100644
  
  class DllHdHomeRunInterface
  {
-@@ -42,30 +42,56 @@ public:
+@@ -41,30 +41,56 @@ public:
  
  class DllHdHomeRun : public DllDynamic, public DllHdHomeRunInterface
  {
