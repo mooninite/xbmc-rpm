@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 12.0
-Release: 0.2.%{PRERELEASE}%{?dist}
+Release: 0.3.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -62,6 +62,7 @@ Patch6: xbmc-12.0-pulse-simple.patch
 %{?fedora:%global _with_crystalhd 1}
 %{?fedora:%global _with_libbluray 1}
 %{?fedora:%global _with_cwiid     1}
+%{?fedora:%global _with_libssh    1}
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -164,7 +165,9 @@ BuildRequires: taglib-devel >= 1.8
 BuildRequires: swig
 BuildRequires: java-devel
 BuildRequires: lame-devel
+%if 0%{?_with_libssh}
 BuildRequires: libssh-devel
+%endif
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
@@ -231,9 +234,11 @@ forecast functions, together third-party plugins.
 %else
   # Remove hdhomerun from the build.
   pushd xbmc/filesystem/
-    rm HDHomeRun.cpp HDHomeRun.h
-    sed -i Makefile.in -e '/HDHomeRun\.cpp/d'
-    sed -i FactoryDirectory.cpp -e '/HomeRun/d'
+    rm HDHomeRunFile.cpp HDHomeRunFile.h
+    rm HDHomeRunDirectory.cpp HDHomeRunDirectory.h
+    sed -i Makefile.in -e '/HDHomeRunFile\.cpp/d'
+    sed -i Makefile.in -e '/HDHomeRunDirectory\.cpp/d'
+    sed -i DirectoryFactory.cpp -e '/HomeRun/d'
     sed -i FileFactory.cpp -e '/HomeRun/d'
   popd
 %endif
@@ -252,6 +257,9 @@ chmod +x bootstrap
 --enable-goom \
 --enable-external-libraries \
 --enable-pulse \
+%if 0%{?_with_libssh} == 0
+--disable-ssh \
+%endif
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
 CPPFLAGS="-I/usr/include/ffmpeg" \
@@ -325,6 +333,10 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Mon Nov 19 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.3.Frodo_alpha7
+- Rebase HDHomeRun removal to match upstream's file names
+- Conditionally disable libssh BR (unavailable in EL6)
+
 * Tue Nov 14 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.2.Frodo_alpha7
 - Add pvr addons
 
