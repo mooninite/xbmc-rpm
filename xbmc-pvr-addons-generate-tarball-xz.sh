@@ -14,14 +14,14 @@ if [[ ! -f xbmc-pvr-addons-$GITHASH.zip ]]; then
 fi
 
 # extract zipball
-find . -maxdepth 1 -name "xbmc-pvr-addons-$GITHASH*" -type d -exec rm -r '{}' \
+find . -maxdepth 1 -name "xbmc-pvr-addons-$GITHASH*" -type d -exec rm -r '{}' \;
 unzip xbmc-pvr-addons-$GITHASH.zip
 
 # Shorten GitHub's auto-generated top-level directory.
 if [[ -d pvr-addons ]]; then
        rm -r pvr-addons
 fi
-find . -maxdepth 1 -name "xbmc-pvr-addons-$GITHASH*" -type d -exec mv '{}' pvr-
+find . -maxdepth 1 -name "xbmc-pvr-addons-$GITHASH*" -type d -exec mv '{}' pvr-addons \;
 
 pushd pvr-addons
 
