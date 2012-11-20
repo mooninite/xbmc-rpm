@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 12.0
-Release: 0.1.%{PRERELEASE}%{?dist}
+Release: 0.2.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -18,6 +18,10 @@ Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 # ./xbmc-generate-tarball-xz.sh <version>
 # where <version> is the particular version being used
 Source1: xbmc-generate-tarball-xz.sh
+
+# xbmc pvr addons are shipped as a separate git repo.
+Source2: xbmc-pvr-addons-1e666ced21-patched.tar.xz
+Source3: xbmc-pvr-addons-generate-tarball-xz.sh
 
 # filed ticket, but patch still needs work
 # http://trac.xbmc.org/ticket/9658
@@ -215,7 +219,7 @@ forecast functions, together third-party plugins.
 
 %prep
 
-%setup -q -n %{name}-%{DIRVERSION}
+%setup -q -a 2 -n %{name}-%{DIRVERSION}
 
 %patch2 -p0
 #patch3 -p0
@@ -321,6 +325,9 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Tue Nov 14 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.2.Frodo_alpha7
+- Add pvr addons
+
 * Tue Nov 13 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.1.Frodo_alpha7
 - Update to Frodo alpha 7
 - Drop bootstrap patch (system libdvdread works properly now)
