@@ -1,4 +1,4 @@
-%global PRERELEASE Frodo_alpha7
+%global PRERELEASE Frodo_beta2
 #global DIRVERSION %{version}
 # use the line below for pre-releases
 %global DIRVERSION %{version}-%{PRERELEASE}
@@ -52,10 +52,6 @@ Patch4: xbmc-12.0-hdhomerun.patch
 # minor tweaks may be needed)
 #Patch5: xbmc-11.0-tsp-Eden-pvr.patch
 
-# Link against pulse-simple.
-# This patch is upstream in master, but it is not in alpha 7.
-Patch6: xbmc-12.0-pulse-simple.patch
-
 # Optional deps (not in EPEL)
 # (libbluray in EPEL 6 is too old.)
 %{?fedora:%global _with_hdhomerun 1}
@@ -81,7 +77,11 @@ BuildRequires: glew-devel
 BuildRequires: libstdc++-devel
 BuildRequires: glib2-devel
 BuildRequires: libjasper-devel
+%if 0%{?el6}
 BuildRequires: libjpeg-devel
+%else
+BuildRequires: libjpeg-turbo-devel
+%endif
 BuildRequires: libogg-devel
 BuildRequires: libpng-devel
 BuildRequires: libstdc++-devel
@@ -228,7 +228,6 @@ forecast functions, together third-party plugins.
 #patch3 -p0
 %patch4 -p1
 #patch5 -p1
-%patch6 -p1
 
 %if 0%{?_with_hdhomerun}
 %else
@@ -333,6 +332,11 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Wed Dec 05 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.3.Frodo_beta2
+- Update to Frodo beta 2
+- Drop patch for linking against pulse-simple
+- libjpeg is gone in Fedora. Conditionally build against libjpeg-turbo
+
 * Mon Nov 19 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.3.Frodo_alpha7
 - Rebase HDHomeRun removal to match upstream's file names
 - Conditionally disable libssh BR (unavailable in EL6)
