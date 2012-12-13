@@ -55,7 +55,9 @@ Patch4: xbmc-12.0-hdhomerun.patch
 # Optional deps (not in EPEL)
 # (libbluray in EPEL 6 is too old.)
 %{?fedora:%global _with_hdhomerun 1}
+%ifarch x86_64 i686
 %{?fedora:%global _with_crystalhd 1}
+%endif
 %{?fedora:%global _with_libbluray 1}
 %{?fedora:%global _with_cwiid     1}
 %{?fedora:%global _with_libssh    1}
