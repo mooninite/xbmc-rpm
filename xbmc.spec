@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 12.0
-Release: 0.3.%{PRERELEASE}%{?dist}
+Release: 0.4.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -22,6 +22,12 @@ Source1: xbmc-generate-tarball-xz.sh
 # xbmc pvr addons are shipped as a separate git repo.
 Source2: xbmc-pvr-addons-1e666ced21-patched.tar.xz
 Source3: xbmc-pvr-addons-generate-tarball-xz.sh
+
+# https://github.com/xbmc/xbmc/pull/1725.patch
+# We need this as long as we build addons together with the main XBMC
+# software. (This will probably never get merged upstream; see pull
+# request for details.)
+Patch1: xbmc-12.0-pvraddons-with-dependencies.patch
 
 # filed ticket, but patch still needs work
 # http://trac.xbmc.org/ticket/9658
@@ -170,12 +176,12 @@ BuildRequires: lame-devel
 %if 0%{?_with_libssh}
 BuildRequires: libssh-devel
 %endif
+BuildRequires: libcap-devel
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
 BuildRequires: afpfs-ng-devel
-# VAAPI currently not working, comment-out
-#BuildRequires: libva-freeworld-devel
+BuildRequires: libva-devel
 
 # need explicit requires for these packages
 # as they are dynamically loaded via XBMC's arcane 
@@ -226,6 +232,7 @@ forecast functions, together third-party plugins.
 
 %setup -q -a 2 -n %{name}-%{DIRVERSION}
 
+%patch1 -p1
 %patch2 -p0
 #patch3 -p0
 %patch4 -p1
@@ -258,6 +265,7 @@ chmod +x bootstrap
 --enable-goom \
 --enable-external-libraries \
 --enable-pulse \
+--enable-pvraddons-with-dependencies \
 %if 0%{?_with_libssh} == 0
 --disable-ssh \
 %endif
@@ -334,6 +342,12 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Thu Dec 13 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.4.Frodo_rc1
+- Disable crystalhd on non-x86 (by kwizart)
+- Enable VAAPI: add BR: libva-devel (#2613)
+- Add libcap BR (allows binding on privileged ports)
+- Add patch to build pvraddons-with-dependencies
+
 * Wed Dec 12 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.3.Frodo_rc1
 - Update to Frodo RC 1
 
