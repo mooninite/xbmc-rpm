@@ -1,17 +1,12 @@
-* Add PVR clients from "official" repo:
+* Build PVR addons with dependencies.
 
-  https://github.com/opdenkamp/xbmc-pvr-addons
+  This will allow us to build the code for the mythtv PVR addon.
 
-  Decided: we will make this a subpackage of the xbmc SRPM while
-  things are in flux.  The way upstream has organized things is that
-  it's apparently then possible to untar the PVR add-on directory
-  inside the main xbmc in a directory called "pvr-addons", then the
-  configure script will "notice" it and it will build them as part of
-  the main XBMC build process (although I haven't tested this myself
-  yet).
+  For the immediate future we should use this patch:
+  https://github.com/xbmc/xbmc/pull/1725/commits
 
-  So we should create a tarball snapshot of the git repo and include
-  that in the package.
+  Longer term, we will probably split out the PVR addons into a separate
+  package.
 
 * Merge libdvdread libhomehdrun patches upstream.
 
@@ -37,5 +32,7 @@
     can't see libmad.so* as a Requires in the built package) , but
     source code should be removed from lib/libmad
 
-* EL6: Backport support for EPEL's taglib 1.6, so we can build Frodo
-  on EL6.
+* EL6: Frodo requires taglib 1.8. Red Hat ships taglib 1.6.1 in RHEL. It
+  is very unlikely that we will be able to backport support for taglib
+  1.6 into newer version of XBMC because the API has changed so much. We
+  would need to ship a "taglib18" package in EPEL.
