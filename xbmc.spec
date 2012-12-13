@@ -1,4 +1,4 @@
-%global PRERELEASE Frodo_beta2
+%global PRERELEASE Frodo_rc1
 #global DIRVERSION %{version}
 # use the line below for pre-releases
 %global DIRVERSION %{version}-%{PRERELEASE}
@@ -332,6 +332,9 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Wed Dec 12 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.3.Frodo_rc1
+- Update to Frodo RC 1
+
 * Wed Dec 05 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.3.Frodo_beta2
 - Update to Frodo beta 2
 - Drop patch for linking against pulse-simple
