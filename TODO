@@ -1,12 +1,7 @@
-* Build PVR addons with dependencies.
+* Watch the addons and possibly split them out.
 
-  This will allow us to build the code for the mythtv PVR addon.
-
-  For the immediate future we should use this patch:
-  https://github.com/xbmc/xbmc/pull/1725/commits
-
-  Longer term, we will probably split out the PVR addons into a separate
-  package.
+  No specific action here presently. We do need to watch and see if it
+  would be beneficial to split out xbmc-addons into a separate package.
 
 * Merge libdvdread libhomehdrun patches upstream.
 
