@@ -5,7 +5,7 @@ set -e
 # The xbmc-pvr-addon software does not yet use version numbers, so we'll
 # just use git hashes for identifiers.
 
-GITHASH=1e666ced21
+GITHASH=e573d80219
 GITHUBURL=https://github.com/opdenkamp/xbmc-pvr-addons/archive/$GITHASH.zip
 
 # download zipball

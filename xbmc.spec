@@ -1,4 +1,4 @@
-%global PRERELEASE Frodo_rc1
+%global PRERELEASE Frodo_rc2
 #global DIRVERSION %{version}
 # use the line below for pre-releases
 %global DIRVERSION %{version}-%{PRERELEASE}
@@ -20,7 +20,7 @@ Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 Source1: xbmc-generate-tarball-xz.sh
 
 # xbmc pvr addons are shipped as a separate git repo.
-Source2: xbmc-pvr-addons-1e666ced21-patched.tar.xz
+Source2: xbmc-pvr-addons-e573d80219-patched.tar.xz
 Source3: xbmc-pvr-addons-generate-tarball-xz.sh
 
 # https://github.com/xbmc/xbmc/pull/1725.patch
@@ -342,6 +342,10 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Wed Dec 27 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.4.Frodo_rc2
+- Update to Frodo RC 2
+- Update PVR addons snapshot to the latest Git version
+
 * Thu Dec 13 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.4.Frodo_rc1
 - Disable crystalhd on non-x86 (by kwizart)
 - Enable VAAPI: add BR: libva-devel (#2613)
