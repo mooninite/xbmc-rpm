@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 12.0
-Release: 0.4.%{PRERELEASE}%{?dist}
+Release: 0.5.%{PRERELEASE}%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -41,22 +41,6 @@ Patch3: xbmc-10-disable-zlib-in-cximage.patch
 # need to file trac ticket, this patch just forces external hdhomerun
 # functionality, needs to be able fallback internal version
 Patch4: xbmc-12.0-hdhomerun.patch
-
-# patch pristine Eden source (git tag: 11.0-Eden-r2) against
-# tsp42's back-port of PVR support (including MythTV support) 
-# to stable Eden branch, patch created using the following:
-#
-#  git clone git://github.com/tsp/xbmc.git xbmc-Eden-pvr
-#  cd xbmc-Eden-pvr/
-#  git checkout Eden-pvr 
-#  git remote add main git://github.com/xbmc/xbmc.git
-#  git fetch main
-#  git diff 11.0-Eden-r2 Eden-pvr > xbmc-11.0-tsp-Eden-pvr.patch
-#
-# (note that hunks within patch that patch ffmpeg needed to be
-# removed, since ffmpeg is removed from original tarball, and other
-# minor tweaks may be needed)
-#Patch5: xbmc-11.0-tsp-Eden-pvr.patch
 
 # Optional deps (not in EPEL)
 # (libbluray in EPEL 6 is too old.)
@@ -236,7 +220,6 @@ forecast functions, together third-party plugins.
 %patch2 -p0
 #patch3 -p0
 %patch4 -p1
-#patch5 -p1
 
 %if 0%{?_with_hdhomerun}
 %else
@@ -342,6 +325,11 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Fri Dec 28 2012 Alex Lancaster <alexlan[AT]fedoraproject org> - 12.0-0.5.Frodo_rc2
+- Release number should be bumped on every change when doing 
+  pre-release updates
+- Remove obsolete MythTV PVR add-on patch from tsp branch
+
 * Wed Dec 27 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.4.Frodo_rc2
 - Update to Frodo RC 2
 - Update PVR addons snapshot to the latest Git version
