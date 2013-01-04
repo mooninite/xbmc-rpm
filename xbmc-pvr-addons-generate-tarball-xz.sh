@@ -5,7 +5,10 @@ set -e
 # The xbmc-pvr-addon software does not yet use version numbers, so we'll
 # just use git hashes for identifiers.
 
-GITHASH=e573d80219
+# Upstream xbmc also hardcodes a Git hash for OSes that bundle
+# xbmc-pvr-addons.  Let's try using the same hash that upstream uses. It
+# can be found in tools/darwin/depends/xbmc-pvr-addons/Makefile.
+GITHASH=5f97406cff
 GITHUBURL=https://github.com/opdenkamp/xbmc-pvr-addons/archive/$GITHASH.zip
 
 # download zipball
