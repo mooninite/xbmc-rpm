@@ -1,7 +1,8 @@
 * Watch the addons and possibly split them out.
 
   No specific action here presently. We do need to watch and see if it
-  would be beneficial to split out xbmc-addons into a separate package.
+  would be beneficial to split out xbmc-pvr-addons into a separate
+  package.
 
 * Merge libdvdread libhomehdrun patches upstream.
 
