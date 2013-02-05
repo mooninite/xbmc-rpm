@@ -2,12 +2,12 @@
 
 MAJORVERSION=12
 MINORVERSION=0
-PRERELEASE=Frodo_rc3
+#PRERELEASE=Frodo_rc3
 
 VERSION=${MAJORVERSION}.${MINORVERSION}${PRERELEASE:+-${PRERELEASE}}
 
-#GITHUBURL=https://github.com/xbmc/xbmc/tarball/$VERSION-Eden
-GITHUBURL=https://github.com/xbmc/xbmc/zipball/$PRERELEASE
+GITHUBURL=https://github.com/xbmc/xbmc/zipball/$VERSION-Frodo
+#GITHUBURL=https://github.com/xbmc/xbmc/zipball/$PRERELEASE
 
 # download zipball
 if [[ ! -f xbmc-$VERSION.zip ]]; then

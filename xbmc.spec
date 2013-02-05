@@ -1,11 +1,11 @@
-%global PRERELEASE Frodo_rc3
-#global DIRVERSION %{version}
+#global PRERELEASE Frodo_rc3
+%global DIRVERSION %{version}
 # use the line below for pre-releases
-%global DIRVERSION %{version}-%{PRERELEASE}
+#global DIRVERSION %{version}-%{PRERELEASE}
 
 Name: xbmc
 Version: 12.0
-Release: 0.6.%{PRERELEASE}%{?dist}
+Release: 1%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -20,7 +20,7 @@ Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 Source1: xbmc-generate-tarball-xz.sh
 
 # xbmc pvr addons are shipped as a separate git repo.
-Source2: xbmc-pvr-addons-5f97406cff-patched.tar.xz
+Source2: xbmc-pvr-addons-96774c4-patched.tar.xz
 Source3: xbmc-pvr-addons-generate-tarball-xz.sh
 
 # https://github.com/xbmc/xbmc/pull/1725.patch
@@ -51,6 +51,7 @@ Patch4: xbmc-12.0-hdhomerun.patch
 %{?fedora:%global _with_libbluray 1}
 %{?fedora:%global _with_cwiid     1}
 %{?fedora:%global _with_libssh    1}
+%{?fedora:%global _with_libcec    1}
 
 ExcludeArch: ppc64
 Buildroot: %{_tmppath}/%{name}-%{version}
@@ -161,6 +162,9 @@ BuildRequires: lame-devel
 BuildRequires: libssh-devel
 %endif
 BuildRequires: libcap-devel
+%if 0%{?_with_libcec}
+BuildRequires: libcec-devel
+%endif
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
@@ -179,6 +183,9 @@ Requires: libcrystalhd
 %endif
 %if 0%{?_with_libbluray}
 Requires: libbluray
+%endif
+%if 0%{?_with_libcec}
+Requires: libcec
 %endif
 
 # needed when doing a minimal install, see
@@ -325,6 +332,10 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Tue Feb 05 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-1
+- Update to Frodo final
+- Add libcec dependency
+
 * Fri Jan 04 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.6.Frodo_rc3
 - Update to Frodo RC 3
 - Update PVR addons snapshot to match snapshot bundled in rc3

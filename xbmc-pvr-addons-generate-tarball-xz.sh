@@ -7,8 +7,10 @@ set -e
 
 # Upstream xbmc also hardcodes a Git hash for OSes that bundle
 # xbmc-pvr-addons.  Let's try using the same hash that upstream uses. It
-# can be found in tools/darwin/depends/xbmc-pvr-addons/Makefile.
-GITHASH=5f97406cff
+# can be found in the source tree like so:
+#   grep ^VERSION tools/darwin/depends/xbmc-pvr-addons/Makefile
+COMMIT=96774c4f775b156a46fb58151379dece3e773c96
+GITHASH=${COMMIT:0:7}
 GITHUBURL=https://github.com/opdenkamp/xbmc-pvr-addons/archive/$GITHASH.zip
 
 # download zipball
