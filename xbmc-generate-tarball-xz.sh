@@ -15,7 +15,7 @@ if [[ ! -f xbmc-$VERSION.zip ]]; then
 fi
 
 # extract zipball
-rm -r xbmc-xbmc-*
+rm -rf xbmc-xbmc-*
 unzip xbmc-$VERSION.zip
 
 # Repair GitHub's odd auto-generated top-level directory...
