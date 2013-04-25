@@ -4,7 +4,7 @@
 #global DIRVERSION %{version}-%{PRERELEASE}
 
 Name: xbmc
-Version: 12.0
+Version: 12.1
 Release: 1%{?dist}
 URL: http://www.xbmc.org/
 
@@ -20,7 +20,7 @@ Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 Source1: xbmc-generate-tarball-xz.sh
 
 # xbmc pvr addons are shipped as a separate git repo.
-Source2: xbmc-pvr-addons-96774c4-patched.tar.xz
+Source2: xbmc-pvr-addons-590f862-patched.tar.xz
 Source3: xbmc-pvr-addons-generate-tarball-xz.sh
 
 # https://github.com/xbmc/xbmc/pull/1725.patch
@@ -332,6 +332,10 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Wed Apr 24 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.1-1
+- Update to Frodo 12.1
+- Update PVR addons snapshot to match snapshot bundled in 12.1
+
 * Tue Feb 05 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-1
 - Update to Frodo final
 - Add libcec dependency

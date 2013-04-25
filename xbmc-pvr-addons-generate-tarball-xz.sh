@@ -9,7 +9,7 @@ set -e
 # xbmc-pvr-addons.  Let's try using the same hash that upstream uses. It
 # can be found in the source tree like so:
 #   grep ^VERSION tools/darwin/depends/xbmc-pvr-addons/Makefile
-COMMIT=96774c4f775b156a46fb58151379dece3e773c96
+COMMIT=590f862065d0f07d399fe4443a72dc37394becb4
 GITHASH=${COMMIT:0:7}
 GITHUBURL=https://github.com/opdenkamp/xbmc-pvr-addons/archive/$GITHASH.zip
 
