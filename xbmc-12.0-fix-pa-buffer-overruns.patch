@@ -1,0 +1,33 @@
+From 5820b25e2fb7ce89ccc2e26e58c9b4fc86a7af21 Mon Sep 17 00:00:00 2001
+From: Michael Cronenworth <mike@cchtml.com>
+Date: Thu, 14 Feb 2013 22:45:26 -0600
+Subject: [PATCH 2/2] AE: Pulse Audio fix buffer underruns.
+
+The cache buffer size was being initialized to the write size
+of a PA stream, which is not the buffer size of the PA server.
+The cache buffer size will now use the PA server buffer size.
+(trac bug 13902)
+
+Signed-off-by: Michael Cronenworth <mike@cchtml.com>
+---
+ xbmc/cores/AudioEngine/Engines/PulseAE/PulseAEStream.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/xbmc/cores/AudioEngine/Engines/PulseAE/PulseAEStream.cpp b/xbmc/cores/AudioEngine/Engines/PulseAE/PulseAEStream.cpp
+index f80d4d8..c3c34f2 100644
+--- a/xbmc/cores/AudioEngine/Engines/PulseAE/PulseAEStream.cpp
++++ b/xbmc/cores/AudioEngine/Engines/PulseAE/PulseAEStream.cpp
+@@ -203,7 +203,9 @@ CPulseAEStream::CPulseAEStream(pa_context *context, pa_threaded_mainloop *mainLo
+     return /*false*/;
+   }
+ 
+-  m_cacheSize = pa_stream_writable_size(m_Stream);
++  const pa_buffer_attr *streamBuffer;
++  streamBuffer = pa_stream_get_buffer_attr(m_Stream);
++  m_cacheSize = streamBuffer->maxlength;
+ 
+   pa_threaded_mainloop_unlock(m_MainLoop);
+ 
+-- 
+1.7.11.7
+
