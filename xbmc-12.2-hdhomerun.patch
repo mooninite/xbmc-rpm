@@ -1,13 +1,13 @@
-commit c6db60512b4ed9d9252a9234935b23fb1b970080
+commit ef5c269992b32d67de7547e9f530b6c971381f45
 Author: Ken Dreyer <ktdreyer@ktdreyer.com>
 Date:   Fri Aug 24 19:34:47 2012 -0600
 
-    Fedora: use internal hdhomerun
+    Fedora: use external hdhomerun
     
     Original patch by Alex Lancaster <alexlan[AT]fedoraproject org>
 
 diff --git a/Makefile.in b/Makefile.in
-index 31826b1..20eb86d 100644
+index 39dc6f9..79877b4 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -179,7 +179,6 @@ endif
@@ -18,7 +18,7 @@ index 31826b1..20eb86d 100644
  	lib/cpluff \
  	lib/xbmc-dll-symbols
  
-@@ -356,8 +355,6 @@ libexif: dllloader
+@@ -352,8 +351,6 @@ libexif: dllloader
  	$(MAKE) -C lib/libexif
  cmyth: dllloader
  	$(MAKE) -C lib/cmyth
@@ -27,7 +27,7 @@ index 31826b1..20eb86d 100644
  papcodecs: dllloader dvdpcodecs
  	test -d system/players/paplayer || mkdir system/players/paplayer
  	$(MAKE) -C lib/xbadpcm
-@@ -386,7 +383,7 @@ endif
+@@ -382,7 +379,7 @@ endif
  
  codecs: papcodecs dvdpcodecs
  
@@ -37,10 +37,10 @@ index 31826b1..20eb86d 100644
  externals: codecs libs visualizations screensavers libaddon pvraddons
  
 diff --git a/configure.in b/configure.in
-index ce40a5b..18df99c 100644
+index e922043..b61f0dd 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -2361,7 +2361,6 @@ OUTPUT_FILES="Makefile \
+@@ -2331,7 +2331,6 @@ OUTPUT_FILES="Makefile \
      lib/libexif/Makefile \
      lib/libXDAAP/Makefile \
      lib/cmyth/Makefile \

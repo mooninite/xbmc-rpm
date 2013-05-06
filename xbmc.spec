@@ -4,8 +4,8 @@
 #global DIRVERSION %{version}-%{PRERELEASE}
 
 Name: xbmc
-Version: 12.1
-Release: 2%{?dist}
+Version: 12.2
+Release: 1%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -31,22 +31,12 @@ Patch1: xbmc-12.0-pvraddons-with-dependencies.patch
 
 # filed ticket, but patch still needs work
 # http://trac.xbmc.org/ticket/9658
-Patch2: xbmc-12.0-dvdread.patch
-
-# and new problem with zlib in cximage
-# trac ticket filed: http://trac.xbmc.org/ticket/9659
-# but patch not attached because it needs work
-Patch3: xbmc-10-disable-zlib-in-cximage.patch
+Patch2: xbmc-12.2-dvdread.patch
 
 # need to file trac ticket, this patch just forces external hdhomerun
 # functionality, needs to be able fallback internal version
-Patch4: xbmc-12.0-hdhomerun.patch
+Patch3: xbmc-12.2-hdhomerun.patch
 
-# Add better support for PA.
-# These patches are upstream in https://github.com/xbmc/xbmc/pull/2240, but
-# they are not in the Frodo (12.x) branch.
-Patch5: xbmc-12.0-fix-crash-on-player-stop.patch
-Patch6: xbmc-12.0-fix-pa-buffer-overruns.patch
 
 # Optional deps (not in EPEL)
 # (libbluray in EPEL 6 is too old.)
@@ -230,9 +220,8 @@ forecast functions, together third-party plugins.
 %setup -q -a 2 -n %{name}-%{DIRVERSION}
 
 %patch1 -p1
-%patch2 -p0
-#patch3 -p0
-%patch4 -p1
+%patch2 -p1
+%patch3 -p1
 
 %if 0%{?_with_hdhomerun}
 %else
@@ -338,6 +327,12 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Mon May 06 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.2-1
+- Update to Frodo 12.2
+- Rebase hdhomerun and dvdread patches onto 12.2
+- Drop upstreamed PA patches
+- Drop unused cximage zlib patch
+
 * Thu Apr 25 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.1-2
 - Add patches for PA (https://github.com/xbmc/xbmc/pull/2240). Fixes #2655
 
