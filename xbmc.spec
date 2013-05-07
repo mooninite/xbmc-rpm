@@ -353,7 +353,7 @@ fi
   pre-release updates
 - Remove obsolete MythTV PVR add-on patch from tsp branch
 
-* Wed Dec 27 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.4.Frodo_rc2
+* Wed Dec 26 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.4.Frodo_rc2
 - Update to Frodo RC 2
 - Update PVR addons snapshot to the latest Git version
 
@@ -375,7 +375,7 @@ fi
 - Rebase HDHomeRun removal to match upstream's file names
 - Conditionally disable libssh BR (unavailable in EL6)
 
-* Tue Nov 14 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.2.Frodo_alpha7
+* Mon Nov 19 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.2.Frodo_alpha7
 - Add pvr addons
 
 * Tue Nov 13 2012 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.0-0.1.Frodo_alpha7
@@ -394,7 +394,7 @@ fi
 - Add CFLAGS option to recognize Samba 4.0 (in f18+)
 - Rebase patches to 12.0/Frodo where necessary
 
-* Sun Aug 28 2012 Ken Dreyer <ktdreyer@ktdreyer..com> - 12.8-0.1.Frodo_alpha4
+* Sun Aug 26 2012 Ken Dreyer <ktdreyer@ktdreyer..com> - 12.8-0.1.Frodo_alpha4
 - Upgrade to Frodo alpha 4
 
 * Wed Jul 11 2012 Nicolas Chauvet <kwizart@gmail.com> - 11.0-8
