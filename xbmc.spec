@@ -251,6 +251,9 @@ chmod +x bootstrap
 --enable-external-libraries \
 --enable-pulse \
 --enable-pvraddons-with-dependencies \
+%if 0%{?_with_libcec}
+--enable-libcec \
+%endif
 %if 0%{?_with_libssh} == 0
 --disable-ssh \
 %endif
