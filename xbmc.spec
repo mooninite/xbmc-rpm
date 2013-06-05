@@ -5,7 +5,7 @@
 
 Name: xbmc
 Version: 12.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -330,6 +330,10 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Tue Jun 04 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.2-3
+- force building with libcec (#2798)
+- add $DVDREAD_CFLAGS in dvdread patch (#2820)
+
 * Sun May 26 2013 Nicolas Chauvet <kwizart@gmail.com> - 12.2-2
 - Rebuilt for x264/FFmpeg
 
