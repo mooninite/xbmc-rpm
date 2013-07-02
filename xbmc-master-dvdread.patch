@@ -61,7 +61,7 @@ index d89353c..04dac86 100644
 -    --extra-cflags="$CFLAGS $DVDREAD_CFLAGS -I`pwd`/../includes" \
 -    --extra-ldflags="-L`pwd`/../libdvdread/obj" \
 -    --with-dvdread-config="`pwd`/../libdvdread/obj/dvdread-config" \
-+    --extra-cflags="$CFLAGS -fPIC -DPIC" \
++    --extra-cflags="$CFLAGS $DVDREAD_CFLAGS -fPIC -DPIC" \
      --prefix="${prefix}" --includedir="${includedir}" --libdir="${libdir}" --datadir="${datadir}" \
      --host=$host_alias \
      --build=$build_alias \
