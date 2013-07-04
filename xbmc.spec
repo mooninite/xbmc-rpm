@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 12.2
-Release: 4%{?dist}
+Release: 5%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -172,6 +172,7 @@ BuildRequires: libva-devel
 # as they are dynamically loaded via XBMC's arcane 
 # pseudo-DLL loading scheme (sigh)
 Requires: librtmp
+Requires: libmad
 %if 0%{?_with_hdhomerun}
 BuildRequires: hdhomerun
 %endif
@@ -331,6 +332,9 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Thu Jul 04 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.2-5
+- Explicitly Require libmad (necessary for the upcoming xbmc 13)
+
 * Wed Jun 05 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.2-4
 - Enable _hardened_build
 
