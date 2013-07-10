@@ -38,6 +38,9 @@
     can't see libmad.so* as a Requires in the built package) , but
     source code should be removed from lib/libmad
 
+* Set the version in the version of XBMC in the "System" menu. I think
+  we can just set the GIT_REV environment variable during the build.
+
 * EL6: Frodo requires taglib 1.8. Red Hat ships taglib 1.6.1 in RHEL. It
   is very unlikely that we will be able to backport support for taglib
   1.6 into newer version of XBMC because the API has changed so much. We
