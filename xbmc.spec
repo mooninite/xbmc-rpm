@@ -1,42 +1,29 @@
-#global PRERELEASE Frodo_rc3
-%global DIRVERSION %{version}
+%global PRERELEASE Gotham_alpha8
+#%%global DIRVERSION %{version}
 # use the line below for pre-releases
-#global DIRVERSION %{version}-%{PRERELEASE}
+%global DIRVERSION %{version}-%{PRERELEASE}
 %global _hardened_build 1
 
 Name: xbmc
-Version: 12.2
-Release: 5%{?dist}
+Version: 13.0
+Release: 0.1.Gotham_alpha8%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 # xbmc contains code that we cannot ship, as well as redundant private
 # copies of upstream libraries that we already distribute.  Therefore
 # we use this script to remove the code before shipping it.
-# Download the upstream tarball from:
-# http://downloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-# and invoke this script while in the directory where the tarball is located:
-# ./xbmc-generate-tarball-xz.sh <version>
-# where <version> is the particular version being used
+# Invoke this script while in the directory where the tarball is located:
+# ./xbmc-generate-tarball-xz.sh
 Source1: xbmc-generate-tarball-xz.sh
-
-# xbmc pvr addons are shipped as a separate git repo.
-Source2: xbmc-pvr-addons-590f862-patched.tar.xz
-Source3: xbmc-pvr-addons-generate-tarball-xz.sh
-
-# https://github.com/xbmc/xbmc/pull/1725.patch
-# We need this as long as we build addons together with the main XBMC
-# software. (This will probably never get merged upstream; see pull
-# request for details.)
-Patch1: xbmc-12.0-pvraddons-with-dependencies.patch
 
 # filed ticket, but patch still needs work
 # http://trac.xbmc.org/ticket/9658
-Patch2: xbmc-12.2-dvdread.patch
+Patch1: xbmc-13.0-dvdread.patch
 
 # need to file trac ticket, this patch just forces external hdhomerun
 # functionality, needs to be able fallback internal version
-Patch3: xbmc-12.2-hdhomerun.patch
+Patch2: xbmc-13.0-hdhomerun.patch
 
 
 # Optional deps (not in EPEL)
@@ -202,6 +189,17 @@ entertainment hub.  XBMC can play a spectrum of of multimedia formats,
 and featuring playlist, audio visualizations, slideshow, and weather
 forecast functions, together third-party plugins.
 
+%package devel
+Summary: Development files needed to compile C programs against xbmc
+Group: Development/Libraries
+Requires: %{name} = %{version}-%{release}
+
+%description devel
+
+XBMC media center is a free cross-platform media-player jukebox and
+entertainment hub. If you want to develop programs which use xbmc's
+libraries, you need to install this package.
+
 #%%package eventclients
 #%Summary: Media center event client remotes
 
@@ -219,11 +217,10 @@ forecast functions, together third-party plugins.
 
 %prep
 
-%setup -q -a 2 -n %{name}-%{DIRVERSION}
+%setup -q -n %{name}-%{DIRVERSION}
 
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %if 0%{?_with_hdhomerun}
 %else
@@ -252,7 +249,6 @@ chmod +x bootstrap
 --enable-goom \
 --enable-external-libraries \
 --enable-pulse \
---enable-pvraddons-with-dependencies \
 %if 0%{?_with_libcec}
 --enable-libcec \
 %endif
@@ -315,6 +311,9 @@ fi
 %{_datadir}/applications/xbmc.desktop
 %{_datadir}/icons/hicolor/*/*/*.png
 
+%files devel
+%{_includedir}/xbmc
+
 #%%files eventclients
 #%%defattr(-,root,root)
 #%%python_sitelib/xbmc
@@ -332,6 +331,11 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Wed Oct 16 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 13.0-0.1.Gotham_alpha8
+- Update to Gotham alpha 8
+- Add -devel subpackage
+- Drop bundled PVR addon (we'll package this separately)
+
 * Thu Jul 04 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 12.2-5
 - Explicitly Require libmad (necessary for the upcoming xbmc 13)
 

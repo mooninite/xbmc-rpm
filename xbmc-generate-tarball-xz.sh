@@ -1,13 +1,13 @@
 #!/bin/sh
 
-MAJORVERSION=12
-MINORVERSION=2
-#PRERELEASE=Frodo_rc3
+MAJORVERSION=13
+MINORVERSION=0
+PRERELEASE=Gotham_alpha8
 
 VERSION=${MAJORVERSION}.${MINORVERSION}${PRERELEASE:+-${PRERELEASE}}
 
-GITHUBURL=https://github.com/xbmc/xbmc/zipball/$VERSION-Frodo
-#GITHUBURL=https://github.com/xbmc/xbmc/zipball/$PRERELEASE
+#GITHUBURL=https://github.com/xbmc/xbmc/zipball/$VERSION-Frodo
+GITHUBURL=https://github.com/xbmc/xbmc/zipball/$PRERELEASE
 
 # download zipball
 if [[ ! -f xbmc-$VERSION.zip ]]; then
@@ -27,7 +27,7 @@ pushd xbmc-$VERSION
 # grrr, *still* have to keep in ffmpeg for now (2011-12-28) since upstream
 # seems to require files within that subdirectory <sigh>, filed
 # http://trac.xbmc.org/ticket/12370
-for i in  cximage-6.0/zlib libid3tag/zlib libhdhomerun libmpeg2 ffmpeg
+for i in  cximage-6.0/zlib libhdhomerun libmpeg2 ffmpeg
 do
     rm -r lib/$i
 done
@@ -40,26 +40,26 @@ done
 
 
 # remove DVD stuff we can't ship, or is already in external libraries
-for i in libdvdcss libdvdread includes 
+for i in libdvdcss libdvdread includes
 do
     rm -r lib/libdvd/$i
 done
 
-# remove all prebuilt binaries (e.g., .so files and Win32 DLLs)
-find \( -type f -name '*.so' -o -name '*.DLL' -o -name '*.dll' -o -name '*.lib' -o -name '*.zlib' -o -name '*.obj' -o -name '*.exe' -o -name '*.vis' \) -print0 | xargs -0 rm -f
+# remove all prebuilt binaries (e.g., Win32 DLLs)
+find \( -type f -name '*.DLL' -o -name '*.dll' -o -name '*.lib' -o -name '*.obj' -o -name '*.exe' \) -print0 | xargs -0 rm -f
 
 # remove all other packages that should be system-wide
-# except for libass, cpluff, jsoncpp (need to figure out how to
+# except for libass, cpluff (need to figure out how to
 # remove these too)
 # xbmc-dll-symbols seems to be XBMC-specific
-for i in enca freetype libbluray liblame libmicrohttpd libmodplug librtmp win32
+for i in enca freetype libbluray libmicrohttpd libmodplug librtmp win32
 do
     rm -r lib/$i
 done
 
-# TODO/FIXME: remove tools/XBMCLive/ and other things under tools/ 
+# TODO/FIXME: remove other unnecessary things under tools/
 # also remove anything to do with win32
-for i in arm darwin win32buildtools 
+for i in android darwin win32buildtools
 do
     rm -r tools/$i
 done

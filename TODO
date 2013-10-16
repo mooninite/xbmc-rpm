@@ -1,24 +1,8 @@
-* Watch the addons and possibly split them out.
-
-  No specific action here presently. We do need to watch and see if it
-  would be beneficial to split out xbmc-pvr-addons into a separate
-  package.
-
 * Merge libdvdread libhomehdrun patches upstream.
 
   The patches must be rewritten to use the external, if found, and
   drop back to bundled versions if not before they would be allowed
   upstream.
-
-* Build with libcec on F18 and above
-
-  libcec is in Fedora 18. Build xbmc with it in order to support remote
-  controlling the Raspberry Pi over HDMI.
-
-* Cleanup: remove commented sections
-
-  Remove the obsolete section about tsp's addons, and remove any commented
-  patches.
 
 * Package the manpages in docs/manpages as per package guidelines.
 

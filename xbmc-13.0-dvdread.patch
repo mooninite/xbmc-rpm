@@ -1,10 +1,11 @@
-commit 9f9845af842a376d5bdf70742785e7727695fd03
+commit 56647b999a332d78d9cfc758e8333ecc5c32f735
 Author: Ken Dreyer <ktdreyer@ktdreyer.com>
 Date:   Mon May 6 17:07:40 2013 -0600
 
     Fedora: use external dvdread
     
     Original patch by Alex Lancaster <alexlan[AT]fedoraproject org>
+    (cherry picked from commit 9f9845af842a376d5bdf70742785e7727695fd03)
 
 diff --git a/bootstrap.mk b/bootstrap.mk
 index 8bc4795..1fc31a4 100644
@@ -30,10 +31,10 @@ index 8bc4795..1fc31a4 100644
  	autoreconf -vif $(@D)
  	-@rm -rf $(@D)/autom4te.cache
 diff --git a/configure.in b/configure.in
-index e98cc95..e922043 100644
+index 50bdf83..6136ecd 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -2616,28 +2616,9 @@ XB_CONFIG_MODULE([lib/libdvd/libdvdcss], [
+@@ -2734,29 +2734,9 @@ XB_CONFIG_MODULE([lib/libdvd/libdvdcss], [
      --with-pic
  ], [$SKIP_CONFIG_DVDCSS])
  
@@ -52,6 +53,7 @@ index e98cc95..e922043 100644
 -  $MAKE dvdread-config &&
 -  mkdir -p `pwd`/../includes/dvdread
 -  cp `pwd`/../libdvdread/src/*.h `pwd`/../includes/dvdread
+-  cp `pwd`/../libdvdread/src/dvdread/*.h `pwd`/../includes/dvdread
 -], [0])
 -
  XB_CONFIG_MODULE([lib/libdvd/libdvdnav], [
