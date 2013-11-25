@@ -1,4 +1,4 @@
-%global PRERELEASE Gotham_alpha8
+%global PRERELEASE Gotham_alpha9
 #%%global DIRVERSION %{version}
 # use the line below for pre-releases
 %global DIRVERSION %{version}-%{PRERELEASE}
@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 13.0
-Release: 0.1.Gotham_alpha8%{?dist}
+Release: 0.2.Gotham_alpha9%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -331,6 +331,9 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Mon Nov 25 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 13.0-0.3.Gotham_alpha9
+- Update to Gotham alpha 9
+
 * Wed Oct 16 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 13.0-0.1.Gotham_alpha8
 - Update to Gotham alpha 8
 - Add -devel subpackage
