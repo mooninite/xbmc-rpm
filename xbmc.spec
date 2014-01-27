@@ -1,4 +1,4 @@
-%global PRERELEASE Gotham_alpha9
+%global PRERELEASE Gotham_alpha11
 #%%global DIRVERSION %{version}
 # use the line below for pre-releases
 %global DIRVERSION %{version}-%{PRERELEASE}
@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 13.0
-Release: 0.2.Gotham_alpha9%{?dist}
+Release: 0.3.Gotham_alpha11%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -149,6 +149,8 @@ BuildRequires: libcap-devel
 %if 0%{?_with_libcec}
 BuildRequires: libcec-devel
 %endif
+BuildRequires: libxml-devel
+BuildRequires: libxslt-devel
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
@@ -331,6 +333,9 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Mon Jan 27 2014 Ken Dreyer <ktdreyer@ktdreyer.com> - 13.0-0.5.Gotham_alpha11
+- Update to Gotham alpha 11
+
 * Mon Nov 25 2013 Ken Dreyer <ktdreyer@ktdreyer.com> - 13.0-0.3.Gotham_alpha9
 - Update to Gotham alpha 9
 

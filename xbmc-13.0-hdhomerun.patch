@@ -1,4 +1,4 @@
-From f79620d0bd702d4257e28e3083c893522a008c2d Mon Sep 17 00:00:00 2001
+From ca26da928991f0e3e48018255abc79c86fb46caf Mon Sep 17 00:00:00 2001
 From: Ken Dreyer <ktdreyer@ktdreyer.com>
 Date: Fri, 24 Aug 2012 19:34:47 -0600
 Subject: [PATCH 2/2] Fedora: use external hdhomerun
@@ -12,10 +12,10 @@ Original patch by Alex Lancaster <alexlan[AT]fedoraproject org>
  3 files changed, 53 insertions(+), 31 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 618ca25..842fbc6 100644
+index a14b3c5..f389b51 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -205,7 +205,6 @@ endif
+@@ -211,7 +211,6 @@ endif
  LIB_DIRS=\
  	lib/cximage-6.0 \
  	lib/libexif \
@@ -23,7 +23,7 @@ index 618ca25..842fbc6 100644
  	lib/cpluff \
  	lib/xbmc-dll-symbols
  
-@@ -411,8 +410,6 @@ libexif: dllloader
+@@ -428,8 +427,6 @@ libexif: dllloader
  	$(MAKE) -C lib/libexif
  cmyth: dllloader
  	$(MAKE) -C lib/cmyth
@@ -32,9 +32,9 @@ index 618ca25..842fbc6 100644
  papcodecs: dllloader dvdpcodecs
  	test -d system/players/paplayer || mkdir system/players/paplayer
  	$(MAKE) -C lib/xbadpcm
-@@ -441,7 +438,7 @@ endif
+@@ -458,7 +455,7 @@ endif
  
- codecs: papcodecs dvdpcodecs
+ codecs: papcodecs dvdpcodecs dvdpextcodecs
  
 -libs: libhdhomerun imagelib libexif system/libcpluff-@ARCH@.so $(CMYTH)
 +libs: imagelib libexif system/libcpluff-@ARCH@.so $(CMYTH)
@@ -42,10 +42,10 @@ index 618ca25..842fbc6 100644
  externals: codecs libs visualizations screensavers libaddon pvraddons
  
 diff --git a/configure.in b/configure.in
-index 7a52036..717bb3b 100644
+index 4182c66..b78085a 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -2518,7 +2518,6 @@ OUTPUT_FILES="Makefile \
+@@ -2522,7 +2522,6 @@ OUTPUT_FILES="Makefile \
      lib/libexif/Makefile \
      lib/libXDAAP/Makefile \
      lib/cmyth/Makefile \
