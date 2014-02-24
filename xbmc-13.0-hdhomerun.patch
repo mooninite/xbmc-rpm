@@ -1,7 +1,7 @@
-From ca26da928991f0e3e48018255abc79c86fb46caf Mon Sep 17 00:00:00 2001
+From 3de14b3f561594c326c96dbbe853d516fa8c242e Mon Sep 17 00:00:00 2001
 From: Ken Dreyer <ktdreyer@ktdreyer.com>
 Date: Fri, 24 Aug 2012 19:34:47 -0600
-Subject: [PATCH 2/2] Fedora: use external hdhomerun
+Subject: [PATCH 2/3] Fedora: use external hdhomerun
 
 Original patch by Alex Lancaster <alexlan[AT]fedoraproject org>
 (cherry picked from commit ef5c269992b32d67de7547e9f530b6c971381f45)
@@ -12,7 +12,7 @@ Original patch by Alex Lancaster <alexlan[AT]fedoraproject org>
  3 files changed, 53 insertions(+), 31 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index a14b3c5..f389b51 100644
+index 76936d4..0f9bc0c 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -211,7 +211,6 @@ endif
@@ -42,10 +42,10 @@ index a14b3c5..f389b51 100644
  externals: codecs libs visualizations screensavers libaddon pvraddons
  
 diff --git a/configure.in b/configure.in
-index 4182c66..b78085a 100644
+index 433c4a2..24a5e89 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -2522,7 +2522,6 @@ OUTPUT_FILES="Makefile \
+@@ -2528,7 +2528,6 @@ OUTPUT_FILES="Makefile \
      lib/libexif/Makefile \
      lib/libXDAAP/Makefile \
      lib/cmyth/Makefile \
@@ -149,5 +149,5 @@ index 150b00f..57936be 100644
  };
  
 -- 
-1.8.3.1
+1.8.5.3
 

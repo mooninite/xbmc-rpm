@@ -27,7 +27,7 @@ pushd xbmc-$VERSION
 # grrr, *still* have to keep in ffmpeg for now (2011-12-28) since upstream
 # seems to require files within that subdirectory <sigh>, filed
 # http://trac.xbmc.org/ticket/12370
-for i in  cximage-6.0/zlib libhdhomerun libmpeg2 ffmpeg
+for i in  cximage-6.0/zlib libhdhomerun libmpeg2
 do
     rm -r lib/$i
 done

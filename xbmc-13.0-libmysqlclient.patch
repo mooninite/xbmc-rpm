@@ -1,0 +1,26 @@
+From 7f3906cd055135adc0930f5a9bb341b4be5a0675 Mon Sep 17 00:00:00 2001
+From: Ken Dreyer <ktdreyer@ktdreyer.com>
+Date: Sat, 22 Feb 2014 13:46:01 -0700
+Subject: [PATCH 3/3] Fedora: avoid linking libmysqlclient during Goom
+
+If libmysqlclient and libgnutls are linked to the same binary, we get a
+segfault.
+---
+ configure.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configure.in b/configure.in
+index 24a5e89..4535204 100644
+--- a/configure.in
++++ b/configure.in
+@@ -2879,6 +2879,7 @@ XB_CONFIG_MODULE([xbmc/visualizations/Goom/goom2k4-0],[
+   ./configure  \
+     CFLAGS="$CFLAGS" \ 
+     CXXFLAGS="$CXXFLAGS" \
++    LIBS="$(echo $LIBS | sed -e s/-lmysqlclient//g)" \
+     --prefix="${prefix}" --includedir="${includedir}" --libdir="${libdir}" --datadir="${datadir}" \
+     --host=$host_alias \
+     --build=$build_alias \
+-- 
+1.8.5.3
+
