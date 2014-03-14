@@ -1,4 +1,4 @@
-From 3de14b3f561594c326c96dbbe853d516fa8c242e Mon Sep 17 00:00:00 2001
+From 6c05d16be3bae96479363c2117c28c4261374ab4 Mon Sep 17 00:00:00 2001
 From: Ken Dreyer <ktdreyer@ktdreyer.com>
 Date: Fri, 24 Aug 2012 19:34:47 -0600
 Subject: [PATCH 2/3] Fedora: use external hdhomerun
@@ -12,10 +12,10 @@ Original patch by Alex Lancaster <alexlan[AT]fedoraproject org>
  3 files changed, 53 insertions(+), 31 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 76936d4..0f9bc0c 100644
+index 8eda3c4..fbb19bd 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -211,7 +211,6 @@ endif
+@@ -208,7 +208,6 @@ endif
  LIB_DIRS=\
  	lib/cximage-6.0 \
  	lib/libexif \
@@ -23,7 +23,7 @@ index 76936d4..0f9bc0c 100644
  	lib/cpluff \
  	lib/xbmc-dll-symbols
  
-@@ -428,8 +427,6 @@ libexif: dllloader
+@@ -416,8 +415,6 @@ libexif: dllloader
  	$(MAKE) -C lib/libexif
  cmyth: dllloader
  	$(MAKE) -C lib/cmyth
@@ -32,7 +32,7 @@ index 76936d4..0f9bc0c 100644
  papcodecs: dllloader dvdpcodecs
  	test -d system/players/paplayer || mkdir system/players/paplayer
  	$(MAKE) -C lib/xbadpcm
-@@ -458,7 +455,7 @@ endif
+@@ -446,7 +443,7 @@ endif
  
  codecs: papcodecs dvdpcodecs dvdpextcodecs
  
@@ -42,10 +42,10 @@ index 76936d4..0f9bc0c 100644
  externals: codecs libs visualizations screensavers libaddon pvraddons
  
 diff --git a/configure.in b/configure.in
-index 433c4a2..24a5e89 100644
+index 343292e..2060e24 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -2528,7 +2528,6 @@ OUTPUT_FILES="Makefile \
+@@ -2544,7 +2544,6 @@ OUTPUT_FILES="Makefile \
      lib/libexif/Makefile \
      lib/libXDAAP/Makefile \
      lib/cmyth/Makefile \

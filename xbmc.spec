@@ -1,4 +1,4 @@
-%global PRERELEASE Gotham_alpha11
+%global PRERELEASE Gotham-beta1
 #%%global DIRVERSION %{version}
 # use the line below for pre-releases
 %global DIRVERSION %{version}-%{PRERELEASE}
@@ -10,7 +10,7 @@
 
 Name: xbmc
 Version: 13.0
-Release: 0.4.Gotham_alpha11%{?dist}
+Release: 0.5.Gotham_beta1%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -30,6 +30,7 @@ Patch1: xbmc-13.0-dvdread.patch
 Patch2: xbmc-13.0-hdhomerun.patch
 
 # Avoid segfault during goom's configure
+# https://bugzilla.redhat.com/1069079
 Patch3: xbmc-13.0-libmysqlclient.patch
 
 # Optional deps (not in EPEL)
@@ -160,6 +161,7 @@ BuildRequires: libcec-devel
 %endif
 BuildRequires: libxml-devel
 BuildRequires: libxslt-devel
+BuildRequires: trousers-devel
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
@@ -254,6 +256,14 @@ chmod +x bootstrap
 # Can't use export nor %%configure (implies using export), because
 # the Makefile pile up *FLAGS in this case.
 
+# TODO: we need to figure out a way to set these flags dynamically so that the
+# "with external_ffmpeg" conditional is effective.
+#%%if %{with external_ffmpeg}
+#CPPFLAGS="-I/usr/include/ffmpeg" \
+#CFLAGS="$CFLAGS -I/usr/include/ffmpeg" \
+#CXXFLAGS="$CXXFLAGS -I/usr/include/ffmpeg" \
+#%%endif
+
 ./configure \
 --prefix=%{_prefix} --bindir=%{_bindir} --includedir=%{_includedir} \
 --libdir=%{_libdir} --datadir=%{_datadir} \
@@ -273,11 +283,8 @@ chmod +x bootstrap
 %endif
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
-%if %{with external_ffmpeg}
-CPPFLAGS="-I/usr/include/ffmpeg" \
-%endif
-CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
-CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
+CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
+CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
 LDFLAGS="-fPIC" \
 LIBS="%{?_with_hdhomerun:-lhdhomerun} $LIBS" \
 ASFLAGS=-fPIC
@@ -349,6 +356,10 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Fri Mar 14 2014 Ken Dreyer <ktdreyer@ktdreyer.com> - 13.0-0.5.Gotham_beta1
+- Update to Gotham beta 1
+- Update Goom/MySQL patch, per RHBZ #1069079
+
 * Fri Feb 21 2014 Ken Dreyer <ktdreyer@ktdreyer.com> - 13.0-0.4.Gotham_alpha11
 - use internal ffmpeg
 - switch to bcond conditionals
