@@ -2,7 +2,7 @@
 
 MAJORVERSION=13
 MINORVERSION=0
-PRERELEASE=Gotham-beta1
+PRERELEASE=Gotham_beta2
 
 VERSION=${MAJORVERSION}.${MINORVERSION}${PRERELEASE:+-${PRERELEASE}}
 
@@ -27,7 +27,7 @@ pushd xbmc-$VERSION
 # grrr, *still* have to keep in ffmpeg for now (2011-12-28) since upstream
 # seems to require files within that subdirectory <sigh>, filed
 # http://trac.xbmc.org/ticket/12370
-for i in  cximage-6.0/zlib libhdhomerun libmpeg2
+for i in  cximage-6.0/zlib libhdhomerun libmpeg2 ffmpeg
 do
     rm -r lib/$i
 done

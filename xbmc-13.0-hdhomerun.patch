@@ -15,7 +15,9 @@ diff --git a/Makefile.in b/Makefile.in
 index 8eda3c4..fbb19bd 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -208,7 +208,6 @@ endif
+@@ -205,11 +205,10 @@ PAPCODECS_DIRS+= \
+ endif
+ 
  LIB_DIRS=\
  	lib/cximage-6.0 \
  	lib/libexif \
@@ -23,7 +25,11 @@ index 8eda3c4..fbb19bd 100644
  	lib/cpluff \
  	lib/xbmc-dll-symbols
  
-@@ -416,8 +415,6 @@ libexif: dllloader
+ ifeq (@USE_MYSQL@,1)
+ LIB_DIRS += lib/cmyth
+@@ -413,12 +412,10 @@ else
+ endif
+ libexif: dllloader
  	$(MAKE) -C lib/libexif
  cmyth: dllloader
  	$(MAKE) -C lib/cmyth
@@ -31,8 +37,12 @@ index 8eda3c4..fbb19bd 100644
 -	$(MAKE) -C lib/libhdhomerun
  papcodecs: dllloader dvdpcodecs
  	test -d system/players/paplayer || mkdir system/players/paplayer
- 	$(MAKE) -C lib/xbadpcm
-@@ -446,7 +443,7 @@ endif
+ 	$(MAKE) -C lib/vgmstream
+ 	$(MAKE) -C lib/timidity
+ 	$(MAKE) -C lib/nosefart
+@@ -442,11 +439,11 @@ ifeq (@USE_PVR_ADDONS@,1)
+ 	$(MAKE) -C pvr-addons
+ endif
  
  codecs: papcodecs dvdpcodecs dvdpextcodecs
  
@@ -41,6 +51,8 @@ index 8eda3c4..fbb19bd 100644
  
  externals: codecs libs visualizations screensavers libaddon pvraddons
  
+ xcode_depends: \
+ 	codecs libs visualizations screensavers eventclients skins libaddon \
 diff --git a/configure.in b/configure.in
 index 343292e..2060e24 100644
 --- a/configure.in

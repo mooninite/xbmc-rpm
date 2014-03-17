@@ -1,4 +1,4 @@
-%global PRERELEASE Gotham-beta1
+%global PRERELEASE Gotham_beta2
 #%%global DIRVERSION %{version}
 # use the line below for pre-releases
 %global DIRVERSION %{version}-%{PRERELEASE}
@@ -6,11 +6,11 @@
 
 # It will no longer be possible to build with external ffmpeg.
 # https://github.com/xbmc/xbmc/pull/4005
-%bcond_without external_ffmpeg
+%bcond_with external_ffmpeg
 
 Name: xbmc
 Version: 13.0
-Release: 0.5.Gotham_beta1%{?dist}
+Release: 0.6.Gotham_beta2%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -32,6 +32,11 @@ Patch2: xbmc-13.0-hdhomerun.patch
 # Avoid segfault during goom's configure
 # https://bugzilla.redhat.com/1069079
 Patch3: xbmc-13.0-libmysqlclient.patch
+
+# External ffmpeg patches
+Patch100: 0001-Revert-drop-support-for-external-ffmpeg.patch
+Patch101: 0002-Revert-linux-link-ffmpeg-statically.patch
+Patch102: 0003-makefile-include.patch
 
 # Optional deps (not in EPEL)
 %if 0%{?fedora}
@@ -236,6 +241,10 @@ libraries, you need to install this package.
 %patch2 -p1
 %patch3 -p1
 
+%patch100 -p1
+%patch101 -p1
+%patch102 -p1
+
 %if %{with hdhomerun}
 %else
   # Remove hdhomerun from the build.
@@ -283,8 +292,14 @@ chmod +x bootstrap
 %endif
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
+%if %{with external_ffmpeg}
+CPPFLAGS="-I/usr/include/ffmpeg" \
+CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
+CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
+%else
 CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
 CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
+%endif
 LDFLAGS="-fPIC" \
 LIBS="%{?_with_hdhomerun:-lhdhomerun} $LIBS" \
 ASFLAGS=-fPIC
@@ -356,6 +371,10 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Sun Mar 16 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.6.Gotham_beta2
+- Update to Gotham beta 2
+- use external ffmpeg
+
 * Fri Mar 14 2014 Ken Dreyer <ktdreyer@ktdreyer.com> - 13.0-0.5.Gotham_beta1
 - Update to Gotham beta 1
 - Update Goom/MySQL patch, per RHBZ #1069079
