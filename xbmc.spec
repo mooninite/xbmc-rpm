@@ -4,13 +4,9 @@
 %global DIRVERSION %{version}-%{PRERELEASE}
 %global _hardened_build 1
 
-# It will no longer be possible to build with external ffmpeg.
-# https://github.com/xbmc/xbmc/pull/4005
-%bcond_with external_ffmpeg
-
 Name: xbmc
 Version: 13.0
-Release: 0.6.Gotham_beta2%{?dist}
+Release: 0.7.Gotham_beta2%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -41,14 +37,16 @@ Patch102: 0003-makefile-include.patch
 # Optional deps (not in EPEL)
 %if 0%{?fedora}
 # (libbluray in EPEL 6 is too old.)
-%bcond_with libbluray
-%bcond_with cwiid
-%bcond_with libssh
-%bcond_with libcec
+%global with_libbluray 1
+%global with_cwiid 1
+%global with_libssh 1
+%global with_libcec 1
+%global with_external_ffmpeg 1
 %endif
 
 %ifarch x86_64 i686
-%bcond_with crystalhd
+%global with_crystalhd 1
+%global with_hdhomerun 1
 %endif
 
 ExcludeArch: ppc64
@@ -117,17 +115,17 @@ BuildRequires: libtool
 BuildRequires: libtiff-devel
 BuildRequires: libvdpau-devel
 BuildRequires: libdvdread-devel
-%if %{with external_ffmpeg}
+%if 0%{with_external_ffmpeg}
 BuildRequires: ffmpeg-devel
 %endif
 BuildRequires: faad2-devel
 BuildRequires: pulseaudio-libs-devel
 BuildRequires: libdca-devel
 BuildRequires: libass-devel >= 0.9.7
-%if %{with hdhomerun}
+%if 0%{with_hdhomerun}
 BuildRequires: hdhomerun-devel
 %endif
-%if %{with crystalhd}
+%if 0%{with_crystalhd}
 BuildRequires: libcrystalhd-devel
 %endif
 BuildRequires: libmodplug-devel
@@ -143,25 +141,25 @@ BuildRequires: gettext-devel
 BuildRequires: gettext-autopoint
 %endif
 BuildRequires: librtmp-devel
-%if %{with libbluray}
+%if 0%{with_libbluray}
 BuildRequires: libbluray-devel
 #BuildRequires: libbluray-devel >= 0.2.1
 %endif
 BuildRequires: yajl-devel
 BuildRequires: bluez-libs-devel
 BuildRequires: tinyxml-devel
-%if %{with cwiid}
+%if 0%{with_cwiid}
 BuildRequires: cwiid-devel
 %endif
 BuildRequires: taglib-devel >= 1.8
 BuildRequires: swig
 BuildRequires: java-devel
 BuildRequires: lame-devel
-%if %{with libssh}
+%if 0%{with_libssh}
 BuildRequires: libssh-devel
 %endif
 BuildRequires: libcap-devel
-%if %{with libcec}
+%if 0%{with_libcec}
 BuildRequires: libcec-devel
 %endif
 BuildRequires: libxml-devel
@@ -178,16 +176,16 @@ BuildRequires: libva-devel
 # pseudo-DLL loading scheme (sigh)
 Requires: librtmp
 Requires: libmad
-%if %{with hdhomerun}
+%if 0%{with_hdhomerun}
 BuildRequires: hdhomerun
 %endif
-%if %{with crystalhd}
+%if 0%{with_crystalhd}
 Requires: libcrystalhd
 %endif
-%if %{with libbluray}
+%if 0%{with_libbluray}
 Requires: libbluray
 %endif
-%if %{with libcec}
+%if 0%{with_libcec}
 Requires: libcec
 %endif
 
@@ -245,7 +243,7 @@ libraries, you need to install this package.
 %patch101 -p1
 %patch102 -p1
 
-%if %{with hdhomerun}
+%if 0%{with_hdhomerun}
 %else
   # Remove hdhomerun from the build.
   pushd xbmc/filesystem/
@@ -265,14 +263,6 @@ chmod +x bootstrap
 # Can't use export nor %%configure (implies using export), because
 # the Makefile pile up *FLAGS in this case.
 
-# TODO: we need to figure out a way to set these flags dynamically so that the
-# "with external_ffmpeg" conditional is effective.
-#%%if %{with external_ffmpeg}
-#CPPFLAGS="-I/usr/include/ffmpeg" \
-#CFLAGS="$CFLAGS -I/usr/include/ffmpeg" \
-#CXXFLAGS="$CXXFLAGS -I/usr/include/ffmpeg" \
-#%%endif
-
 ./configure \
 --prefix=%{_prefix} --bindir=%{_bindir} --includedir=%{_includedir} \
 --libdir=%{_libdir} --datadir=%{_datadir} \
@@ -280,19 +270,19 @@ chmod +x bootstrap
 --enable-external-libraries \
 --enable-goom \
 --enable-pulse \
-%if %{with libcec}
+%if 0%{with_libcec}
 --enable-libcec \
 %else
 --disable-libcec \
 %endif
-%if %{with libssh}
+%if 0%{with_libssh}
 --enable-ssh \
 %else
 --disable-ssh \
 %endif
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
-%if %{with external_ffmpeg}
+%if 0%{with_external_ffmpeg}
 CPPFLAGS="-I/usr/include/ffmpeg" \
 CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
 CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
@@ -301,7 +291,9 @@ CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/samba-4.0/ 
 CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
 %endif
 LDFLAGS="-fPIC" \
-LIBS="%{?_with_hdhomerun:-lhdhomerun} $LIBS" \
+%if 0%{?with_hdhomerun}
+LIBS=" -lhdhomerun $LIBS" \
+%endif
 ASFLAGS=-fPIC
 
 make %{?_smp_mflags} VERBOSE=1
@@ -371,6 +363,9 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Tue Mar 18 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.7.Gotham_beta2
+- Switch away from bcond conditionals
+
 * Sun Mar 16 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.6.Gotham_beta2
 - Update to Gotham beta 2
 - use external ffmpeg
