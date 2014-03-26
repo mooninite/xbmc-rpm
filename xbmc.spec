@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 13.0
-Release: 0.7.Gotham_beta2%{?dist}
+Release: 0.8.Gotham_beta2%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -363,6 +363,9 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Tue Mar 25 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.8.Gotham_beta2
+- Rebuild for ffmpeg bump
+
 * Tue Mar 18 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.7.Gotham_beta2
 - Switch away from bcond conditionals
 
