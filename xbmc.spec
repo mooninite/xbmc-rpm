@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 13.0
-Release: 0.9.Gotham_beta3%{?dist}
+Release: 0.10.Gotham_beta3%{?dist}
 URL: http://www.xbmc.org/
 
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -37,16 +37,16 @@ Patch102: 0003-makefile-include.patch
 # Optional deps (not in EPEL)
 %if 0%{?fedora}
 # (libbluray in EPEL 6 is too old.)
-%global with_libbluray 1
-%global with_cwiid 1
-%global with_libssh 1
-%global with_libcec 1
-%global with_external_ffmpeg 1
+%global _with_libbluray 1
+%global _with_cwiid 1
+%global _with_libssh 1
+%global _with_libcec 1
+%global _with_external_ffmpeg 1
 %endif
 
 %ifarch x86_64 i686
-%global with_crystalhd 1
-%global with_hdhomerun 1
+%global _with_crystalhd 1
+%global _with_hdhomerun 1
 %endif
 
 ExcludeArch: ppc64
@@ -115,17 +115,17 @@ BuildRequires: libtool
 BuildRequires: libtiff-devel
 BuildRequires: libvdpau-devel
 BuildRequires: libdvdread-devel
-%if 0%{with_external_ffmpeg}
+%if 0%{?_with_external_ffmpeg}
 BuildRequires: ffmpeg-devel
 %endif
 BuildRequires: faad2-devel
 BuildRequires: pulseaudio-libs-devel
 BuildRequires: libdca-devel
 BuildRequires: libass-devel >= 0.9.7
-%if 0%{with_hdhomerun}
+%if 0%{?_with_hdhomerun}
 BuildRequires: hdhomerun-devel
 %endif
-%if 0%{with_crystalhd}
+%if 0%{?_with_crystalhd}
 BuildRequires: libcrystalhd-devel
 %endif
 BuildRequires: libmodplug-devel
@@ -141,25 +141,25 @@ BuildRequires: gettext-devel
 BuildRequires: gettext-autopoint
 %endif
 BuildRequires: librtmp-devel
-%if 0%{with_libbluray}
+%if 0%{?_with_libbluray}
 BuildRequires: libbluray-devel
 #BuildRequires: libbluray-devel >= 0.2.1
 %endif
 BuildRequires: yajl-devel
 BuildRequires: bluez-libs-devel
 BuildRequires: tinyxml-devel
-%if 0%{with_cwiid}
+%if 0%{?_with_cwiid}
 BuildRequires: cwiid-devel
 %endif
 BuildRequires: taglib-devel >= 1.8
 BuildRequires: swig
 BuildRequires: java-devel
 BuildRequires: lame-devel
-%if 0%{with_libssh}
+%if 0%{?_with_libssh}
 BuildRequires: libssh-devel
 %endif
 BuildRequires: libcap-devel
-%if 0%{with_libcec}
+%if 0%{?_with_libcec}
 BuildRequires: libcec-devel
 %endif
 BuildRequires: libxml-devel
@@ -176,16 +176,16 @@ BuildRequires: libva-devel
 # pseudo-DLL loading scheme (sigh)
 Requires: librtmp
 Requires: libmad
-%if 0%{with_hdhomerun}
+%if 0%{?_with_hdhomerun}
 BuildRequires: hdhomerun
 %endif
-%if 0%{with_crystalhd}
+%if 0%{?_with_crystalhd}
 Requires: libcrystalhd
 %endif
-%if 0%{with_libbluray}
+%if 0%{?_with_libbluray}
 Requires: libbluray
 %endif
-%if 0%{with_libcec}
+%if 0%{?_with_libcec}
 Requires: libcec
 %endif
 
@@ -243,7 +243,7 @@ libraries, you need to install this package.
 %patch101 -p1
 %patch102 -p1
 
-%if 0%{with_hdhomerun}
+%if 0%{?_with_hdhomerun}
 %else
   # Remove hdhomerun from the build.
   pushd xbmc/filesystem/
@@ -270,19 +270,26 @@ chmod +x bootstrap
 --enable-external-libraries \
 --enable-goom \
 --enable-pulse \
-%if 0%{with_libcec}
+%if 0%{?_with_libcec}
 --enable-libcec \
 %else
 --disable-libcec \
 %endif
-%if 0%{with_libssh}
+%if 0%{?_with_libssh}
 --enable-ssh \
 %else
 --disable-ssh \
 %endif
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
-%if 0%{with_external_ffmpeg}
+%ifarch armv7hl \
+--enable-tegra \
+--disable-neon \
+%endif
+%ifarch armv7hnl
+--enable-neon \
+%endif
+%if 0%{?_with_external_ffmpeg}
 CPPFLAGS="-I/usr/include/ffmpeg" \
 CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
 CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/ffmpeg -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
@@ -291,7 +298,7 @@ CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/samba-4.0/ 
 CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
 %endif
 LDFLAGS="-fPIC" \
-%if 0%{?with_hdhomerun}
+%if 0%{?_with_hdhomerun}
 LIBS=" -lhdhomerun $LIBS" \
 %endif
 ASFLAGS=-fPIC
@@ -363,6 +370,9 @@ fi
 #%%{_includedir}/xbmc/xbmcclient.h
 
 %changelog
+* Fri Apr 04 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.10.Gotham_beta3
+- Add ARM build switches
+
 * Wed Apr 02 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.9.Gotham_beta3
 - Update to Gotham beta 3
 
