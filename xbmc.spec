@@ -278,7 +278,7 @@ chmod +x bootstrap
 %endif
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
-ifnarch %{arm}
+%ifnarch %{arm}
 --enable-gl \
 --disable-gles \
 --enable-vdpau \
