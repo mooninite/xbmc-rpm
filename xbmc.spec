@@ -6,9 +6,12 @@
 
 Name: xbmc
 Version: 13.0
-Release: 0.10.Gotham_beta3%{?dist}
-URL: http://www.xbmc.org/
+Release: 0.11.Gotham_beta3%{?dist}
+Summary: Media center
 
+License: GPLv2+ and GPLv3+
+Group: Applications/Multimedia
+URL: http://www.xbmc.org/
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 # xbmc contains code that we cannot ship, as well as redundant private
 # copies of upstream libraries that we already distribute.  Therefore
@@ -50,154 +53,146 @@ Patch102: 0003-makefile-include.patch
 %endif
 
 ExcludeArch: ppc64
-Summary: Media center
-License: GPLv2+ and GPLv3+
-Group: Applications/Multimedia
-BuildRequires: desktop-file-utils
-BuildRequires: dbus-devel
+
 BuildRequires: SDL-devel
 BuildRequires: SDL_image-devel
 BuildRequires: SDL_mixer-devel
-BuildRequires: fontconfig-devel
-BuildRequires: fribidi-devel
-BuildRequires: glibc-devel
-BuildRequires: glew-devel
-BuildRequires: libstdc++-devel
-BuildRequires: glib2-devel
-BuildRequires: libjasper-devel
-%if 0%{?el6}
-BuildRequires: libjpeg-devel
-%else
-BuildRequires: libjpeg-turbo-devel
-%endif
-BuildRequires: libogg-devel
-BuildRequires: libpng-devel
-BuildRequires: libstdc++-devel
-BuildRequires: e2fsprogs-devel
-BuildRequires: libvorbis-devel
-BuildRequires: lzo-devel
-BuildRequires: pcre-devel
-BuildRequires: zlib-devel
-BuildRequires: tre-devel
+BuildRequires: a52dec-devel
+BuildRequires: afpfs-ng-devel
+BuildRequires: avahi-devel
+BuildRequires: bluez-libs-devel
 BuildRequires: boost-devel
 BuildRequires: bzip2-devel
-BuildRequires: freetype-devel
-BuildRequires: libXinerama-devel
-BuildRequires: fontconfig-devel
-BuildRequires: mysql-devel
-BuildRequires: jasper-devel
-BuildRequires: enca-devel
 BuildRequires: cmake
-BuildRequires: gperf
-BuildRequires: nasm
-BuildRequires: libXmu-devel
-BuildRequires: pcre-devel
-BuildRequires: gcc-c++
-BuildRequires: sqlite-devel
-BuildRequires: curl-devel
-BuildRequires: libcdio-devel
-BuildRequires: flex
-BuildRequires: libmad-devel
-BuildRequires: libsamplerate-devel
-BuildRequires: libsmbclient-devel
-BuildRequires: libmms-devel
-BuildRequires: libXtst-devel
-BuildRequires: libvdpau-devel
+%if 0%{?_with_cwiid}
+BuildRequires: cwiid-devel
+%endif
+BuildRequires: dbus-devel
 BuildRequires: desktop-file-utils
-BuildRequires: python-devel
-BuildRequires: wavpack-devel
-BuildRequires: a52dec-devel
-BuildRequires: libmpeg2-devel
-BuildRequires: libmpcdec-devel
-BuildRequires: flac-devel
-BuildRequires: avahi-devel
-BuildRequires: libtool
-BuildRequires: libtiff-devel
-BuildRequires: libvdpau-devel
-BuildRequires: libdvdread-devel
+BuildRequires: e2fsprogs-devel
+BuildRequires: enca-devel
+BuildRequires: expat-devel
+BuildRequires: faad2-devel
 %if 0%{?_with_external_ffmpeg}
 BuildRequires: ffmpeg-devel
 %endif
-BuildRequires: faad2-devel
-BuildRequires: pulseaudio-libs-devel
-BuildRequires: libdca-devel
-BuildRequires: libass-devel >= 0.9.7
-%if 0%{?_with_hdhomerun}
-BuildRequires: hdhomerun-devel
-%endif
-%if 0%{?_with_crystalhd}
-BuildRequires: libcrystalhd-devel
-%endif
-BuildRequires: libmodplug-devel
-BuildRequires: libmicrohttpd-devel
-BuildRequires: expat-devel
-BuildRequires: zip
-BuildRequires: pkgconfig(libudev)
-# for AirPlay support
-BuildRequires: libplist-devel
+BuildRequires: flac-devel
+BuildRequires: flex
+BuildRequires: fontconfig-devel
+BuildRequires: freetype-devel
+BuildRequires: fribidi-devel
 %if 0%{?el6}
 BuildRequires: gettext-devel
 %else
 BuildRequires: gettext-autopoint
 %endif
-BuildRequires: librtmp-devel
-%if 0%{?_with_libbluray}
-BuildRequires: libbluray-devel
-#BuildRequires: libbluray-devel >= 0.2.1
+BuildRequires: glew-devel
+BuildRequires: glib2-devel
+BuildRequires: gperf
+%if 0%{?_with_hdhomerun}
+BuildRequires: hdhomerun-devel
 %endif
-BuildRequires: yajl-devel
-BuildRequires: bluez-libs-devel
-BuildRequires: tinyxml-devel
-%if 0%{?_with_cwiid}
-BuildRequires: cwiid-devel
-%endif
-BuildRequires: taglib-devel >= 1.8
-BuildRequires: swig
+BuildRequires: jasper-devel
 BuildRequires: java-devel
 BuildRequires: lame-devel
-%if 0%{?_with_libssh}
-BuildRequires: libssh-devel
+BuildRequires: libXinerama-devel
+BuildRequires: libXmu-devel
+BuildRequires: libXtst-devel
+BuildRequires: libass-devel >= 0.9.7
+%if 0%{?_with_libbluray}
+BuildRequires: libbluray-devel
 %endif
 BuildRequires: libcap-devel
+BuildRequires: libcdio-devel
 %if 0%{?_with_libcec}
 BuildRequires: libcec-devel
 %endif
+%if 0%{?_with_crystalhd}
+BuildRequires: libcrystalhd-devel
+%endif
+BuildRequires: libcurl-devel
+BuildRequires: libdca-devel
+BuildRequires: libdvdread-devel
+%if 0%{?el6}
+BuildRequires: libjpeg-devel
+%else
+BuildRequires: libjpeg-turbo-devel
+%endif
+BuildRequires: libmad-devel
+BuildRequires: libmicrohttpd-devel
+BuildRequires: libmms-devel
+BuildRequires: libmodplug-devel
+BuildRequires: libmpcdec-devel
+BuildRequires: libmpeg2-devel
+BuildRequires: libogg-devel
+# for AirPlay support
+BuildRequires: libplist-devel
+BuildRequires: libpng-devel
+BuildRequires: librtmp-devel
+BuildRequires: libsamplerate-devel
+BuildRequires: libsmbclient-devel
+%if 0%{?_with_libssh}
+BuildRequires: libssh-devel
+%endif
+BuildRequires: libtiff-devel
+BuildRequires: libtool
+%ifnarch %{arm}
+BuildRequires: libva-devel
+BuildRequires: libvdpau-devel
+%endif
+BuildRequires: libvorbis-devel
 BuildRequires: libxml-devel
 BuildRequires: libxslt-devel
+BuildRequires: lzo-devel
+BuildRequires: mariadb-devel
+# ARM uses GLES
+%ifarch %{arm}
+BuildRequires: mesa-libEGL-devel
+BuildRequires: mesa-libGLES-devel
+%endif
+BuildRequires: nasm
+BuildRequires: pcre-devel
+BuildRequires: pulseaudio-libs-devel
+BuildRequires: python-devel
+BuildRequires: python-pillow
+BuildRequires: sqlite-devel
+BuildRequires: swig
+BuildRequires: systemd-devel
+BuildRequires: taglib-devel >= 1.8
+BuildRequires: tinyxml-devel
+BuildRequires: tre-devel
 BuildRequires: trousers-devel
+BuildRequires: wavpack-devel
+BuildRequires: yajl-devel
+BuildRequires: zlib-devel
 
 # nfs-utils-lib-devel package currently broken
 #BuildRequires: nfs-utils-lib-devel
-BuildRequires: afpfs-ng-devel
-BuildRequires: libva-devel
 
 # need explicit requires for these packages
 # as they are dynamically loaded via XBMC's arcane 
 # pseudo-DLL loading scheme (sigh)
-Requires: librtmp
-Requires: libmad
-%if 0%{?_with_hdhomerun}
-BuildRequires: hdhomerun
-%endif
-%if 0%{?_with_crystalhd}
-Requires: libcrystalhd
-%endif
 %if 0%{?_with_libbluray}
 Requires: libbluray
 %endif
 %if 0%{?_with_libcec}
 Requires: libcec
 %endif
+%if 0%{?_with_crystalhd}
+Requires: libcrystalhd
+%endif
+Requires: libmad
+Requires: librtmp
 
 # needed when doing a minimal install, see
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=1844
 Requires: glx-utils
 Requires: xorg-x11-utils
 
-# These are just symlinked to, but needed both at build-time
+# This is just symlinked to, but needed both at build-time
 # and for installation
-BuildRequires: python-imaging
 Requires: python-imaging
+
 
 %description
 XBMC media center is a free cross-platform media-player jukebox and
@@ -205,16 +200,17 @@ entertainment hub.  XBMC can play a spectrum of of multimedia formats,
 and featuring playlist, audio visualizations, slideshow, and weather
 forecast functions, together third-party plugins.
 
+
 %package devel
 Summary: Development files needed to compile C programs against xbmc
 Group: Development/Libraries
 Requires: %{name} = %{version}-%{release}
 
 %description devel
-
 XBMC media center is a free cross-platform media-player jukebox and
 entertainment hub. If you want to develop programs which use xbmc's
 libraries, you need to install this package.
+
 
 #%%package eventclients
 #%Summary: Media center event client remotes
@@ -231,8 +227,8 @@ libraries, you need to install this package.
 #%This package contains the development header files for the eventclients
 #%library.
 
-%prep
 
+%prep
 %setup -q -n %{name}-%{DIRVERSION}
 
 %patch1 -p1
@@ -256,8 +252,8 @@ libraries, you need to install this package.
   popd
 %endif
 
-%build
 
+%build
 chmod +x bootstrap
 ./bootstrap
 # Can't use export nor %%configure (implies using export), because
@@ -282,12 +278,21 @@ chmod +x bootstrap
 %endif
 --disable-dvdcss \
 --disable-optimizations --disable-debug \
+ifnarch %{arm}
+--enable-gl \
+--disable-gles \
+--enable-vdpau \
+%else
+--enable-gles \
+--disable-vdpau \
+--disable-vaapi \
 %ifarch armv7hl \
 --enable-tegra \
 --disable-neon \
 %endif
 %ifarch armv7hnl
 --enable-neon \
+%endif
 %endif
 %if 0%{?_with_external_ffmpeg}
 CPPFLAGS="-I/usr/include/ffmpeg" \
@@ -304,6 +309,7 @@ LIBS=" -lhdhomerun $LIBS" \
 ASFLAGS=-fPIC
 
 make %{?_smp_mflags} VERBOSE=1
+
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -323,11 +329,10 @@ ln -s %{python_sitearch}/PIL $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module
 #install -d $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pysqlite/lib
 #ln -s %{python_sitearch}/pysqlite2 $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pysqlite/lib/pysqlite2
 
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %post
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -335,8 +340,10 @@ if [ $1 -eq 0 ] ; then
     /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
 
+
 %posttrans
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
 
 %files
 %defattr(-,root,root)
@@ -350,8 +357,10 @@ fi
 %{_datadir}/applications/xbmc.desktop
 %{_datadir}/icons/hicolor/*/*/*.png
 
+
 %files devel
 %{_includedir}/xbmc
+
 
 #%%files eventclients
 #%%defattr(-,root,root)
@@ -369,7 +378,11 @@ fi
 #%%dir %{_includedir}/xbmc
 #%%{_includedir}/xbmc/xbmcclient.h
 
+
 %changelog
+* Tue Apr 15 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.11.Gotham_beta3
+- Enable GLES on ARM, disable VDPAU/VAAPI on ARM
+
 * Fri Apr 04 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.10.Gotham_beta3
 - Add ARM build switches
 
