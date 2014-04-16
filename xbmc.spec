@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 13.0
-Release: 0.11.Gotham_beta3%{?dist}
+Release: 0.12.Gotham_beta3%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
@@ -380,6 +380,9 @@ fi
 
 
 %changelog
+* Tue Apr 15 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.12.Gotham_beta3
+- Update dvdread patch for new dvdread release
+
 * Tue Apr 15 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.11.Gotham_beta3
 - Enable GLES on ARM, disable VDPAU/VAAPI on ARM
 

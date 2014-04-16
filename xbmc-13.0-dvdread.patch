@@ -38,7 +38,7 @@ diff --git a/configure.in b/configure.in
 index beb8aac..343292e 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -2861,28 +2861,9 @@ XB_CONFIG_MODULE([lib/libdvd/libdvdcss], [
+@@ -2860,27 +2860,9 @@
      --with-pic
  ], [$SKIP_CONFIG_DVDCSS])
  
@@ -63,10 +63,9 @@ index beb8aac..343292e 100644
    ./configure2 \
      --extra-cflags="$CFLAGS $DVDREAD_CFLAGS -I`pwd`/../includes $DROID_DVDLIB_SEEK64" \
 -    --extra-ldflags="-L`pwd`/../libdvdread/obj" \
--    --with-dvdread-config="`pwd`/../dvdread-config" \
+     --with-dvdread-config="`pwd`/../dvdread-config" \
      --prefix="${prefix}" --includedir="${includedir}" --libdir="${libdir}" --datadir="${datadir}" \
      --host=$host_alias \
-     --build=$build_alias \
 diff --git a/lib/libdvd/Makefile.in b/lib/libdvd/Makefile.in
 index 69d2286..1f5eebb 100644
 --- a/lib/libdvd/Makefile.in
