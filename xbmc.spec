@@ -1,4 +1,4 @@
-%global PRERELEASE Gotham_beta3
+%global PRERELEASE Gotham_beta4
 #%%global DIRVERSION %{version}
 # use the line below for pre-releases
 %global DIRVERSION %{version}-%{PRERELEASE}
@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 13.0
-Release: 0.12.Gotham_beta3%{?dist}
+Release: 0.13.Gotham_beta4%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
@@ -31,6 +31,9 @@ Patch2: xbmc-13.0-hdhomerun.patch
 # Avoid segfault during goom's configure
 # https://bugzilla.redhat.com/1069079
 Patch3: xbmc-13.0-libmysqlclient.patch
+
+# Set program version parameters
+Patch4: xbmc-13.0-versioning.patch
 
 # External ffmpeg patches
 Patch100: 0001-Revert-drop-support-for-external-ffmpeg.patch
@@ -212,20 +215,21 @@ entertainment hub. If you want to develop programs which use xbmc's
 libraries, you need to install this package.
 
 
-#%%package eventclients
-#%Summary: Media center event client remotes
+%package eventclients
+Summary: Media center event client remotes
 
-#%%description eventclients
-#%This package contains support for using XBMC with the PS3 Remote, the Wii
-#%Remote, a J2ME based remote and the command line xbmc-send utility.
+%description eventclients
+This package contains support for using XBMC with the PS3 Remote, the Wii
+Remote, a J2ME based remote and the command line xbmc-send utility.
 
-#%%package eventclients-devel
-#%Summary: Media center event client remotes development files
-#%Requires:	%{name}-eventclients = %{version}-%{release}
+%package eventclients-devel
+Summary: Media center event client remotes development files
+Requires:	%{name}-eventclients = %{version}-%{release}
+Requires:	%{name}-devel = %{version}-%{release}
 
-#%%description eventclients-devel
-#%This package contains the development header files for the eventclients
-#%library.
+%description eventclients-devel
+This package contains the development header files for the eventclients
+library.
 
 
 %prep
@@ -234,6 +238,7 @@ libraries, you need to install this package.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %patch100 -p1
 %patch101 -p1
@@ -314,7 +319,7 @@ make %{?_smp_mflags} VERBOSE=1
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
-#make -C tools/EventClients DESTDIR=$RPM_BUILD_ROOT install 
+make -C tools/EventClients DESTDIR=$RPM_BUILD_ROOT install 
 # remove the doc files from unversioned /usr/share/doc/xbmc, they should be in versioned docdir
 rm -r $RPM_BUILD_ROOT/%{_datadir}/doc/
 
@@ -362,24 +367,26 @@ fi
 %{_includedir}/xbmc
 
 
-#%%files eventclients
-#%%defattr(-,root,root)
-#%%python_sitelib/xbmc
-#%%dir %{_datadir}/pixmaps/xbmc
-#%%{_datadir}/pixmaps/xbmc/*.png
-#%%{_bindir}/xbmc-j2meremote
-#%%{_bindir}/xbmc-ps3d
-#%%{_bindir}/xbmc-ps3remote
-#%%{_bindir}/xbmc-send
-#%%{_bindir}/xbmc-wiiremote
+%files eventclients
+%python_sitelib/xbmc
+%dir %{_datadir}/pixmaps/xbmc
+%{_datadir}/pixmaps/xbmc/*.png
+%{_bindir}/xbmc-j2meremote
+%{_bindir}/xbmc-ps3d
+%{_bindir}/xbmc-ps3remote
+%{_bindir}/xbmc-send
+%{_bindir}/xbmc-wiiremote
 
-#%%files eventclients-devel
-#%%defattr(-,root,root)
-#%%dir %{_includedir}/xbmc
-#%%{_includedir}/xbmc/xbmcclient.h
+
+%files eventclients-devel
+%{_includedir}/xbmc/xbmcclient.h
 
 
 %changelog
+* Sun Apr 20 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.13.Gotham_beta4
+- Update to Gotham beta 4
+- Enable clientevents package
+
 * Tue Apr 15 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.12.Gotham_beta3
 - Update dvdread patch for new dvdread release
 
