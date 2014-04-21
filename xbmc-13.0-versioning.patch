@@ -1,0 +1,21 @@
+--- a/xbmc/GitRevision.h	2014-04-18 17:47:17.000000000 -0500
++++ b/xbmc/GitRevision.h	2014-04-20 18:26:11.509554641 -0500
+@@ -1,5 +1,7 @@
+ #pragma once
+ 
++#undef GIT_REV
++
+ /*
+  *      Copyright (C) 2011-2013 Team XBMC
+  *      http://xbmc.org
+--- a/xbmc/Application.cpp	2014-04-18 17:47:17.000000000 -0500
++++ b/xbmc/Application.cpp	2014-04-20 18:10:35.171011439 -0500
+@@ -693,7 +693,7 @@
+   CProfilesManager::Get().Load();
+ 
+   CLog::Log(LOGNOTICE, "-----------------------------------------------------------------------");
+-  CLog::Log(LOGNOTICE, "Starting XBMC (%s). Platform: %s %s %d-bit", g_infoManager.GetVersion().c_str(), g_sysinfo.GetBuildTargetCpuFamily().c_str(),
++  CLog::Log(LOGNOTICE, "Starting XBMC from RPM Fusion (%s). Platform: %s %s %d-bit", g_infoManager.GetVersion().c_str(), g_sysinfo.GetBuildTargetCpuFamily().c_str(),
+       g_sysinfo.GetBuildTargetPlatformName().c_str(), g_sysinfo.GetXbmcBitness());
+ 
+ /* Expand macro before stringify */
