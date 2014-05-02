@@ -1,4 +1,4 @@
-%global PRERELEASE Gotham_beta4
+%global PRERELEASE Gotham_rc1
 #%%global DIRVERSION %{version}
 # use the line below for pre-releases
 %global DIRVERSION %{version}-%{PRERELEASE}
@@ -6,7 +6,7 @@
 
 Name: xbmc
 Version: 13.0
-Release: 0.13.Gotham_beta4%{?dist}
+Release: 0.14.Gotham_rc1%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
@@ -383,6 +383,9 @@ fi
 
 
 %changelog
+* Thu May 01 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.14.Gotham_rc1
+- Update to Gotham RC 1
+
 * Sun Apr 20 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.13.Gotham_beta4
 - Update to Gotham beta 4
 - Enable clientevents package
