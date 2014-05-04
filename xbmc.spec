@@ -1,12 +1,12 @@
-%global PRERELEASE Gotham_rc1
-#%%global DIRVERSION %{version}
+#global PRERELEASE Gotham_rc1
+%global DIRVERSION %{version}
 # use the line below for pre-releases
-%global DIRVERSION %{version}-%{PRERELEASE}
+#global DIRVERSION %{version}-%{PRERELEASE}
 %global _hardened_build 1
 
 Name: xbmc
 Version: 13.0
-Release: 0.14.Gotham_rc1%{?dist}
+Release: 1%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
@@ -383,6 +383,9 @@ fi
 
 
 %changelog
+* Sun May 04 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-1
+- Update to Gotham final
+
 * Thu May 01 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-0.14.Gotham_rc1
 - Update to Gotham RC 1
 

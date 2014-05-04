@@ -2,12 +2,12 @@
 
 MAJORVERSION=13
 MINORVERSION=0
-PRERELEASE=Gotham_rc1
+#PRERELEASE=Gotham_rc1
 
 VERSION=${MAJORVERSION}.${MINORVERSION}${PRERELEASE:+-${PRERELEASE}}
 
-#GITHUBURL=https://github.com/xbmc/xbmc/zipball/$VERSION-Frodo
-GITHUBURL=https://github.com/xbmc/xbmc/zipball/$PRERELEASE
+GITHUBURL=https://github.com/xbmc/xbmc/zipball/$VERSION-Gotham
+#GITHUBURL=https://github.com/xbmc/xbmc/zipball/$PRERELEASE
 
 # download zipball
 if [[ ! -f xbmc-$VERSION.zip ]]; then
