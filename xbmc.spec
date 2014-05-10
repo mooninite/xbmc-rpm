@@ -1,18 +1,19 @@
 #global PRERELEASE Gotham_rc1
 %global DIRVERSION %{version}
+%global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
 #global DIRVERSION %{version}-%{PRERELEASE}
 %global _hardened_build 1
 
 Name: xbmc
 Version: 13.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
 Group: Applications/Multimedia
 URL: http://www.xbmc.org/
-Source0: %{name}-%{DIRVERSION}-patched.tar.xz
+Source0: %{name}-%{DIRVERSION}-%{GITCOMMIT}-patched.tar.xz
 # xbmc contains code that we cannot ship, as well as redundant private
 # copies of upstream libraries that we already distribute.  Therefore
 # we use this script to remove the code before shipping it.
@@ -233,7 +234,7 @@ library.
 
 
 %prep
-%setup -q -n %{name}-%{DIRVERSION}
+%setup -q -n %{name}-%{DIRVERSION}-%{GITCOMMIT}
 
 %patch1 -p1
 %patch2 -p1
@@ -383,6 +384,10 @@ fi
 
 
 %changelog
+* Sat May 10 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-2
+- Update to latest Gotham final branch (commit e988513)
+- Fixes for rtmp (RFBZ #3234)
+
 * Sun May 04 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-1
 - Update to Gotham final
 
