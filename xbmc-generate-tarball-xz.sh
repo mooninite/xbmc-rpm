@@ -1,16 +1,16 @@
 #!/bin/sh
 
 MAJORVERSION=13
-MINORVERSION=0
-GITCOMMIT=e988513175fccca83f8b688bb77b932f6a403b96
-GITSHORT=ge988513
-PRERELEASE=Gotham_r2
+MINORVERSION=1b1
+#GITCOMMIT=e988513175fccca83f8b688bb77b932f6a403b96
+#GITSHORT=ge988513
+#PRERELEASE=Gotham
 
 VERSION=${MAJORVERSION}.${MINORVERSION}${PRERELEASE:+-${PRERELEASE}}${GITSHORT:+-${GITSHORT}}
 
-#GITHUBURL=https://github.com/xbmc/xbmc/zipball/$VERSION-Gotham
+GITHUBURL=https://github.com/xbmc/xbmc/zipball/$VERSION-Gotham
 #GITHUBURL=https://github.com/xbmc/xbmc/zipball/$PRERELEASE
-GITHUBURL=https://github.com/xbmc/xbmc/zipball/$GITCOMMIT
+#GITHUBURL=https://github.com/xbmc/xbmc/zipball/$GITCOMMIT
 
 # download zipball
 if [[ ! -f xbmc-$VERSION.zip ]]; then

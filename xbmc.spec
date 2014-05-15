@@ -1,19 +1,19 @@
-#global PRERELEASE Gotham_rc1
-%global DIRVERSION %{version}
-%global GITCOMMIT Gotham_r2-ge988513
+%global PRERELEASE b1
+#global DIRVERSION %{version}
+#global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
-#global DIRVERSION %{version}-%{PRERELEASE}
+%global DIRVERSION %{version}%{PRERELEASE}
 %global _hardened_build 1
 
 Name: xbmc
-Version: 13.0
-Release: 2%{?dist}
+Version: 13.1
+Release: 0.1.beta1%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
 Group: Applications/Multimedia
 URL: http://www.xbmc.org/
-Source0: %{name}-%{DIRVERSION}-%{GITCOMMIT}-patched.tar.xz
+Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 # xbmc contains code that we cannot ship, as well as redundant private
 # copies of upstream libraries that we already distribute.  Therefore
 # we use this script to remove the code before shipping it.
@@ -35,6 +35,10 @@ Patch3: xbmc-13.0-libmysqlclient.patch
 
 # Set program version parameters
 Patch4: xbmc-13.0-versioning.patch
+
+# Fix crash during suspend
+# https://github.com/xbmc/xbmc/pull/4696
+Patch5: xbmc-13.0-dbus-power.patch
 
 # External ffmpeg patches
 Patch100: 0001-Revert-drop-support-for-external-ffmpeg.patch
@@ -234,12 +238,13 @@ library.
 
 
 %prep
-%setup -q -n %{name}-%{DIRVERSION}-%{GITCOMMIT}
+%setup -q -n %{name}-%{DIRVERSION}
 
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %patch100 -p1
 %patch101 -p1
@@ -384,6 +389,9 @@ fi
 
 
 %changelog
+* Wed May 14 2014 Michael Cronenworth <mike@cchtml.com> - 13.1-0.1.beta1
+- Update to 13.1 beta 1
+
 * Sat May 10 2014 Michael Cronenworth <mike@cchtml.com> - 13.0-2
 - Update to latest Gotham final branch (commit e988513)
 - Fixes for rtmp (RFBZ #3234)
