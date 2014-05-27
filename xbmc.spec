@@ -1,4 +1,4 @@
-%global PRERELEASE b1
+%global PRERELEASE rc1
 #global DIRVERSION %{version}
 #global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
@@ -7,7 +7,7 @@
 
 Name: xbmc
 Version: 13.1
-Release: 0.1.beta1%{?dist}
+Release: 0.2.rc1%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
@@ -389,6 +389,9 @@ fi
 
 
 %changelog
+* Mon May 26 2014 Michael Cronenworth <mike@cchtml.com> - 13.1-0.2.rc1
+- Update to 13.1 RC 1
+
 * Wed May 14 2014 Michael Cronenworth <mike@cchtml.com> - 13.1-0.1.beta1
 - Update to 13.1 beta 1
 
