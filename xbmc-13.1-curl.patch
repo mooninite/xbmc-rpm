@@ -1,0 +1,36 @@
+From b47117d9d0e1be09a298079919cc335baf2f37f0 Mon Sep 17 00:00:00 2001
+From: Pierre Ossman <pierre@ossman.eu>
+Date: Sun, 25 May 2014 17:10:03 +0200
+Subject: [PATCH] curl: don't mess with the default cipher list as we can't
+ know the format
+
+---
+ xbmc/filesystem/CurlFile.cpp | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/xbmc/filesystem/CurlFile.cpp b/xbmc/filesystem/CurlFile.cpp
+index 30de6f9..0a5ea14 100644
+--- a/xbmc/filesystem/CurlFile.cpp
++++ b/xbmc/filesystem/CurlFile.cpp
+@@ -394,7 +394,7 @@ CCurlFile::CCurlFile()
+   m_username = "";
+   m_password = "";
+   m_httpauth = "";
+-  m_cipherlist = "DEFAULT";
++  m_cipherlist = "";
+   m_proxytype = PROXY_HTTP;
+   m_state = new CReadState();
+   m_oldState = NULL;
+@@ -608,7 +608,8 @@ void CCurlFile::SetCommonOptions(CReadState* state)
+     g_curlInterface.easy_setopt(h, CURLOPT_IGNORE_CONTENT_LENGTH, 1);
+ 
+   // Setup allowed TLS/SSL ciphers. New versions of cURL may deprecate things that are still in use.
+-  g_curlInterface.easy_setopt(h, CURLOPT_SSL_CIPHER_LIST, m_cipherlist.c_str());
++  if (!m_cipherlist.empty())
++    g_curlInterface.easy_setopt(h, CURLOPT_SSL_CIPHER_LIST, m_cipherlist.c_str());
+ }
+ 
+ void CCurlFile::SetRequestHeaders(CReadState* state)
+-- 
+1.9.3
+
