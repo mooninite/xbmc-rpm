@@ -7,7 +7,7 @@
 
 Name: xbmc
 Version: 13.2
-Release: 0.1.beta3%{?dist}
+Release: 0.2.beta3%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
@@ -390,7 +390,7 @@ fi
 
 
 %changelog
-* Tue Aug 05 2014 Michael Cronenworth <mike@cchtml.com> - 13.2-0.1.beta3
+* Tue Aug 05 2014 Michael Cronenworth <mike@cchtml.com> - 13.2-0.2.beta3
 - Update to 13.2 beta 3
 - Drop upstream patches
 
