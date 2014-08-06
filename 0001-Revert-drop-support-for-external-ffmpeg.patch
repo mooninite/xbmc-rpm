@@ -15,7 +15,7 @@ diff --git a/configure.in b/configure.in
 index f9f5693..c389b76 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -191,6 +191,9 @@ libcec_disabled="== libcec disabled. CEC adapter support will not be available.
+@@ -191,6 +191,9 @@
  # External library message strings
  external_libraries_enabled="== Use of all supported external libraries enabled. =="
  external_libraries_disabled="== Use of all supported external libraries disabled. =="
@@ -25,7 +25,7 @@ index f9f5693..c389b76 100644
  dashes="------------------------"
  final_message="\n  XBMC Configuration:"
  final_message="\n$dashes$final_message\n$dashes"
-@@ -569,6 +572,12 @@ AC_ARG_ENABLE([external-libraries],
+@@ -569,6 +572,12 @@
    [use_external_libraries=$enableval],
    [use_external_libraries=no])
  
@@ -38,9 +38,9 @@ index f9f5693..c389b76 100644
  AC_ARG_ENABLE([libav-compat],
    [AS_HELP_STRING([--enable-libav-compat],
    [build a wrapper around libav to provide the functions needed by XBMC. This is
-@@ -600,9 +609,6 @@ PKG_PROG_PKG_CONFIG
- MAKE="${MAKE:-make}"
- OBJDUMP="${OBJDUMP:-objdump}"
+@@ -602,9 +611,6 @@
+ READELF="${READELF:-readelf}"
+ NM="${NM:-nm}"
  
 -use_external_ffmpeg=no
 -use_static_ffmpeg=no
