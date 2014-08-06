@@ -1,4 +1,4 @@
-%global PRERELEASE b2
+%global PRERELEASE b3
 %global DIRVERSION %{version}%{?PRERELEASE}
 #global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
