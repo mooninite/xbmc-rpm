@@ -132,6 +132,7 @@ BuildRequires: libmpeg2-devel
 BuildRequires: libogg-devel
 # for AirPlay support
 BuildRequires: libplist-devel
+BuildRequires: libshairport-devel
 BuildRequires: libpng-devel
 BuildRequires: librtmp-devel
 BuildRequires: libsamplerate-devel
@@ -189,6 +190,9 @@ Requires: libcrystalhd
 %endif
 Requires: libmad
 Requires: librtmp
+
+# needed for airplay support
+Requires: libshairport
 
 # needed when doing a minimal install, see
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=1844
@@ -274,6 +278,8 @@ chmod +x bootstrap
 --enable-external-libraries \
 --enable-goom \
 --enable-pulse \
+--enable-airplay \
+--enable-airtunes \
 %if 0%{?_with_libcec}
 --enable-libcec \
 %else
