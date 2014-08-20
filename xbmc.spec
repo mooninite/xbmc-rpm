@@ -1,5 +1,5 @@
-%global PRERELEASE b3
-%global DIRVERSION %{version}%{?PRERELEASE}
+#global PRERELEASE b3
+%global DIRVERSION %{version}
 #global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
 #global DIRVERSION %{version}%{PRERELEASE}
@@ -7,7 +7,7 @@
 
 Name: xbmc
 Version: 13.2
-Release: 0.3.beta3%{?dist}
+Release: 1%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
@@ -135,6 +135,7 @@ BuildRequires: libplist-devel
 BuildRequires: libpng-devel
 BuildRequires: librtmp-devel
 BuildRequires: libsamplerate-devel
+BuildRequires: libshairport-devel
 BuildRequires: libsmbclient-devel
 %if 0%{?_with_libssh}
 BuildRequires: libssh-devel
@@ -189,6 +190,7 @@ Requires: libcrystalhd
 %endif
 Requires: libmad
 Requires: librtmp
+Requires: libshairport
 
 # needed when doing a minimal install, see
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=1844
@@ -390,6 +392,10 @@ fi
 
 
 %changelog
+* Wed Aug 20 2014 Michael Cronenworth <mike@cchtml.com> - 13.2-1
+- Update to 13.2 final
+- Enable AirTunes support
+
 * Wed Aug 06 2014 Michael Cronenworth <mike@cchtml.com> - 13.2-0.3.beta3
 - Update external ffmpeg patch
 
