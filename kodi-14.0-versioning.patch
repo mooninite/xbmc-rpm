@@ -1,0 +1,11 @@
+--- a/xbmc/Application.cpp.orig	2014-08-24 13:48:56.198199578 -0500
++++ b/xbmc/Application.cpp	2014-08-24 13:55:16.242116310 -0500
+@@ -697,7 +697,7 @@
+   CProfilesManager::Get().Load();
+ 
+   CLog::Log(LOGNOTICE, "-----------------------------------------------------------------------");
+-  CLog::Log(LOGNOTICE, "Starting Kodi (%s). Platform: %s %s %d-bit", g_infoManager.GetVersion().c_str(), g_sysinfo.GetBuildTargetPlatformName().c_str(),
++  CLog::Log(LOGNOTICE, "Starting Kodi from RPM Fusion (%s). Platform: %s %s %d-bit", g_infoManager.GetVersion().c_str(), g_sysinfo.GetBuildTargetPlatformName().c_str(),
+             g_sysinfo.GetBuildTargetCpuFamily().c_str(), g_sysinfo.GetXbmcBitness());
+ 
+   std::string buildType;

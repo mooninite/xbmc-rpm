@@ -1,15 +1,14 @@
 #!/bin/sh
 
-MAJORVERSION=13
-MINORVERSION=2
+MAJORVERSION=14
+MINORVERSION=0a2
 #GITCOMMIT=e988513175fccca83f8b688bb77b932f6a403b96
 #GITSHORT=ge988513
-#PRERELEASE=Gotham
+CODENAME=Helix
 
-VERSION=${MAJORVERSION}.${MINORVERSION}${PRERELEASE:+-${PRERELEASE}}${GITSHORT:+-${GITSHORT}}
+VERSION=${MAJORVERSION}.${MINORVERSION}${GITSHORT:+-${GITSHORT}}
 
-GITHUBURL=https://github.com/xbmc/xbmc/zipball/$VERSION-Gotham
-#GITHUBURL=https://github.com/xbmc/xbmc/zipball/$PRERELEASE
+GITHUBURL=https://github.com/xbmc/xbmc/zipball/$VERSION-$CODENAME
 #GITHUBURL=https://github.com/xbmc/xbmc/zipball/$GITCOMMIT
 
 # download zipball
@@ -22,9 +21,9 @@ rm -rf xbmc-xbmc-*
 unzip xbmc-$VERSION.zip
 
 # Repair GitHub's odd auto-generated top-level directory...
-mv xbmc-xbmc-* xbmc-$VERSION
+mv xbmc-xbmc-* kodi-$VERSION
 
-pushd xbmc-$VERSION
+pushd kodi-$VERSION
 
 # remove bundled libraries, saves space and forces using external versions
 # grrr, *still* have to keep in ffmpeg for now (2011-12-28) since upstream
@@ -38,7 +37,7 @@ done
 # remove more bundled codecs
 for i in libmpeg2
 do
-    rm -r xbmc/cores/dvdplayer/DVDCodecs/Video/$i
+    rm -r kodi/cores/dvdplayer/DVDCodecs/Video/$i
 done
 
 
@@ -62,7 +61,7 @@ done
 
 # TODO/FIXME: remove other unnecessary things under tools/
 # also remove anything to do with win32
-for i in android darwin win32buildtools
+for i in win32buildtools
 do
     rm -r tools/$i
 done
@@ -70,4 +69,4 @@ done
 popd
 
 # repack
-tar -cJvf xbmc-$VERSION-patched.tar.xz xbmc-$VERSION
+tar -cJvf kodi-$VERSION-patched.tar.xz kodi-$VERSION
