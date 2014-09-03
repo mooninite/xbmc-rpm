@@ -1,4 +1,4 @@
-%global PRERELEASE a2
+%global PRERELEASE a3
 #global DIRVERSION %{version}
 #global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
@@ -7,7 +7,7 @@
 
 Name: kodi
 Version: 14.0
-Release: 0.1.alpha2%{?dist}
+Release: 0.2.alpha3%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
@@ -385,6 +385,9 @@ fi
 
 
 %changelog
+* Tue Sep 02 2014 Michael Cronenworth <mike@cchtml.com> - 14.0-0.2.alpha3
+- Update to 14.0 alpha 3
+
 * Sun Aug 24 2014 Michael Cronenworth <mike@cchtml.com> - 14.0-0.1.alpha2
 - Update to 14.0 alpha 2
 - Renamed XBMC to Kodi
