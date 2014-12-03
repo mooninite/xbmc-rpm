@@ -1,4 +1,4 @@
-%global PRERELEASE a3
+%global PRERELEASE rc1
 #global DIRVERSION %{version}
 #global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
@@ -7,12 +7,12 @@
 
 Name: kodi
 Version: 14.0
-Release: 0.2.alpha3%{?dist}
+Release: 0.3.rc1%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
 Group: Applications/Multimedia
-URL: http://www.xbmc.org/
+URL: http://www.kodi.tv/
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 # kodi contains code that we cannot ship, as well as redundant private
 # copies of upstream libraries that we already distribute.  Therefore
@@ -22,7 +22,7 @@ Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 Source1: kodi-generate-tarball-xz.sh
 
 # filed ticket, but patch still needs work
-# http://trac.xbmc.org/ticket/9658
+# http://trac.kodi.tv/ticket/9658
 Patch1: xbmc-13.0-dvdread.patch
 
 # need to file trac ticket, this patch just forces external hdhomerun
@@ -244,7 +244,7 @@ library.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p0
+%patch5 -p1
 
 %if 0%{?_with_hdhomerun}
 %else
@@ -323,18 +323,22 @@ rm -r $RPM_BUILD_ROOT/%{_datadir}/doc/
 
 desktop-file-install \
  --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
- $RPM_BUILD_ROOT%{_datadir}/applications/xbmc.desktop
+ $RPM_BUILD_ROOT%{_datadir}/applications/kodi.desktop
+
+desktop-file-install \
+ --dir=${RPM_BUILD_ROOT}%{_datadir}/xsessions \
+ $RPM_BUILD_ROOT%{_datadir}/xsessions/kodi.desktop
 
 # Normally we are expected to build these manually. But since we are using
 # the system Python interpreter, we also want to use the system libraries
-install -d $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pil/lib
-ln -s %{python_sitearch}/PIL $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pil/lib/PIL
-#install -d $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pysqlite/lib
-#ln -s %{python_sitearch}/pysqlite2 $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pysqlite/lib/pysqlite2
+install -d $RPM_BUILD_ROOT%{_libdir}/kodi/addons/script.module.pil/lib
+ln -s %{python_sitearch}/PIL $RPM_BUILD_ROOT%{_libdir}/kodi/addons/script.module.pil/lib/PIL
+#install -d $RPM_BUILD_ROOT%{_libdir}/kodi/addons/script.module.pysqlite/lib
+#ln -s %{python_sitearch}/pysqlite2 $RPM_BUILD_ROOT%{_libdir}/kodi/addons/script.module.pysqlite/lib/pysqlite2
 
 # Use external Roboto font files instead of bundled ones
-ln -sf %{_fontbasedir}/google-roboto/Roboto-Regular.ttf ${RPM_BUILD_ROOT}%{_datadir}/xbmc/addons/skin.confluence/fonts/
-ln -sf %{_fontbasedir}/google-roboto/Roboto-Bold.ttf ${RPM_BUILD_ROOT}%{_datadir}/xbmc/addons/skin.confluence/fonts/
+ln -sf %{_fontbasedir}/google-roboto/Roboto-Regular.ttf ${RPM_BUILD_ROOT}%{_datadir}/kodi/addons/skin.confluence/fonts/
+ln -sf %{_fontbasedir}/google-roboto/Roboto-Bold.ttf ${RPM_BUILD_ROOT}%{_datadir}/kodi/addons/skin.confluence/fonts/
 
 
 %post
@@ -354,37 +358,46 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc copying.txt CONTRIBUTORS LICENSE.GPL README
+%doc copying.txt CONTRIBUTORS LICENSE.GPL README.md
 %doc docs
+%{_bindir}/kodi
+%{_bindir}/kodi-standalone
 %{_bindir}/xbmc
 %{_bindir}/xbmc-standalone
+%{_libdir}/kodi
 %{_libdir}/xbmc
+%{_datadir}/kodi
 %{_datadir}/xbmc
-%{_datadir}/xsessions/XBMC.desktop
-%{_datadir}/applications/xbmc.desktop
+%{_datadir}/xsessions/kodi.desktop
+%{_datadir}/xsessions/xbmc.desktop
+%{_datadir}/applications/kodi.desktop
 %{_datadir}/icons/hicolor/*/*/*.png
 
 
 %files devel
+%{_includedir}/kodi
 %{_includedir}/xbmc
 
 
 %files eventclients
-%python_sitelib/xbmc
-%dir %{_datadir}/pixmaps/xbmc
-%{_datadir}/pixmaps/xbmc/*.png
-%{_bindir}/xbmc-j2meremote
-%{_bindir}/xbmc-ps3d
-%{_bindir}/xbmc-ps3remote
-%{_bindir}/xbmc-send
-%{_bindir}/xbmc-wiiremote
+%python_sitelib/kodi
+%dir %{_datadir}/pixmaps/kodi
+%{_datadir}/pixmaps/kodi/*.png
+%{_bindir}/kodi-j2meremote
+%{_bindir}/kodi-ps3d
+%{_bindir}/kodi-ps3remote
+%{_bindir}/kodi-send
+%{_bindir}/kodi-wiiremote
 
 
 %files eventclients-devel
-%{_includedir}/xbmc/xbmcclient.h
+%{_includedir}/kodi/xbmcclient.h
 
 
 %changelog
+* Tue Dec 02 2014 W. Michael Petullo <mike@flyn.org> - 14.0-0.3.rc1
+- Update to 14.0 rc 1
+
 * Tue Sep 02 2014 Michael Cronenworth <mike@cchtml.com> - 14.0-0.2.alpha3
 - Update to 14.0 alpha 3
 
