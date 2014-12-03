@@ -364,7 +364,7 @@ fi
 %{_bindir}/xbmc-standalone
 %{_libdir}/xbmc
 %{_datadir}/xbmc
-%{_datadir}/xsessions/kodi-xsession.desktop
+%{_datadir}/xsessions/kodi.desktop
 %{_datadir}/applications/kodi.desktop
 %{_datadir}/icons/hicolor/*/*/*.png
 
@@ -374,14 +374,14 @@ fi
 
 
 %files eventclients
-%python_sitelib/xbmc
-%dir %{_datadir}/pixmaps/xbmc
-%{_datadir}/pixmaps/xbmc/*.png
-%{_bindir}/xbmc-j2meremote
-%{_bindir}/xbmc-ps3d
-%{_bindir}/xbmc-ps3remote
-%{_bindir}/xbmc-send
-%{_bindir}/xbmc-wiiremote
+%python_sitelib/kodi
+%dir %{_datadir}/pixmaps/kodi
+%{_datadir}/pixmaps/kodi/*.png
+%{_bindir}/kodi-j2meremote
+%{_bindir}/kodi-ps3d
+%{_bindir}/kodi-ps3remote
+%{_bindir}/kodi-send
+%{_bindir}/kodi-wiiremote
 
 
 %files eventclients-devel
