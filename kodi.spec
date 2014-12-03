@@ -1,4 +1,4 @@
-%global PRERELEASE a3
+%global PRERELEASE rc1
 #global DIRVERSION %{version}
 #global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
@@ -244,7 +244,7 @@ library.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p0
+%patch5 -p1
 
 %if 0%{?_with_hdhomerun}
 %else
@@ -323,7 +323,11 @@ rm -r $RPM_BUILD_ROOT/%{_datadir}/doc/
 
 desktop-file-install \
  --dir=${RPM_BUILD_ROOT}%{_datadir}/applications \
- $RPM_BUILD_ROOT%{_datadir}/applications/xbmc.desktop
+ $RPM_BUILD_ROOT%{_datadir}/applications/kodi.desktop
+
+desktop-file-install \
+ --dir=${RPM_BUILD_ROOT}%{_datadir}/xsessions \
+ $RPM_BUILD_ROOT%{_datadir}/xsessions/kodi.desktop
 
 # Normally we are expected to build these manually. But since we are using
 # the system Python interpreter, we also want to use the system libraries
@@ -354,14 +358,14 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc copying.txt CONTRIBUTORS LICENSE.GPL README
+%doc copying.txt CONTRIBUTORS LICENSE.GPL README.md
 %doc docs
 %{_bindir}/xbmc
 %{_bindir}/xbmc-standalone
 %{_libdir}/xbmc
 %{_datadir}/xbmc
-%{_datadir}/xsessions/XBMC.desktop
-%{_datadir}/applications/xbmc.desktop
+%{_datadir}/xsessions/kodi-xsession.desktop
+%{_datadir}/applications/kodi.desktop
 %{_datadir}/icons/hicolor/*/*/*.png
 
 
@@ -385,6 +389,9 @@ fi
 
 
 %changelog
+* Tue Dec 02 2014 W. Michael Petullo <mike@flyn.org> - 14.0-0.1.rc1
+- Update to 14.0 rc 1
+
 * Tue Sep 02 2014 Michael Cronenworth <mike@cchtml.com> - 14.0-0.2.alpha3
 - Update to 14.0 alpha 3
 
