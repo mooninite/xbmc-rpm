@@ -7,7 +7,7 @@
 
 Name: kodi
 Version: 14.0
-Release: 0.2.alpha3%{?dist}
+Release: 0.3.rc1%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+
@@ -395,7 +395,7 @@ fi
 
 
 %changelog
-* Tue Dec 02 2014 W. Michael Petullo <mike@flyn.org> - 14.0-0.1.rc1
+* Tue Dec 02 2014 W. Michael Petullo <mike@flyn.org> - 14.0-0.3.rc1
 - Update to 14.0 rc 1
 
 * Tue Sep 02 2014 Michael Cronenworth <mike@cchtml.com> - 14.0-0.2.alpha3
