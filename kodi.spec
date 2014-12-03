@@ -12,7 +12,7 @@ Summary: Media center
 
 License: GPLv2+ and GPLv3+
 Group: Applications/Multimedia
-URL: http://www.xbmc.org/
+URL: http://www.kodi.tv/
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 # kodi contains code that we cannot ship, as well as redundant private
 # copies of upstream libraries that we already distribute.  Therefore
@@ -22,7 +22,7 @@ Source0: %{name}-%{DIRVERSION}-patched.tar.xz
 Source1: kodi-generate-tarball-xz.sh
 
 # filed ticket, but patch still needs work
-# http://trac.xbmc.org/ticket/9658
+# http://trac.kodi.tv/ticket/9658
 Patch1: xbmc-13.0-dvdread.patch
 
 # need to file trac ticket, this patch just forces external hdhomerun
@@ -331,14 +331,14 @@ desktop-file-install \
 
 # Normally we are expected to build these manually. But since we are using
 # the system Python interpreter, we also want to use the system libraries
-install -d $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pil/lib
-ln -s %{python_sitearch}/PIL $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pil/lib/PIL
-#install -d $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pysqlite/lib
-#ln -s %{python_sitearch}/pysqlite2 $RPM_BUILD_ROOT%{_libdir}/xbmc/addons/script.module.pysqlite/lib/pysqlite2
+install -d $RPM_BUILD_ROOT%{_libdir}/kodi/addons/script.module.pil/lib
+ln -s %{python_sitearch}/PIL $RPM_BUILD_ROOT%{_libdir}/kodi/addons/script.module.pil/lib/PIL
+#install -d $RPM_BUILD_ROOT%{_libdir}/kodi/addons/script.module.pysqlite/lib
+#ln -s %{python_sitearch}/pysqlite2 $RPM_BUILD_ROOT%{_libdir}/kodi/addons/script.module.pysqlite/lib/pysqlite2
 
 # Use external Roboto font files instead of bundled ones
-ln -sf %{_fontbasedir}/google-roboto/Roboto-Regular.ttf ${RPM_BUILD_ROOT}%{_datadir}/xbmc/addons/skin.confluence/fonts/
-ln -sf %{_fontbasedir}/google-roboto/Roboto-Bold.ttf ${RPM_BUILD_ROOT}%{_datadir}/xbmc/addons/skin.confluence/fonts/
+ln -sf %{_fontbasedir}/google-roboto/Roboto-Regular.ttf ${RPM_BUILD_ROOT}%{_datadir}/kodi/addons/skin.confluence/fonts/
+ln -sf %{_fontbasedir}/google-roboto/Roboto-Bold.ttf ${RPM_BUILD_ROOT}%{_datadir}/kodi/addons/skin.confluence/fonts/
 
 
 %post
@@ -360,16 +360,22 @@ fi
 %defattr(-,root,root)
 %doc copying.txt CONTRIBUTORS LICENSE.GPL README.md
 %doc docs
+%{_bindir}/kodi
+%{_bindir}/kodi-standalone
 %{_bindir}/xbmc
 %{_bindir}/xbmc-standalone
+%{_libdir}/kodi
 %{_libdir}/xbmc
+%{_datadir}/kodi
 %{_datadir}/xbmc
 %{_datadir}/xsessions/kodi.desktop
+%{_datadir}/xsessions/xbmc.desktop
 %{_datadir}/applications/kodi.desktop
 %{_datadir}/icons/hicolor/*/*/*.png
 
 
 %files devel
+%{_includedir}/kodi
 %{_includedir}/xbmc
 
 
@@ -385,7 +391,7 @@ fi
 
 
 %files eventclients-devel
-%{_includedir}/xbmc/xbmcclient.h
+%{_includedir}/kodi/xbmcclient.h
 
 
 %changelog
