@@ -7,10 +7,12 @@
 
 Name: kodi
 Version: 14.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 Summary: Media center
 
-License: GPLv2+ and GPLv3+
+License: GPLv2+ and GPLv3+ and LGPLv2+ and BSD and MIT
+# Main binary and all supporting files are GPLv2+/GPLv3+
+# Some supporting libraries use the LGPL / BSD / MIT license
 Group: Applications/Multimedia
 URL: http://www.kodi.tv/
 Source0: %{name}-%{DIRVERSION}-patched.tar.xz
@@ -41,9 +43,7 @@ Patch5: kodi-14.0-dvddemux-ffmpeg.patch
 
 # Kodi is the renamed XBMC project
 Obsoletes: xbmc < 14.0-1
-Obsoletes: xbmc-eventclients < 14.0-1
 Provides: xbmc = %{version}
-ProvideS: xbmc-eventclients = %{version}
 
 # Optional deps (not in EPEL)
 %if 0%{?fedora}
@@ -60,6 +60,7 @@ ProvideS: xbmc-eventclients = %{version}
 %global _with_hdhomerun 1
 %endif
 
+# Upstream does not support ppc64
 ExcludeArch: ppc64
 
 BuildRequires: SDL-devel
@@ -180,19 +181,19 @@ BuildRequires: zlib-devel
 
 Requires: google-roboto-fonts
 # need explicit requires for these packages
-# as they are dynamically loaded via XBMC's arcane 
+# as they are dynamically loaded via XBMC's arcane
 # pseudo-DLL loading scheme (sigh)
 %if 0%{?_with_libbluray}
-Requires: libbluray
+Requires: libbluray%{?_isa}
 %endif
 %if 0%{?_with_libcec}
-Requires: libcec >= 2.2.0
+Requires: libcec%{?_isa} >= 2.2.0
 %endif
 %if 0%{?_with_crystalhd}
-Requires: libcrystalhd
+Requires: libcrystalhd%{?_isa}
 %endif
-Requires: libmad
-Requires: librtmp
+Requires: libmad%{?_isa}
+Requires: librtmp%{?_isa}
 
 # needed when doing a minimal install, see
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=1844
@@ -201,24 +202,24 @@ Requires: xorg-x11-utils
 
 # This is just symlinked to, but needed both at build-time
 # and for installation
-Requires: python-imaging
+Requires: python-pillow%{?_isa}
 
 
 %description
 Kodi is a free cross-platform media-player jukebox and entertainment hub.
-Kodi can play a spectrum of of multimedia formats, and featuring playlist, 
-audio visualizations, slideshow, and weather forecast functions, together 
+Kodi can play a spectrum of of multimedia formats, and featuring playlist,
+audio visualizations, slideshow, and weather forecast functions, together
 third-party plugins.
 
 
 %package devel
 Summary: Development files needed to compile C programs against kodi
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 Kodi is a free cross-platform media-player jukebox and entertainment hub.
-If you want to develop programs which use Kodi's libraries, you need to 
+If you want to develop programs which use Kodi's libraries, you need to
 install this package.
 
 
@@ -231,8 +232,10 @@ Remote, a J2ME based remote and the command line xbmc-send utility.
 
 %package eventclients-devel
 Summary: Media center event client remotes development files
-Requires:	%{name}-eventclients = %{version}-%{release}
-Requires:	%{name}-devel = %{version}-%{release}
+Requires:	%{name}-eventclients%{?_isa} = %{version}-%{release}
+Requires:	%{name}-devel%{?_isa} = %{version}-%{release}
+Obsoletes: xbmc-eventclients < 14.0-1
+Provides:  xbmc-eventclients = %{version}
 
 %description eventclients-devel
 This package contains the development header files for the eventclients
@@ -319,7 +322,7 @@ make %{?_smp_mflags} VERBOSE=1
 %install
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install
-make -C tools/EventClients DESTDIR=$RPM_BUILD_ROOT install 
+make -C tools/EventClients DESTDIR=$RPM_BUILD_ROOT install
 # remove the doc files from unversioned /usr/share/doc/xbmc, they should be in versioned docdir
 rm -r $RPM_BUILD_ROOT/%{_datadir}/doc/
 
@@ -338,6 +341,10 @@ ln -s %{python_sitearch}/PIL $RPM_BUILD_ROOT%{_libdir}/kodi/addons/script.module
 ln -sf %{_fontbasedir}/google-roboto/Roboto-Regular.ttf ${RPM_BUILD_ROOT}%{_datadir}/kodi/addons/skin.confluence/fonts/
 ln -sf %{_fontbasedir}/google-roboto/Roboto-Bold.ttf ${RPM_BUILD_ROOT}%{_datadir}/kodi/addons/skin.confluence/fonts/
 
+# Move man-pages into system dir
+mkdir -p ${RPM_BUILD_ROOT}%{_mandir}/
+mv docs/manpages ${RPM_BUILD_ROOT}%{_mandir}/man1/
+
 
 %post
 /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
@@ -352,32 +359,43 @@ fi
 
 %posttrans
 /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+rmdir %{_libdir}/xbmc %{_datadir}/xbmc
+ln -s kodi ${RPM_BUILD_ROOT}%{_libdir}/xbmc
+ln -s kodi ${RPM_BUILD_ROOT}%{_datadir}/xbmc
+
+
+%posttrans devel
+rmdir %{_includedir}/xbmc
+ln -s kodi ${RPM_BUILD_ROOT}%{_includedir}/xbmc
 
 
 %files
-%defattr(-,root,root)
-%doc copying.txt CONTRIBUTORS LICENSE.GPL README.md
-%doc docs
+%license copying.txt LICENSE.GPL
+%doc CONTRIBUTORS README.md docs
 %{_bindir}/kodi
 %{_bindir}/kodi-standalone
 %{_bindir}/xbmc
 %{_bindir}/xbmc-standalone
 %{_libdir}/kodi
-%{_libdir}/xbmc
+%ghost %{_libdir}/xbmc
 %{_datadir}/kodi
-%{_datadir}/xbmc
+%ghost %{_datadir}/xbmc
 %{_datadir}/xsessions/kodi.desktop
 %{_datadir}/xsessions/xbmc.desktop
 %{_datadir}/applications/kodi.desktop
 %{_datadir}/icons/hicolor/*/*/*.png
+%{_mandir}/man1/kodi.1.gz
+%{_mandir}/man1/kodi.bin.1.gz
+%{_mandir}/man1/kodi-standalone.1.gz
 
 
 %files devel
 %{_includedir}/kodi
-%{_includedir}/xbmc
+%ghost %{_includedir}/xbmc
 
 
 %files eventclients
+%license copying.txt LICENSE.GPL
 %python_sitelib/kodi
 %dir %{_datadir}/pixmaps/kodi
 %{_datadir}/pixmaps/kodi/*.png
@@ -386,6 +404,11 @@ fi
 %{_bindir}/kodi-ps3remote
 %{_bindir}/kodi-send
 %{_bindir}/kodi-wiiremote
+%{_mandir}/man1/kodi-j2meremote.1.gz
+%{_mandir}/man1/kodi-ps3remote.1.gz
+%{_mandir}/man1/kodi-send.1.gz
+%{_mandir}/man1/kodi-standalone.1.gz
+%{_mandir}/man1/kodi-wiiremote.1.gz
 
 
 %files eventclients-devel
@@ -393,7 +416,10 @@ fi
 
 
 %changelog
-* Tue Dec 23 2014 Michael Cronenworth <mike@cchtml.com> - 14.0-1
+* Mon Jan 05 2015 Michael Cronenworth <mike@cchtml.com> - 14.0-2
+- Fix xbmc upgrade path
+
+* Sun Dec 28 2014 Michael Cronenworth <mike@cchtml.com> - 14.0-1
 - Update to 14.0 final
 
 * Tue Dec 09 2014 Michael Cronenworth <mike@cchtml.com> - 14.0-0.4.rc3
