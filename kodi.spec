@@ -1,13 +1,13 @@
-%global PRERELEASE b1
-#global DIRVERSION %{version}
+#global PRERELEASE b1
+%global DIRVERSION %{version}
 #global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
-%global DIRVERSION %{version}%{PRERELEASE}
+#global DIRVERSION %{version}%{PRERELEASE}
 %global _hardened_build 1
 
 Name: kodi
 Version: 14.2
-Release: 0.1%{?dist}
+Release: 1%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+ and LGPLv2+ and BSD and MIT
@@ -424,8 +424,8 @@ fi
 
 
 %changelog
-* Mon Mar 02 2015 Michael Cronenworth <mike@cchtml.com> - 14.2-0.1
-- Update to 14.2 beta 1
+* Sun Mar 29 2015 Michael Cronenworth <mike@cchtml.com> - 14.2-1
+- Update to 14.2 final
 - Build with SDL2 to enable joystick support
 
 * Fri Jan 30 2015 Michael Cronenworth <mike@cchtml.com> - 14.1-1
