@@ -44,8 +44,8 @@ diff --git a/configure.ac b/configure.ac
 index 343292e..2060e24 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -2478,7 +2478,6 @@
-     xbmc/network/httprequesthandler/python/Makefile \
+@@ -2477,7 +2477,6 @@
+     xbmc/network/Makefile \
      xbmc/network/upnp/Makefile \
      lib/libexif/Makefile \
 -    lib/libhdhomerun/Makefile \

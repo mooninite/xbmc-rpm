@@ -1,13 +1,13 @@
-%global PRERELEASE b2
-#global DIRVERSION %{version}
+#global PRERELEASE b2
+%global DIRVERSION %{version}
 #global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
-%global DIRVERSION %{version}%{PRERELEASE}
+#global DIRVERSION %{version}%{PRERELEASE}
 %global _hardened_build 1
 
 Name: kodi
 Version: 15.0
-Release: 0.1%{?dist}
+Release: 1%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+ and LGPLv2+ and BSD and MIT
@@ -29,7 +29,7 @@ Patch1: xbmc-13.0-dvdread.patch
 
 # need to file trac ticket, this patch just forces external hdhomerun
 # functionality, needs to be able fallback internal version
-Patch2: kodi-14.0-hdhomerun.patch
+Patch2: kodi-15.0-hdhomerun.patch
 
 # Avoid segfault during goom's configure
 # https://bugzilla.redhat.com/1069079
@@ -439,6 +439,9 @@ fi
 
 
 %changelog
+* Wed Jul 22 2015 Michael Cronenworth <mike@cchtml.com> - 15.0-1
+- Kodi 15.0 final
+
 * Tue Jun 16 2015 Michael Cronenworth <mike@cchtml.com> - 15.0-0.1
 - Kodi 15.0 beta 2
 
