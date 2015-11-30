@@ -7,7 +7,7 @@
 
 Name: kodi
 Version: 15.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+ and LGPLv2+ and BSD and MIT
@@ -137,6 +137,7 @@ BuildRequires: libmpeg2-devel
 BuildRequires: libnfs-devel
 BuildRequires: libogg-devel
 # for AirPlay support
+BuildRequires: shairplay-devel
 BuildRequires: libplist-devel
 BuildRequires: libpng-devel
 BuildRequires: librtmp-devel
@@ -199,6 +200,7 @@ Requires: libcrystalhd%{?_isa}
 %endif
 Requires: libmad%{?_isa}
 Requires: librtmp%{?_isa}
+Requires: shairplay-libs%{?_isa}
 
 # needed when doing a minimal install, see
 # https://bugzilla.rpmfusion.org/show_bug.cgi?id=1844
@@ -433,6 +435,9 @@ fi
 
 
 %changelog
+* Wed Nov 25 2015 Michael Cronenworth <mike@cchtml.com> - 15.2-3
+- Enable AirPlay support (shairplay library)
+
 * Sat Oct 24 2015 Michael Cronenworth <mike@cchtml.com> - 15.2-2
 - Enable NFS client support
 
