@@ -1,13 +1,13 @@
-#global PRERELEASE b2
-%global DIRVERSION %{version}
+%global PRERELEASE b3
+#global DIRVERSION %{version}
 #global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
-#global DIRVERSION %{version}%{PRERELEASE}
+%global DIRVERSION %{version}%{PRERELEASE}
 %global _hardened_build 1
 
 Name: kodi
-Version: 15.2
-Release: 3%{?dist}
+Version: 16.0
+Release: 0.1%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+ and LGPLv2+ and BSD and MIT
@@ -27,23 +27,11 @@ Source1: kodi-generate-tarball-xz.sh
 # http://trac.xbmc.org/ticket/9658
 Patch1: xbmc-13.0-dvdread.patch
 
-# need to file trac ticket, this patch just forces external hdhomerun
-# functionality, needs to be able fallback internal version
-Patch2: kodi-15.0-hdhomerun.patch
-
-# Avoid segfault during goom's configure
-# https://bugzilla.redhat.com/1069079
-Patch3: xbmc-13.0-libmysqlclient.patch
-
 # Set program version parameters
-Patch4: kodi-14.0-versioning.patch
+Patch2: kodi-16.0-versioning.patch
 
 # Remove call to internal ffmpeg function (misued anyway)
-Patch5: kodi-14.0-dvddemux-ffmpeg.patch
-
-# Kodi is the renamed XBMC project
-Obsoletes: xbmc < 14.0-1
-Provides: xbmc = %{version}
+Patch3: kodi-14.0-dvddemux-ffmpeg.patch
 
 # Optional deps (not in EPEL)
 %if 0%{?fedora}
@@ -58,7 +46,6 @@ Provides: xbmc = %{version}
 
 %ifarch x86_64 i686
 %global _with_crystalhd 1
-%global _with_hdhomerun 1
 %endif
 
 # Upstream does not support ppc64
@@ -73,10 +60,12 @@ BuildRequires: bluez-libs-devel
 BuildRequires: boost-devel
 BuildRequires: bzip2-devel
 BuildRequires: cmake
+BuildRequires: crossguid-devel
 %if 0%{?_with_cwiid}
 BuildRequires: cwiid-devel
 %endif
 BuildRequires: dbus-devel
+BuildRequires: dcadec-libs-devel
 BuildRequires: desktop-file-utils
 BuildRequires: e2fsprogs-devel
 BuildRequires: enca-devel
@@ -99,9 +88,6 @@ BuildRequires: gettext-autopoint
 BuildRequires: glew-devel
 BuildRequires: glib2-devel
 BuildRequires: gperf
-%if 0%{?_with_hdhomerun}
-BuildRequires: hdhomerun-devel
-%endif
 BuildRequires: jasper-devel
 BuildRequires: java-devel
 BuildRequires: lame-devel
@@ -148,6 +134,7 @@ BuildRequires: libssh-devel
 %endif
 BuildRequires: libtiff-devel
 BuildRequires: libtool
+BuildRequires: libuuid-devel
 %ifnarch %{arm}
 BuildRequires: libva-devel
 BuildRequires: libvdpau-devel
@@ -189,6 +176,7 @@ Requires: google-roboto-fonts
 # need explicit requires for these packages
 # as they are dynamically loaded via XBMC's arcane
 # pseudo-DLL loading scheme (sigh)
+Requires: dcadec-libs%{?_isa}
 %if 0%{?_with_libbluray}
 Requires: libbluray%{?_isa}
 %endif
@@ -255,25 +243,9 @@ library.
 
 %prep
 %setup -q -n %{name}-%{DIRVERSION}
-
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p0
-
-%if 0%{?_with_hdhomerun}
-%else
-  # Remove hdhomerun from the build.
-  pushd xbmc/filesystem/
-    rm HDHomeRunFile.cpp HDHomeRunFile.h
-    rm HDHomeRunDirectory.cpp HDHomeRunDirectory.h
-    sed -i Makefile.in -e '/HDHomeRunFile\.cpp/d'
-    sed -i Makefile.in -e '/HDHomeRunDirectory\.cpp/d'
-    sed -i DirectoryFactory.cpp -e '/HomeRun/d'
-    sed -i FileFactory.cpp -e '/HomeRun/d'
-  popd
-%endif
+%patch3 -p0
 
 
 %build
@@ -326,9 +298,6 @@ chmod +x bootstrap
 CFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
 CXXFLAGS="$RPM_OPT_FLAGS -fPIC -I/usr/include/afpfs-ng/ -I/usr/include/samba-4.0/ -D__STDC_CONSTANT_MACROS" \
 LDFLAGS="-fPIC" \
-%if 0%{?_with_hdhomerun}
-LIBS=" -lhdhomerun $LIBS" \
-%endif
 ASFLAGS=-fPIC
 
 make %{?_smp_mflags} VERBOSE=1
@@ -435,6 +404,10 @@ fi
 
 
 %changelog
+* Sun Dec 06 2015 Michael Cronenworth <mike@cchtml.com> - 16.0-0.1
+- Kodi 16.0 beta 3
+- Drop libhdhomerun support (dropped by Kodi)
+
 * Wed Nov 25 2015 Michael Cronenworth <mike@cchtml.com> - 15.2-3
 - Enable AirPlay support (shairplay library)
 
