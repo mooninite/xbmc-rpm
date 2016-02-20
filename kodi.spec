@@ -1,13 +1,13 @@
-%global PRERELEASE b3
-#global DIRVERSION %{version}
+#global PRERELEASE rc1
+%global DIRVERSION %{version}
 #global GITCOMMIT Gotham_r2-ge988513
 # use the line below for pre-releases
-%global DIRVERSION %{version}%{PRERELEASE}
+#global DIRVERSION %{version}%{PRERELEASE}
 %global _hardened_build 1
 
 Name: kodi
 Version: 16.0
-Release: 0.1%{?dist}
+Release: 1%{?dist}
 Summary: Media center
 
 License: GPLv2+ and GPLv3+ and LGPLv2+ and BSD and MIT
@@ -33,13 +33,17 @@ Patch2: kodi-16.0-versioning.patch
 # Remove call to internal ffmpeg function (misued anyway)
 Patch3: kodi-14.0-dvddemux-ffmpeg.patch
 
+# Disable dcadec library detection when using external ffmpeg (dcadec is only
+# needed to build bundled ffmpeg)
+Patch4: kodi-16.0-dcadec.patch
+
 # Optional deps (not in EPEL)
 %if 0%{?fedora}
 # (libbluray in EPEL 6 is too old.)
 %global _with_libbluray 1
 %global _with_cwiid 1
 %global _with_libssh 1
-%global _with_libcec 0
+%global _with_libcec 1
 %global _with_external_ffmpeg 1
 %global _with_wayland 0
 %endif
@@ -65,7 +69,6 @@ BuildRequires: crossguid-devel
 BuildRequires: cwiid-devel
 %endif
 BuildRequires: dbus-devel
-BuildRequires: dcadec-libs-devel
 BuildRequires: desktop-file-utils
 BuildRequires: e2fsprogs-devel
 BuildRequires: enca-devel
@@ -176,7 +179,6 @@ Requires: google-roboto-fonts
 # need explicit requires for these packages
 # as they are dynamically loaded via XBMC's arcane
 # pseudo-DLL loading scheme (sigh)
-Requires: dcadec-libs%{?_isa}
 %if 0%{?_with_libbluray}
 Requires: libbluray%{?_isa}
 %endif
@@ -246,6 +248,7 @@ library.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p0
+%patch4 -p0
 
 
 %build
@@ -404,6 +407,12 @@ fi
 
 
 %changelog
+* Sat Feb 20 2016 Michael Cronenworth <mike@cchtml.com> - 16.0-1
+- Kodi 16.0 final
+
+* Fri Jan 22 2016 Michael Cronenworth <mike@cchtml.com> - 16.0-0.2
+- Kodi 16.0 RC1
+
 * Sun Dec 06 2015 Michael Cronenworth <mike@cchtml.com> - 16.0-0.1
 - Kodi 16.0 beta 3
 - Drop libhdhomerun support (dropped by Kodi)
